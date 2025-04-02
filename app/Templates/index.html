@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>UNILyse - Liste des Cours</title>
+    <!-- Import de Bootstrap et DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</head>
+<body>
+
+<header>
+    <div class="container-header">
+        <div class="title-left">UNILyse</div>
+        <div class="title-center">
+            Liste des Cours
+            <div class="last-update">Dernière màj : {{ last_update }}</div>
+        </div>
+        <button class="dropdown-btn" id="dropdown-btn">☰</button>
+    </div>
+    <div class="dropdown-menu" id="dropdown-menu">
+        <a href="/evaluate">Évaluer un cours</a>
+        <a href="/about">À propos</a>
+    </div>
+</header>
+
+<div class="container">
+    <table id="course-table" class="display">
+        <thead>
+            <tr>
+                <th>Faculté
+                    <select id="filter-faculty">
+                        <option value="">Toutes</option>
+                    </select>
+                </th>
+                <th>Cursus
+                    <select id="filter-cursus">
+                        <option value="">Tous</option>
+                    </select>
+                </th>
+                <th>Semestre
+                    <select id="filter-semester">
+                        <option value="">Tous</option>
+                    </select>
+                </th>
+                <th>Crédits
+                    <select id="filter-credits">
+                        <option value="">Tous</option>
+                    </select>
+                </th>
+                <th>Nom
+                    <input type="text" id="search-name" placeholder="Rechercher cours">
+                </th>
+                <th>Globale</th>
+                <th>Travail</th>
+                <th>Difficulté</th>
+                <th>Intérêt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td>{{ course['Faculté'] }}</td>
+                <td>{{ course['Cursus'] }}</td>
+                <td>{{ course['Semestre'] }}</td>
+                <td>{{ course['Crédits'] }}</td>
+                <td>{{ course['Nom'] }}</td>
+                <td>{{ course['Globale'] }}</td>
+                <td>{{ course['Travail'] }}</td>
+                <td>{{ course['Difficulté'] }}</td>
+                <td>{{ course['Intérêt'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

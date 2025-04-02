@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Évaluer un cours</h2>
+<form method="post">
+    <label>Nom du cours :</label><input type="text" name="nom" required><br>
+    <label>Nom de l'étudiant :</label><input type="text" name="etudiant" required><br>
+    <hr>
+    {% for question in ["Avez vous aimé ce cours dans sa globalité ?", 
+                        "Recommanderiez-vous cet enseignement ?", 
+                        "Votre réflexion est stimulée.", 
+                        "Les objectifs de l’enseignement sont bien définis.",
+                        "Les consignes concernant les évaluations sont claires.",
+                        "Les commentaires sur vos évaluations vous aident à améliorer la qualité de votre travail.",
+                        "Faut-il des connaissances préalables pour suivre cet enseignement ?",
+                        "La charge de travail est adéquate par rapport au nombre de crédits ECTS accordés à ce séminaire."] %}
+        <label>{{ question }}</label>
+        <select name="{{ loop.index0 }}" required>
+            <option value="1">Non</option>
+            <option value="2">Plutôt non</option>
+            <option value="3">Plutôt oui</option>
+            <option value="4">Oui</option>
+        </select><br>
+    {% endfor %}
+    <button type="submit">Soumettre</button>
+</form>
+{% endblock %}

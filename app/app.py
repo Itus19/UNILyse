@@ -49,14 +49,13 @@ def read_csv_data():
 def read_evaluation_data():
     """Lit les données du fichier evaluation.csv et les retourne sous forme de liste de dictionnaires."""
     evaluations = []
-    if os.path.exists(EVALUATIONS_CSV):
-        try:
-            with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
-                reader = csv.DictReader(eval_file, delimiter=';')
-                for row in reader:
-                    evaluations.append(row)
-        except Exception as e:
-            print(f"Erreur lors de la lecture de evaluation.csv : {e}")
+    try:
+        with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
+            reader = csv.DictReader(eval_file, delimiter=';')
+            for row in reader:
+                evaluations.append(row)
+    except Exception as e:
+        print(f"Erreur lors de la lecture de evaluation.csv : {e}")
     return evaluations
 
 def read_evaluation_data_with_counts():
@@ -81,6 +80,8 @@ def update_evaluation(course_name, data):
     updated = False
     for row in evaluations:
         if row['Nom'] == course_name:
+            # Incrémenter le compteur Nombre_Evaluations
+            row['Nombre_Evaluations'] = int(row.get('Nombre_Evaluations', 0)) + 1
             row.update(data)
             updated = True
             break
@@ -99,10 +100,36 @@ def update_evaluation(course_name, data):
         print(f"Erreur lors de la mise à jour de evaluation.csv : {e}")
         return False
 
+def update_evaluation_counts():
+    """Met à jour le nombre d'évaluations pour chaque cours dans le fichier evaluation.csv."""
+    evaluations = []
+    try:
+        with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
+            reader = csv.DictReader(eval_file, delimiter=';')
+            fieldnames = reader.fieldnames
+
+            # Ajouter la colonne Nombre_Evaluations si elle n'existe pas
+            if 'Nombre_Evaluations' not in fieldnames:
+                fieldnames.append('Nombre_Evaluations')
+
+            for row in reader:
+                # Compter les évaluations non vides
+                count = sum(1 for key in ['Intérêt_Q1', 'Difficulté_Q1', 'Travail_Q1'] if row.get(key))
+                row['Nombre_Evaluations'] = count
+                evaluations.append(row)
+
+        # Écrire les données mises à jour dans le fichier
+        with open(EVALUATIONS_CSV, 'w', newline='', encoding='utf-8-sig') as eval_file:
+            writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
+            writer.writeheader()
+            writer.writerows(evaluations)
+
+    except Exception as e:
+        print(f"Erreur lors de la mise à jour des comptes d'évaluations : {e}")
+
 @app.route('/')
 def liste():
-    evaluations = read_evaluation_data_with_counts()
-    print("Données envoyées au template :", evaluations)  # Débogage
+    evaluations = read_evaluation_data()
     return render_template('liste.html', courses=evaluations)
 
 @app.route('/evaluation', methods=['GET', 'POST'])
@@ -112,20 +139,27 @@ def evaluation():
 
     if request.method == 'POST':
         course_name = request.form.get('course_name')
-        interest_q1 = int(request.form.get('interest_q1'))
-        interest_q2 = int(request.form.get('interest_q2'))
-        interest_q3 = int(request.form.get('interest_q3'))
-        difficulty_q1 = int(request.form.get('difficulty_q1'))
-        difficulty_q2 = int(request.form.get('difficulty_q2'))
-        difficulty_q3 = int(request.form.get('difficulty_q3'))
-        work_q1 = int(request.form.get('work_q1'))
+        interest_q1 = float(request.form.get('interest_q1')) * 1.5  # Conversion sur 6
+        interest_q2 = float(request.form.get('interest_q2')) * 1.5  # Conversion sur 6
+        interest_q3 = float(request.form.get('interest_q3')) * 1.5  # Conversion sur 6
+        difficulty_q1 = float(request.form.get('difficulty_q1')) * 1.5  # Conversion sur 6
+        difficulty_q2 = float(request.form.get('difficulty_q2')) * 1.5  # Conversion sur 6
+        difficulty_q3 = float(request.form.get('difficulty_q3')) * 1.5  # Conversion sur 6
+        work_q1 = float(request.form.get('work_q1')) * 1.5  # Conversion sur 6
         comments_general = request.form.get('comments_general')
         comments_tips = request.form.get('comments_tips')
 
-        # Calcul des moyennes
-        moyenne_interet = round((interest_q1 + interest_q2 + interest_q3) / 3, 2)
-        moyenne_difficulte = round((difficulty_q1 + difficulty_q2 + difficulty_q3) / 3, 2)
-        moyenne_travail = round(work_q1, 2)
+        # Calcul des moyennes sur 4
+        moyenne_interet = round((float(request.form.get('interest_q1')) + float(request.form.get('interest_q2')) + float(request.form.get('interest_q3'))) / 3, 2)
+        moyenne_difficulte = round((float(request.form.get('difficulty_q1')) + float(request.form.get('difficulty_q2')) + float(request.form.get('difficulty_q3'))) / 3, 2)
+        moyenne_travail = round(float(request.form.get('work_q1')), 2)
+
+        # Conversion des moyennes sur 6
+        moyenne_interet = round(moyenne_interet * 1.5, 2)
+        moyenne_difficulte = round(moyenne_difficulte * 1.5, 2)
+        moyenne_travail = round(moyenne_travail * 1.5, 2)
+
+        # Calcul de la moyenne globale
         moyenne_globale = round((moyenne_interet + moyenne_difficulte + moyenne_travail) / 3, 2)
 
         # Mise à jour du fichier evaluation.csv

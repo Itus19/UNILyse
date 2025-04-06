@@ -1,0 +1,558 @@
+/* Couleur de fond globale */
+body {
+    background-color: #f1f0f0;
+}
+
+/* Barre de navigation */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    height: 90px;
+    width: 90px;
+    object-fit: contain;
+    margin-left: -10px;
+}
+
+h1 {
+    font-size: 50px;
+    font-family: 'Merriweather', sans-serif;
+    margin: 0;
+    background: linear-gradient(90deg, #9c54b5, #272356); /* Dégradé violet clair à foncé */
+    -webkit-background-clip: text; /* Applique le fond au texte */
+    background-clip: text; /* Applique le fond au texte */
+    -webkit-text-fill-color: transparent; /* Rend le texte transparent pour laisser apparaître le fond */
+}
+h2 {
+    font-size: 30px;
+    font-family: 'Merriweather', sans-serif;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #555;
+    margin: 0;
+}
+
+.header-center {
+    text-align: center;
+}
+
+.header-update {
+    font-size: 14px;
+    color: #333;
+}
+
+.menu {
+    display: none; /* Masque le menu par défaut */
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.menu a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: black;
+}
+
+.menu a:hover {
+    background-color: #9c54b5; /* Couleur de fond au survol */
+}
+
+.header-button:hover + .menu, 
+.menu:hover {
+    display: block; /* Affiche le menu lorsque le curseur est sur l'icône ou le menu */
+}
+
+/* Styles du bouton de menu */
+.header-button {
+    background: none;
+    border: none;
+    font-size: 60px;
+    cursor: pointer;
+}
+
+.header-button:focus {
+    outline: none;
+}
+
+/* ============================
+   PAGE DE LISTE DES COURS
+   ============================ */
+
+
+/* Styles du container filter-row */
+.filter-row {
+    display: flex; /* Utilise flexbox pour aligner les éléments */
+    align-items: center; /* Aligne verticalement les éléments */
+    gap: 5px; /* Espace entre les éléments */
+    margin: 1px; /* Ajuste les marges autour du conteneur */
+    position: sticky; /* Rend la barre fixe */
+    top: 0; /* Fixe la barre en haut de la page */
+    z-index: 900; /* Assure que la barre reste au-dessus des autres éléments */
+    background-color: f1f0f0; /* Ajoute un fond blanc pour la lisibilité */
+    padding: 10px; /* Ajoute un peu d'espace autour des éléments */
+    border-bottom: none; /* Ajoute une bordure pour séparer visuellement */
+}
+
+/* Styles des listes déroulantes */
+.filter-row-item {
+    height: 30px; /* Ajuste la hauteur des éléments */
+    width: 90px; /* Ajuste la largeur des éléments */
+    text-align: center;
+    margin: 0 0px; /* Ajuste l'espacement entre les éléments */
+    font-size: 14px; /* Ajuste la taille de la police */
+    border-radius: 5px; /* Arrondit les coins des éléments */;
+}
+/* Styles du search-bar */
+.search-bar {
+    flex-grow: 1; /* Permet à la barre de recherche de prendre l'espace disponible */
+    height: 30px; /* Ajuste la hauteur */
+    text-align: center;
+    font-size: 14px; /* Ajuste la taille de la police */
+    border-radius: 5px; /* Arrondit les coins */
+    padding: 0 10px; /* Ajoute un espacement interne */
+    min-width: 150px; /* Définit une largeur minimale */
+    max-width: 100%; /* Empêche la barre de dépasser la largeur disponible */
+    margin: 0; /* Supprime les marges inutiles */
+    border: 1px solid #ddd; /* Bordure grise */
+}
+
+/* Styles des boutons de tri*/
+.sort-button {
+    height: 30px; /* Ajuste la hauteur des boutons */
+    width: 90px; /* Ajuste la largeur des boutons */
+    background-color: #9c54b5; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    border: none; /* Pas de bordure */
+    text-align: center; /* Centrer le texte */
+    display: inline-block; /* Affichage en ligne */
+    font-size: 14px; /* Taille de la police */
+    margin: 0px 0px; /* Marges externes */
+    border-radius: 5px; /* Coins arrondis */
+    position: relative; /* Permet de positionner le texte supplémentaire */
+}
+
+#sort-global::after {
+    content: "(#)"; /* Texte supplémentaire */
+    font-size: 10px; /* Taille du texte supplémentaire */
+    margin-left: 5px; /* Espace entre le texte principal et le texte supplémentaire */
+    color: inherit; /* Même couleur que le texte principal */
+    position: static; /* Position statique pour rester dans le bouton */
+    cursor: help; /* Change le curseur pour indiquer une aide */
+}
+
+#sort-global:hover::after {
+    content: "(#)"; /* Maintient le texte supplémentaire */
+    position: relative; /* Position relative pour l'infobulle */
+}
+
+#sort-global[title]::after {
+    content: attr(title); /* Utilise l'attribut title pour l'infobulle */
+}
+
+#sort-global {
+    position: relative; /* Nécessaire pour positionner l'infobulle */
+}
+
+#sort-global:hover::after {
+    content: "Nombre d'évaluations"; /* Texte de l'infobulle */
+    font-size: 10px; /* Taille de la police de l'infobulle */
+    position: absolute; /* Position absolue pour l'infobulle */
+    top: 100%; /* Positionne l'infobulle en dessous du bouton */
+    left: 50%; /* Centre horizontalement l'infobulle */
+    transform: translateX(-50%); /* Ajuste pour centrer */
+    background-color: #fff; /* Fond blanc pour l'infobulle */
+    color: #000; /* Texte noir */
+    padding: 5px 10px; /* Espacement interne de l'infobulle */
+    border: 1px solid #ddd; /* Bordure grise */
+    border-radius: 5px; /* Coins arrondis */
+    white-space: nowrap; /* Empêche le texte de se couper */
+    z-index: 10; /* Superposition au-dessus des autres éléments */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ombre pour l'infobulle */
+}
+
+.sort-button:first-of-type {
+    margin-left: auto; /* Pousse les boutons de tri vers la droite */
+}
+
+/* ============================
+    STYLES DES CARTES DE COURS
+   ============================ */
+
+/* Ajout d'un style des cartes */
+.course-card {
+    height: 30px; /* Ajuste la hauteur des cartes */
+    max-width: 100%; /* Ajuste la largeur maximale des cartes */
+    display: flex; /* Utilise le modèle de boîte flexible */
+    align-items: center; /* Centre les éléments verticalement */
+    justify-content: space-between; /* Espacement entre les éléments */
+    border: 1px solid #ddd; /* Bordure grise */
+    border-radius: 5px;
+    margin-bottom: 5px; /* Espace entre les cartes */
+    background-color: #f9f9f9;
+    margin-left: 10px; /* Espace à gauche */
+    margin-right: 10px; /* Espace à droite */
+    padding: 0px;
+    gap: 5px; /* Ajout d'espacement entre les éléments */
+}
+
+.course-card:hover {
+    background-color: #f2e0fc; /* Couleur de fond au survol */
+}
+
+/* Ajout d'un style pour le faculty-container */
+.faculty-container {
+    height: 30px; /* Ajuste la hauteur des éléments */
+    width: 90px; /* Ajuste la largeur des éléments */
+    text-align: center;
+    margin: 0 0px; /* Ajuste l'espacement entre les éléments */
+    font-size: 18px; /* Ajuste la taille de la police */
+    border-radius: 5px; /* Arrondit les coins des éléments */
+    background-color: #007bff; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    text-transform: bold; /* Met le texte en gras */
+    display: flex;  /* Affichage en flex */
+    align-items: center; /* Centre verticalement le texte */
+    justify-content: center; /* Centre horizontalement le texte */
+}
+/* Mise à jour du style pour aligner le semester-container */
+.semester-container {
+    height: 30px; /* Hauteur alignée avec filter-row-item */
+    width: 90px; /* Largeur alignée avec filter-row-item faculty */
+    text-align: center; /* Alignement horizontal du texte */
+    display: flex; /* Utilisation de flexbox */
+    align-items: center; /* Alignement vertical du texte */
+    justify-content: center; /* Centrage horizontal du texte */
+    margin: 0; /* Pas de marge */
+}
+/* Mise à jour du style pour aligner le credits-container */
+.credits-container {
+    height: 30px; /* Hauteur alignée avec filter-row-item */
+    width: 90px; /* Largeur alignée avec filter-row-item credits */
+    text-align: center; /* Alignement horizontal du texte */
+    display: flex; /* Utilisation de flexbox */
+    align-items: center; /* Alignement vertical du texte */
+    justify-content: center; /* Centrage horizontal du texte */
+    margin: 0; /* Pas de marge */
+}
+
+/* Mise à jour du style pour aligner le course-name-container */
+.course-name-container {
+    height: 30px; /* Hauteur alignée avec search-bar */
+    flex-grow: 1; /* Permet à l'élément de prendre l'espace disponible */
+    max-width: 100%; /* Empêche de dépasser la largeur disponible */
+    text-align: center; /* Alignement horizontal du texte */
+    display: flex; /* Utilisation de flexbox */
+    align-items: center; /* Alignement vertical du texte */
+    justify-content: center; /* Centrage horizontal du texte */
+    margin: 0; /* Pas de marge */
+    text-transform: bold; /* Met le texte en gras */
+}
+
+.course-name-container a {
+    font-weight: bold; /* Met le texte en gras */
+    color: black; /* Couleur noire */
+    text-decoration: none; /* Supprime le soulignement */
+}
+
+.course-name-container a:hover {
+    text-decoration: underline; /* Ajoute un soulignement au survol */
+}
+
+/* Mise à jour du style pour les evaluation-box */
+.evaluation-box {
+    height: 30px; /* Hauteur alignée avec sort-button */
+    width: 87px; /* Largeur alignée avec sort-button */
+    text-align: center; /* Alignement horizontal du texte */
+    display: flex; /* Utilisation de flexbox */
+    align-items: center; /* Alignement vertical */
+    justify-content: center; /* Centrage horizontal du texte */
+    margin-left: 1px; /* Espacement entre les boîtes */
+    border: 1px solid #ddd; /* Bordure grise */
+    border-radius: 5px; /* Coins arrondis */
+    background-color: #f9f9f9; /* Couleur de fond */
+}
+
+.evaluation-box[data-column="Moyenne_Globale"]::after {
+    content: attr(data-evaluations); /* Affiche le nombre d'évaluations */
+    font-size: 5px; /* Taille du texte */
+    margin-left: 5px; /* Espacement entre la note et le texte */
+    color: #333; /* Couleur du texte */
+}
+
+.evaluation-box p span {
+    margin-left: 1px; /* Ajoute un espace de 1px entre la note et le nombre d'évaluations */
+    font-size: 0.9em; /* Optionnel : ajuster la taille du texte */
+}
+
+/* Styles pour les evaluation-box en fonction des notes */
+.evaluation-box[data-value="0"] {
+    background-color: #f9f9f9; /* Couleur par défaut si pas d'évaluation */
+}
+
+.evaluation-box[data-value="1"] {
+    background-color: #f83e3a; /* Moins bonne note */
+}
+
+.evaluation-box[data-value="2"] {
+    background-color: #f95b3e;
+}
+
+.evaluation-box[data-value="3"] {
+    background-color: #fa7d43;
+}
+
+.evaluation-box[data-value="4"] {
+    background-color: #f99f48;
+}
+
+.evaluation-box[data-value="5"] {
+    background-color: #7dcf5b;
+}
+
+.evaluation-box[data-value="6"] {
+    background-color: #36bd69; /* Meilleure note */
+}
+
+/* Styles pour les evaluation-box en fonction des notes avec décimales */
+.evaluation-box[data-value="0"] {
+    background-color: #f9f9f9; /* Couleur par défaut si pas d'évaluation */
+}
+
+/* Styles pour les evaluation-box en fonction des notes avec décimales */
+.evaluation-box[data-value^="1."] {
+    background-color: #f83e3a; /* Moins bonne note */
+}
+
+.evaluation-box[data-value^="2."] {
+    background-color: #f95b3e;
+}
+
+.evaluation-box[data-value^="3."] {
+    background-color: #faa843;
+}
+
+.evaluation-box[data-value^="4."] {
+    background-color: #f6f948;
+}
+
+.evaluation-box[data-value^="5."] {
+    background-color: #7dcf5b;
+}
+
+.evaluation-box[data-value^="6."] {
+    background-color: #36bd69; /* Meilleure note */
+}
+
+/* ============================
+   PAGE D'ÉVALUATION
+   ============================ */
+
+/* En-tête de section (Intérêt, Difficulté, Travail) */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Styles du search-bar 2 */
+.search-bar-2 {
+    width: 500px;
+    height: 30px; /* Ajuste la hauteur */
+    text-align: center;
+    font-size: 14px; /* Ajuste la taille de la police */
+    border-radius: 5px; /* Arrondit les coins */
+    padding: 0 10px; /* Ajoute un espacement interne */
+    min-width: 150px; /* Définit une largeur minimale */
+    max-width: 100%; /* Empêche la barre de dépasser la largeur disponible */
+    margin: 0; /* Supprime les marges inutiles */
+    border: 1px solid #ddd; /* Bordure grise */
+}
+
+/* Styles pour les suggestions de recherche */
+.search-suggestions {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+    position: absolute;
+    width: 500px; /* Aligné avec la largeur de la search-bar-2 */
+    z-index: 1000;
+}
+
+.search-suggestions li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.search-suggestions li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Styles du conteneur d'évaluation */
+.evaluation-container {
+    padding: 20px;
+    margin: 20px;
+    background-color: f1f0f0;
+    border-radius: 10px;
+}
+
+/* Ligne séparatrice sous chaque section */
+.section-divider {
+    height: 2px; /* Épaisseur de la ligne */
+    background: linear-gradient(90deg, #9c54b5, #272356); /* Dégradé de gauche à droite */
+    margin: -10px 0; /* Espace réduit pour un rendu plus compact */
+    margin-bottom: 5px;
+    border: none;
+}    
+
+/* ============================
+   STYLES DU TABLEAU
+   ============================ */
+
+/* Structure de base du tableau */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Alignement centré des boutons radio */
+.radio-group {
+    height: 0px; /* Ajuste la hauteur des boutons radio */
+    width: 55px; /* Ajuste la largeur des boutons radio */
+    margin-inline: center; /* Centre les boutons radio */
+    margin-right: 0px; /* Ajuste l'espacement entre les éléments */
+}
+
+/* Styles pour les labels de réponse (Oui, Plutôt oui, etc.) */
+.response-labels {
+    display: flex;               /* Aligne les éléments sur une ligne */
+    justify-content: space-around; /* Espacement uniforme entre les labels */
+    gap: 30px;                   /* Espace entre chaque label */
+    align-items: center;         /* Aligne verticalement au centre */
+    margin-right: 60px;             /* Supprime la marge inutile */
+}
+
+/* Espacement supplémentaire pour les boutons radio */
+.radio-group input[type="radio"] {
+    margin-right: 5px;
+}
+
+
+/* Bordures pointillées entre les lignes du tableau */
+td {
+    padding: 10px 15px; /* Réduction du padding vertical pour un espace plus compact */
+    border-bottom: 1px dashed #9c54b5;
+}
+
+/* ============================
+   STYLES DES COMMENTAIRES
+   ============================ */
+
+/* Zone de commentaires */
+.comments-section {
+    margin: 20px 0;
+}
+
+/* Style des zones de texte */
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* ============================
+   BOUTON DE SOUMISSION
+   ============================ */
+
+/* Style principal du bouton */
+button[type="submit"] {
+    background: linear-gradient(90deg, #272356, #9c54b5); /* Dégradé inversé au survol */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Effet de survol pour le bouton */
+button[type="submit"]:hover {
+    background-color: #2c3e50;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-center {
+        margin-top: 10px;
+    }
+}
+/* ============================
+   POPUP
+   ============================ */
+/* Styles de la popup */
+.popup {
+    position: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Couleur de fond semi-transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    border: #272356; /* Bordure violette */
+    border-radius: 10px; /* Coins arrondis */
+    border-style: solid; /* Bordure solide */
+    border-width: 5px; /* Épaisseur de la bordure */
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre */
+}
+
+.popup-content button {
+    background: linear-gradient(90deg, #272356, #9c54b5); /* Dégradé */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-content button:hover {
+    background-color: #2c3e50; /* Couleur au survol */
+}

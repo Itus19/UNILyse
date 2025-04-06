@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UNILyse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="header" role="banner">
+        <div class="header-left">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo UNILyse" class="logo">
+            <div>
+                <h1>UNILyse</h1>
+                <p class="subtitle">pour les étudiant·x·e·s de l'UNIL</p>
+            </div>
+        </div>
+        <div class="header-center">
+            <p id="last-update" class="header-update">Dernière màj : Chargement...</p>
+        </div>
+        <nav aria-label="Menu principal">
+            <button class="header-button" onclick="toggleMenu()" aria-expanded="false" aria-controls="menu">☰</button>
+            <div class="menu" id="menu">
+                <a href="{{ url_for('liste') }}">Accueil</a>
+                <a href="{{ url_for('evaluation') }}">Évaluer un cours</a>
+            </div>
+        </nav>
+    </header>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    <script>
+        fetch('/last-update')
+            .then(response => response.json())
+            .then(data => {
+                const lastUpdateElem = document.getElementById('last-update');
+                if (lastUpdateElem) {
+                    lastUpdateElem.textContent = `Dernière màj : ${data}`;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération de la date de mise à jour :', error);
+            });
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

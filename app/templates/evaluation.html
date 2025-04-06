@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="evaluation-container">
+    <h2>Évaluation des cours</h2>
+    <br>
+    <p>Nous vous remercions de prendre le temps d'évaluer les cours que vous avez suivis. Vos retours sont précieux afin de renforcer l'entraide estudiantine.</p>
+
+    <!-- Formulaire d'évaluation -->
+    <form id="evaluation-form" method="POST">
+        <input type="text" id="course-name" name="course_name" class="search-bar-2" placeholder="Rechercher un cours..." required>
+        <ul id="search-suggestions" class="search-suggestions"></ul>
+        <br><br>
+
+        <!-- Section Intérêt -->
+        <div class="section">
+            <div class="section-header">
+                <h3>Intérêt</h3>
+                <div class="response-labels">
+                    <span>Non</span>
+                    <span>Plutôt non</span>
+                    <span>Plutôt oui</span>
+                    <span>Oui</span>
+                </div>
+            </div>
+            <hr class="section-divider">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Avez-vous aimé ce cours dans sa globalité ?</td>
+                        <td class="radio-group"><input type="radio" name="interest_q1" value="1" required></td>
+                        <td class="radio-group"><input type="radio" name="interest_q1" value="2"></td>
+                        <td class="radio-group"><input type="radio" name="interest_q1" value="3"></td>
+                        <td class="radio-group"><input type="radio" name="interest_q1" value="4"></td>
+                    </tr>
+                    <tr>
+                        <td>Recommanderiez-vous cet enseignement ?</td>
+                        <td class="radio-group"><input type="radio" name="interest_q2" value="1" required></td>
+                        <td class="radio-group"><input type="radio" name="interest_q2" value="2"></td>
+                        <td class="radio-group"><input type="radio" name="interest_q2" value="3"></td>
+                        <td class="radio-group"><input type="radio" name="interest_q2" value="4"></td>
+                    </tr>
+                    <tr>
+                        <td>Votre réflexion est stimulée.</td>
+                        <td class="radio-group"><input type="radio" name="interest_q3" value="1" required></td>
+                        <td class="radio-group"><input type="radio" name="interest_q3" value="2"></td>
+                        <td class="radio-group"><input type="radio" name="interest_q3" value="3"></td>
+                        <td class="radio-group"><input type="radio" name="interest_q3" value="4"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Difficulté -->
+        <div class="section">
+            <div class="section-header">
+                <h3>Difficulté</h3>
+            
+            </div>
+            <hr class="section-divider">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Les objectifs de l'enseignement sont bien définis.</td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q1" value="1" required></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q1" value="2"></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q1" value="3"></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q1" value="4"></td>
+                    </tr>
+                    <tr>
+                        <td>Les consignes concernant les évaluations sont claires.</td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q2" value="1" required></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q2" value="2"></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q2" value="3"></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q2" value="4"></td>
+                    </tr>
+                    <tr>
+                        <td>Les commentaires sur vos évaluations vous aident à améliorer la qualité de votre travail.</td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q3" value="1" required></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q3" value="2"></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q3" value="3"></td>
+                        <td class="radio-group"><input type="radio" name="difficulty_q3" value="4"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Travail -->
+        <div class="section">
+            <div class="section-header">
+                <h3>Travail</h3>
+
+            </div>
+            <hr class="section-divider">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>La charge de travail est adéquate par rapport au nombre de crédits ECTS.</td>
+                        <td class="radio-group"><input type="radio" name="work_q1" value="1" required></td>
+                        <td class="radio-group"><input type="radio" name="work_q1" value="2"></td>
+                        <td class="radio-group"><input type="radio" name="work_q1" value="3"></td>
+                        <td class="radio-group"><input type="radio" name="work_q1" value="4"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Commentaires -->
+        <div class="section">
+            <h3>Commentaires</h3>
+            <hr class="section-divider">
+            <div class="comments-section">
+                <label>Avez-vous des commentaires généraux à faire ?</label>
+                <textarea id="comments_general" name="comments_general" rows="4" placeholder="Votre commentaire..."></textarea>
+                <br>
+                <label>Avez-vous des conseils pour la réussite de cet enseignement ?</label>
+                <textarea id="comments_tips" name="comments_tips" rows="4" placeholder="Vos astuces..."></textarea>
+            </div>
+        </div>
+
+        <button type="submit">Soumettre</button>
+    </form>
+</div>
+
+<!-- Fenêtre pop-up -->
+<div id="thank-you-popup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <p>Merci d'avoir évalué l'enseignement <3</p>
+        <button id="reset-button">Avec plaiz'</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchBar = document.getElementById("course-name");
+        const suggestions = document.getElementById("search-suggestions");
+
+        const courses = JSON.parse('{{ courses|tojson|safe }}');
+
+        searchBar.addEventListener("input", () => {
+            const query = searchBar.value.toLowerCase();
+            suggestions.innerHTML = ""; // Clear previous suggestions
+
+            if (query) {
+                const filteredCourses = courses.filter(course => course.toLowerCase().includes(query));
+                filteredCourses.forEach(course => {
+                    const li = document.createElement("li");
+                    li.textContent = course;
+                    li.addEventListener("click", () => {
+                        searchBar.value = course;
+                        suggestions.innerHTML = ""; // Clear suggestions after selection
+                    });
+                    suggestions.appendChild(li);
+                });
+            }
+        });
+
+        const form = document.getElementById("evaluation-form");
+        const popup = document.getElementById("thank-you-popup");
+        const resetButton = document.getElementById("reset-button");
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault(); // Empêche l'envoi du formulaire
+
+            const formData = new FormData(form);
+            fetch('/evaluation', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    popup.style.display = "block"; // Affiche la fenêtre pop-up
+                } else {
+                    alert("Erreur lors de l'enregistrement de l'évaluation.");
+                }
+            })
+            .catch(error => {
+                console.error("Erreur :", error);
+                alert("Erreur lors de l'enregistrement de l'évaluation.");
+            });
+        });
+
+        resetButton.addEventListener("click", () => {
+            form.reset(); // Réinitialise les champs du formulaire
+            popup.style.display = "none"; // Cache la fenêtre pop-up
+        });
+    });
+</script>
+
+<style>
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .popup-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup-content button {
+        background: linear-gradient(90deg, #272356, #9c54b5);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .popup-content button:hover {
+        background-color: #2c3e50;
+    }
+</style>
+
+{% endblock %}

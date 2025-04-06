@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="filter-row">
+        <select id="filter-faculty" class="filter-row-item" data-filter="Faculté">
+            <option value="">Faculté</option>
+            {% for faculty in courses|map(attribute='Faculté')|unique %}
+            <option value="{{ faculty }}">{{ faculty }}</option>
+            {% endfor %}
+        </select>
+        <select id="filter-semester" class="filter-row-item" data-filter="Semestre">
+            <option value="">Semestre</option>
+            {% for semester in courses|map(attribute='Semestre')|unique %}
+            <option value="{{ semester }}">{{ semester }}</option>
+            {% endfor %}
+        </select>
+        <select id="filter-credits" class="filter-row-item" data-filter="Crédits">
+            <option value="">Crédits</option>
+            {% for credits in courses|map(attribute='Crédits')|unique %}
+            <option value="{{ credits }}">{{ credits }}</option>
+            {% endfor %}
+        </select>
+        <input type="search" id="search-bar" class="search-bar" placeholder="Rechercher un cours..." data-search="Nom">
+        <button id="sort-global" class="sort-button" data-column="Moyenne_Globale" data-order="asc">Globale</button>
+        <button id="sort-work" class="sort-button" data-column="Moyenne_Travail" data-order="asc">Travail</button>
+        <button id="sort-difficulty" class="sort-button" data-column="Moyenne_Difficulté" data-order="asc">Difficulté</button>
+        <button id="sort-interest" class="sort-button" data-column="Moyenne_Intérêt" data-order="asc">Intérêt</button>
+    </div>
+
+    <div id="course-container">
+        {% for course in courses %}
+        <div class="course-card" 
+             data-faculte="{{ course['Faculté'] }}" 
+             data-semestre="{{ course['Semestre'] }}" 
+             data-credits="{{ course['Crédits'] }}" 
+             data-name="{{ course['Nom'] }}" 
+             data-moyenne_globale="{{ course['Moyenne_Globale'] }}" 
+             data-moyenne_travail="{{ course['Moyenne_Travail'] }}" 
+             data-moyenne_difficulte="{{ course['Moyenne_Difficulté'] }}" 
+             data-moyenne_interet="{{ course['Moyenne_Intérêt'] }}">
+            <div class="faculty-container">
+                <p>{{ course['Faculté'] }}</p>
+            </div>
+            <div class="semester-container">
+                <p>{{ course['Semestre'] }}</p>
+            </div>
+            <div class="credits-container">
+                <p>{{ course['Crédits'] }}</p>
+            </div>
+            <div class="course-name-container">
+                <p><a href="{{ course['Lien'] }}" target="_blank">{{ course['Nom'] }}</a></p>
+            </div>
+            {% for metric, label in {'Moyenne_Globale': 'Globale', 'Moyenne_Travail': 'Travail', 'Moyenne_Difficulté': 'Difficulté', 'Moyenne_Intérêt': 'Intérêt'}.items() %}
+            <div class="evaluation-box" 
+                 data-value="{{ course[metric] }}" 
+                 data-evaluations="({{ course['Nombre_Evaluations'] }})">
+                <p>{{ course[metric] }}/6</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+<script src="{{ url_for('static', filename='style.css') }}"></script>
+{% endblock %}

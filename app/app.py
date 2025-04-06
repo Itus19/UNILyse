@@ -281,17 +281,17 @@ def evaluation():
         comments_tips = request.form.get('comments_tips')
 
         # Calcul des moyennes sur 4
-        moyenne_interet = round((float(request.form.get('interest_q1')) + float(request.form.get('interest_q2')) + float(request.form.get('interest_q3'))) / 3, 2)
-        moyenne_difficulte = round((float(request.form.get('difficulty_q1')) + float(request.form.get('difficulty_q2')) + float(request.form.get('difficulty_q3'))) / 3, 2)
-        moyenne_travail = round(float(request.form.get('work_q1')), 2)
+        moyenne_interet = round((float(request.form.get('interest_q1')) + float(request.form.get('interest_q2')) + float(request.form.get('interest_q3'))) / 3, 1)
+        moyenne_difficulte = round((float(request.form.get('difficulty_q1')) + float(request.form.get('difficulty_q2')) + float(request.form.get('difficulty_q3'))) / 3, 1)
+        moyenne_travail = round(float(request.form.get('work_q1')), 1)
 
         # Conversion des moyennes sur 6
-        moyenne_interet = round(moyenne_interet * 1.5, 2)
-        moyenne_difficulte = round(moyenne_difficulte * 1.5, 2)
-        moyenne_travail = round(moyenne_travail * 1.5, 2)
+        moyenne_interet = round(moyenne_interet * 1.5, 1)
+        moyenne_difficulte = round(moyenne_difficulte * 1.5, 1)
+        moyenne_travail = round(moyenne_travail * 1.5, 1)
 
         # Calcul de la moyenne globale
-        moyenne_globale = round((moyenne_interet + moyenne_difficulte + moyenne_travail) / 3, 2)
+        moyenne_globale = round((moyenne_interet + moyenne_difficulte + moyenne_travail) / 3, 1)
 
         # Ajouter une nouvelle évaluation dans evaluations.csv
         success = update_evaluation_with_reference(course_name, {

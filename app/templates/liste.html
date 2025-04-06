@@ -54,7 +54,7 @@
             <div class="evaluation-box" 
                  data-value="{{ course[metric] }}" 
                  data-evaluations="({{ course['Nombre_Evaluations'] }})">
-                <p>{{ course[metric] }}/6</p>
+                <p>{{ course[metric] }}/6{% if metric == 'Moyenne_Globale' %}<span>({{ course['Nombre_Evaluations'] }})</span>{% endif %}</p>
             </div>
             {% endfor %}
         </div>

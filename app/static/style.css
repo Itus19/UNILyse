@@ -138,7 +138,7 @@ h2 {
 .sort-button {
     height: 30px; /* Ajuste la hauteur des boutons */
     width: 90px; /* Ajuste la largeur des boutons */
-    background-color: #9c54b5; /* Couleur de fond */
+    background-color: #9d54b5c4; /* Couleur de fond */
     color: white; /* Couleur du texte */
     border: none; /* Pas de bordure */
     text-align: center; /* Centrer le texte */
@@ -198,7 +198,7 @@ h2 {
 
 /* Ajout d'un style des cartes */
 .course-card {
-    height: 30px; /* Ajuste la hauteur des cartes */
+    height: 40px; /* Ajuste la hauteur des cartes */
     max-width: 100%; /* Ajuste la largeur maximale des cartes */
     display: flex; /* Utilise le modèle de boîte flexible */
     align-items: center; /* Centre les éléments verticalement */
@@ -278,7 +278,7 @@ h2 {
 
 /* Mise à jour du style pour les evaluation-box */
 .evaluation-box {
-    height: 30px; /* Hauteur alignée avec sort-button */
+    height: 25px; /* Hauteur alignée avec sort-button */
     width: 87px; /* Largeur alignée avec sort-button */
     text-align: center; /* Alignement horizontal du texte */
     display: flex; /* Utilisation de flexbox */
@@ -290,45 +290,9 @@ h2 {
     background-color: #f9f9f9; /* Couleur de fond */
 }
 
-.evaluation-box[data-column="Moyenne_Globale"]::after {
-    content: attr(data-evaluations); /* Affiche le nombre d'évaluations */
-    font-size: 5px; /* Taille du texte */
-    margin-left: 5px; /* Espacement entre la note et le texte */
-    color: #333; /* Couleur du texte */
-}
-
 .evaluation-box p span {
-    margin-left: 1px; /* Ajoute un espace de 1px entre la note et le nombre d'évaluations */
-    font-size: 0.9em; /* Optionnel : ajuster la taille du texte */
-}
-
-/* Styles pour les evaluation-box en fonction des notes */
-.evaluation-box[data-value="0"] {
-    background-color: #f9f9f9; /* Couleur par défaut si pas d'évaluation */
-}
-
-.evaluation-box[data-value="1"] {
-    background-color: #f83e3a; /* Moins bonne note */
-}
-
-.evaluation-box[data-value="2"] {
-    background-color: #f95b3e;
-}
-
-.evaluation-box[data-value="3"] {
-    background-color: #fa7d43;
-}
-
-.evaluation-box[data-value="4"] {
-    background-color: #f99f48;
-}
-
-.evaluation-box[data-value="5"] {
-    background-color: #7dcf5b;
-}
-
-.evaluation-box[data-value="6"] {
-    background-color: #36bd69; /* Meilleure note */
+    font-size: 10px; /* Taille du texte entre parenthèses */
+    margin-left: 1px; /* Espace entre le texte et la note */
 }
 
 /* Styles pour les evaluation-box en fonction des notes avec décimales */
@@ -338,27 +302,27 @@ h2 {
 
 /* Styles pour les evaluation-box en fonction des notes avec décimales */
 .evaluation-box[data-value^="1."] {
-    background-color: #f83e3a; /* Moins bonne note */
+    background-color: #f8a6b0; /* Moins bonne note */
 }
 
 .evaluation-box[data-value^="2."] {
-    background-color: #f95b3e;
+    background-color: #fcd8ae;
 }
 
 .evaluation-box[data-value^="3."] {
-    background-color: #faa843;
+    background-color: #fef093;
 }
 
 .evaluation-box[data-value^="4."] {
-    background-color: #f6f948;
+    background-color: #aef2d1;
 }
 
 .evaluation-box[data-value^="5."] {
-    background-color: #7dcf5b;
+    background-color: #4ad2bf;
 }
 
 .evaluation-box[data-value^="6."] {
-    background-color: #36bd69; /* Meilleure note */
+    background-color: #4ad2bf; /* Meilleure note */
 }
 
 /* ============================

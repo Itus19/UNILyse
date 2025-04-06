@@ -6,10 +6,11 @@ from datetime import datetime
 app = Flask(__name__)  # Définition de l'objet app
 
 # Chemins des fichiers CSV
-EVALUATIONS_CSV = os.path.join(os.path.dirname(__file__), "../scraping/evaluation.csv")
+EVALUATIONS_CSV = os.path.join(os.path.dirname(__file__), "../database/evaluations.csv")
+LISTE_CSV = os.path.join(os.path.dirname(__file__), "../database/liste.csv")
 
-# Chemin du fichier cours_extraits.csv
-COURSES_CSV = os.path.join(os.path.dirname(__file__), "../scraping/cours_extraits.csv")
+# Chemin du fichier scraping.csv
+COURSES_CSV = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
 
 def initialize_evaluation_csv():
     """Crée le fichier evaluation.csv s'il n'existe pas et copie les données de cours_extraits.csv."""
@@ -29,6 +30,32 @@ def initialize_evaluation_csv():
                 print(f"Erreur lors de l'initialisation de evaluation.csv : {e}")
         else:
             print("Le fichier cours_extraits.csv n'existe pas.")
+
+def initialize_liste_csv():
+    """Initialise le fichier liste.csv avec les données de scraping.csv."""
+    scraping_csv = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
+    try:
+        with open(scraping_csv, newline='', encoding='utf-8-sig') as scraping_file, \
+             open(LISTE_CSV, 'w', newline='', encoding='utf-8-sig') as liste_file:
+            reader = csv.DictReader(scraping_file, delimiter=';')
+            fieldnames = ['Faculté', 'Semestre', 'Crédits', 'Nom', 'Professeur', 'Lien', 'Moyenne_Intérêt', 'Moyenne_Difficulté', 'Moyenne_Travail', 'Moyenne_Globale', 'Nombre_Evaluations']
+            writer = csv.DictWriter(liste_file, fieldnames=fieldnames, delimiter=';')
+            writer.writeheader()
+
+            for row in reader:
+                row.update({
+                    'Moyenne_Intérêt': 0,
+                    'Moyenne_Difficulté': 0,
+                    'Moyenne_Travail': 0,
+                    'Moyenne_Globale': 0,
+                    'Nombre_Evaluations': 0
+                })
+                writer.writerow(row)
+    except Exception as e:
+        print(f"Erreur lors de l'initialisation de liste.csv : {e}")
+
+# Appeler cette fonction au démarrage pour s'assurer que liste.csv est initialisé
+initialize_liste_csv()
 
 def read_csv_data():
     """Lit les données du fichier CSV et les retourne sous forme de liste de dictionnaires."""
@@ -127,15 +154,119 @@ def update_evaluation_counts():
     except Exception as e:
         print(f"Erreur lors de la mise à jour des comptes d'évaluations : {e}")
 
+def read_courses_data():
+    """Lit les données du fichier liste.csv et les retourne sous forme de liste de dictionnaires."""
+    courses = []
+    try:
+        with open(LISTE_CSV, newline='', encoding='utf-8-sig') as courses_file:
+            reader = csv.DictReader(courses_file, delimiter=';')
+            for row in reader:
+                courses.append(row)
+    except Exception as e:
+        print(f"Erreur lors de la lecture de liste.csv : {e}")
+    return courses
+
+def update_evaluation_with_reference(course_name, data):
+    """Ajoute une nouvelle évaluation en complétant les données manquantes avec liste.csv."""
+    courses = read_courses_data()
+    course_data = next((course for course in courses if course['Nom'] == course_name), None)  # Utiliser 'Nom' au lieu de 'Nom_Cours'
+
+    if not course_data:
+        print(f"Erreur : le cours '{course_name}' n'existe pas dans liste.csv.")
+        return False
+
+    # Compléter les données manquantes avec les informations de liste.csv
+    new_evaluation = {
+        'Nom_Cours': course_name,
+        'Professeur': course_data['Professeur'],
+        'Date_Evaluation': datetime.now().strftime('%Y-%m-%d'),
+        **data
+    }
+
+    try:
+        with open(EVALUATIONS_CSV, 'a', newline='', encoding='utf-8-sig') as eval_file:
+            fieldnames = ['Nom_Cours', 'Professeur', 'Date_Evaluation', 'Intérêt_Q1', 'Intérêt_Q2', 'Intérêt_Q3', 'Moyenne_Intérêt', 'Difficulté_Q1', 'Difficulté_Q2', 'Difficulté_Q3', 'Moyenne_Difficulté', 'Travail_Q1', 'Moyenne_Travail', 'Moyenne_Globale', 'Commentaires_Généraux', 'Commentaires_Conseils']
+            writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
+
+            # Écrire l'évaluation dans le fichier
+            writer.writerow(new_evaluation)
+        return True
+    except Exception as e:
+        print(f"Erreur lors de l'ajout de l'évaluation dans evaluations.csv : {e}")
+        return False
+
+def update_liste_csv():
+    """Met à jour les moyennes et le nombre d'évaluations dans liste.csv en fonction des données d'evaluations.csv."""
+    # Charger les données d'évaluations
+    evaluations = []
+    try:
+        with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
+            reader = csv.DictReader(eval_file, delimiter=';')
+            evaluations = list(reader)
+    except Exception as e:
+        print(f"Erreur lors de la lecture de evaluations.csv : {e}")
+        return
+
+    # Calculer les moyennes et le nombre d'évaluations par cours
+    course_averages = {}
+    for eval_row in evaluations:
+        course_name = eval_row['Nom_Cours']
+        if course_name not in course_averages:
+            course_averages[course_name] = {
+                'Moyenne_Intérêt': 0,
+                'Moyenne_Difficulté': 0,
+                'Moyenne_Travail': 0,
+                'Moyenne_Globale': 0,
+                'Nombre_Evaluations': 0
+            }
+
+        course_averages[course_name]['Moyenne_Intérêt'] += float(eval_row['Moyenne_Intérêt'])
+        course_averages[course_name]['Moyenne_Difficulté'] += float(eval_row['Moyenne_Difficulté'])
+        course_averages[course_name]['Moyenne_Travail'] += float(eval_row['Moyenne_Travail'])
+        course_averages[course_name]['Moyenne_Globale'] += float(eval_row['Moyenne_Globale'])
+        course_averages[course_name]['Nombre_Evaluations'] += 1
+
+    # Calculer les moyennes finales
+    for course_name, averages in course_averages.items():
+        averages['Moyenne_Intérêt'] = round(averages['Moyenne_Intérêt'] / averages['Nombre_Evaluations'], 2)
+        averages['Moyenne_Difficulté'] = round(averages['Moyenne_Difficulté'] / averages['Nombre_Evaluations'], 2)
+        averages['Moyenne_Travail'] = round(averages['Moyenne_Travail'] / averages['Nombre_Evaluations'], 2)
+        averages['Moyenne_Globale'] = round(averages['Moyenne_Globale'] / averages['Nombre_Evaluations'], 2)
+
+    # Mettre à jour liste.csv
+    try:
+        with open(LISTE_CSV, newline='', encoding='utf-8-sig') as liste_file:
+            reader = csv.DictReader(liste_file, delimiter=';')
+            courses = list(reader)
+
+        for course in courses:
+            course_name = course['Nom']
+            if course_name in course_averages:
+                course.update({
+                    'Moyenne_Intérêt': course_averages[course_name]['Moyenne_Intérêt'],
+                    'Moyenne_Difficulté': course_averages[course_name]['Moyenne_Difficulté'],
+                    'Moyenne_Travail': course_averages[course_name]['Moyenne_Travail'],
+                    'Moyenne_Globale': course_averages[course_name]['Moyenne_Globale'],
+                    'Nombre_Evaluations': course_averages[course_name]['Nombre_Evaluations']
+                })
+
+        with open(LISTE_CSV, 'w', newline='', encoding='utf-8-sig') as liste_file:
+            fieldnames = ['Faculté', 'Semestre', 'Crédits', 'Nom', 'Professeur', 'Lien', 'Moyenne_Intérêt', 'Moyenne_Difficulté', 'Moyenne_Travail', 'Moyenne_Globale', 'Nombre_Evaluations']
+            writer = csv.DictWriter(liste_file, fieldnames=fieldnames, delimiter=';')
+            writer.writeheader()
+            writer.writerows(courses)
+
+    except Exception as e:
+        print(f"Erreur lors de la mise à jour de liste.csv : {e}")
+
 @app.route('/')
 def liste():
-    evaluations = read_evaluation_data()
-    return render_template('liste.html', courses=evaluations)
+    courses = read_courses_data()  # Lire les données depuis liste.csv
+    return render_template('liste.html', courses=courses)
 
 @app.route('/evaluation', methods=['GET', 'POST'])
 def evaluation():
     initialize_evaluation_csv()  # S'assurer que le fichier evaluation.csv existe
-    evaluations = read_evaluation_data()  # Lire les données du fichier evaluation.csv
 
     if request.method == 'POST':
         course_name = request.form.get('course_name')
@@ -162,8 +293,8 @@ def evaluation():
         # Calcul de la moyenne globale
         moyenne_globale = round((moyenne_interet + moyenne_difficulte + moyenne_travail) / 3, 2)
 
-        # Mise à jour du fichier evaluation.csv
-        success = update_evaluation(course_name, {
+        # Ajouter une nouvelle évaluation dans evaluations.csv
+        success = update_evaluation_with_reference(course_name, {
             'Intérêt_Q1': interest_q1,
             'Intérêt_Q2': interest_q2,
             'Intérêt_Q3': interest_q3,
@@ -178,12 +309,15 @@ def evaluation():
             'Commentaires_Généraux': comments_general,
             'Commentaires_Conseils': comments_tips
         })
+
         if success:
+            update_liste_csv()  # Mettre à jour liste.csv après l'ajout
             return jsonify({"message": "Évaluation enregistrée avec succès."}), 200
         else:
             return jsonify({"error": "Erreur lors de l'enregistrement de l'évaluation."}), 500
 
-    return render_template('evaluation.html', courses=evaluations)
+    courses = read_courses_data()  # Lire les données depuis liste.csv
+    return render_template('evaluation.html', courses=courses)
 
 @app.route('/last-update')
 def last_update():

@@ -7,13 +7,14 @@ from datetime import datetime
 # Définir des constantes globales pour éviter les répétitions
 CSV_FILE = "cours_extraits.csv"
 HTML_FOLDER = os.path.join(os.path.dirname(__file__), "html_pages")
-EVALUATION_FILE = os.path.join(os.path.dirname(__file__), "evaluation.csv")
+# Fichier CSV pour stocker les évaluations
+EVALUATION_FILE = os.path.join(os.path.dirname(__file__), "../database/evaluations.csv")
 
 # Dossier pour stocker les pages HTML
 os.makedirs(HTML_FOLDER, exist_ok=True)
 
 # Fichier CSV pour stocker les données
-csv_file = os.path.join(os.path.dirname(__file__), "cours_extraits.csv")
+csv_file = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
 
 # URLs des pages à scraper
 urls = {

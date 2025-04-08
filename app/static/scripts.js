@@ -151,4 +151,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // Interaction dynamique entre les 'course-card' et 'commentary-container'
+    const courseCards = document.querySelectorAll(".course-card");
+
+    courseCards.forEach(courseCard => {
+        courseCard.addEventListener("click", () => {
+            // Trouver le commentary-container associé
+            const commentaryContainer = courseCard.nextElementSibling;
+
+            if (commentaryContainer && commentaryContainer.classList.contains("commentary-container")) {
+                // Basculer l'affichage du commentary-container
+                if (commentaryContainer.style.maxHeight) {
+                    commentaryContainer.style.maxHeight = null; // Fermer
+                    commentaryContainer.classList.remove("open"); // Retirer la classe
+                } else {
+                    commentaryContainer.style.maxHeight = commentaryContainer.scrollHeight + "px"; // Ouvrir
+                    commentaryContainer.classList.add("open"); // Ajouter la classe
+                }
+            }
+        });
+    });
 });

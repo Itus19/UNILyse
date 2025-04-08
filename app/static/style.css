@@ -211,6 +211,7 @@ h2 {
     margin-right: 0px; /* Espace à droite */
     padding: 0px;
     gap: 5px; /* Ajout d'espacement entre les éléments */
+    cursor: pointer;
 }
 
 .course-card:hover {
@@ -346,16 +347,15 @@ h2 {
     top: 0;
     margin-left: 0px; /* Espace à gauche */
     margin-right: 0px; /* Espace à droite */
-    margin-top: 0px; /* Espace entre la course-card et le commentary-container */
-    border-left: 1px solid #ae7bc1; 
-    border-right: 1px solid #ae7bc1;
-    border-bottom: 1px solid #ae7bc1;
-    border-bottom-left-radius: 5px; /* Coins arrondis */
-    border-bottom-right-radius: 5px; /* Coins arrondis */ 
+    margin-top: 0px; /* Espace entre la course-card et le commentary-container */ 
     font-size: 16px; /* Taille de la police */
     color: #333; /* Couleur du texte */
     margin-bottom: 0px; /* Espace entre les commentaires */
     padding-left: 10px; /* Espace à gauche */
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+    border: none; /* Bordure aucune */
 }
 
 /* ============================

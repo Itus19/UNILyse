@@ -66,5 +66,25 @@
         {% endfor %}
     </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const courseCards = document.querySelectorAll(".course-card");
+
+        courseCards.forEach(courseCard => {
+            courseCard.addEventListener("click", () => {
+                const commentaryContainer = courseCard.nextElementSibling;
+
+                if (commentaryContainer && commentaryContainer.classList.contains("commentary-container")) {
+                    if (commentaryContainer.style.maxHeight) {
+                        commentaryContainer.style.maxHeight = null;
+                    } else {
+                        commentaryContainer.style.maxHeight = commentaryContainer.scrollHeight + "px";
+                    }
+                }
+            });
+        });
+    });
+</script>
+
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 {% endblock %}

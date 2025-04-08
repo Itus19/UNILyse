@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="about-container">
+    <h2>À propos de UNILyse</h2>
+    <br>
+    <p>UNILyse est un s</p>
+</div>
+<br>
+<h2>FAQ</h2>
+<br>
+<button class="accordion-faq">Pourquoi évaluer sur UNILyse ?</button>
+    <div class="panel-faq">
+        <p>Au début de chaque semestre, les groupes de discussion des étudiants sont inondés de questions du type : « Le cours xxx est-il bien ? ». 
+            Malheureusement, les réponses se perdent rapidement dans le flot de nouvelles questions. Fouiller l’historique des conversations ou recevoir 
+            quelques avis vagues n’est pas la manière la plus efficace de s’informer. 
+
+            C’est pourquoi nous avons créé UNILyse : pour centraliser les retours des étudiants et les rendre facilement accessibles. 
+            
+            Contrairement aux évaluations officielles demandées par les enseignants de l’UNIL, notre plateforme n’a pas pour objectif d’améliorer les cours, 
+            mais plutôt d’aider les étudiants à faire des choix éclairés. Bien que ces deux démarches soient complémentaires, l’approche d’UNILyse est centrée 
+            sur l’expérience et les besoins des étudiants.</p>
+    </div>
+<button class="accordion-faq">Pourquoi évaluer sur UNILyse ?</button>
+    <div class="panel-faq">
+        <p>Par ce que c'est cool</p>
+    </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const accordions = document.querySelectorAll(".accordion-faq");
+
+        accordions.forEach(accordion => {
+            accordion.addEventListener("click", () => {
+                accordion.classList.toggle("active");
+
+                const panel = accordion.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

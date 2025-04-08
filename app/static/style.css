@@ -556,4 +556,43 @@ button[type="submit"]:hover {
     background-color: #2c3e50; /* Couleur au survol */
 }
 
+/* ============================
+   STYLES POUR L'ACCORDÉON
+   ============================ */
+
+.accordion-faq {
+    background-color: #9c54b5; /* Couleur de fond du bouton d'accordéon */
+    color: white; /* Couleur du texte */
+    cursor: pointer; /* Change le curseur pour indiquer que c'est cliquable */
+    padding: 15px; /* Espacement interne */
+    width: 100%; /* Largeur du bouton */
+    border: none; /* Supprime les bordures */
+    text-align: left; /* Aligne le texte à gauche */
+    outline: none; /* Supprime le contour par défaut */
+    font-size: 18px; /* Taille de la police */
+    transition: background-color 0.3s ease; /* Animation pour le changement de couleur */
+    border-radius: 5px; /* Coins arrondis */
+    margin-bottom: -10px; /* Espacement entre les boutons */
+}
+
+.accordion-faq:hover {
+    background-color: #7a3e91; /* Couleur au survol */
+}
+
+.accordion-faq.active {
+    background-color: #7a3e91; /* Couleur lorsque le bouton est actif */
+}
+
+.panel-faq {
+    padding: 0 15px; /* Espacement interne horizontal */
+    background-color: #f9f9f9; /* Couleur de fond du panneau */
+    max-height: 0; /* Hauteur initiale fermée */
+    overflow: hidden; /* Cache le contenu qui dépasse */
+    transition: max-height 0.3s ease; /* Animation pour l'ouverture/fermeture */
+    border: 1px solid #7a3e91; /* Bordure */
+    border-radius: 5px; /* Coins arrondis */
+    margin-bottom: 10px; /* Espacement entre les panneaux */
+    font-size: 16px; /* Taille de la police */
+}
+
 

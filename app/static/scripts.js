@@ -131,4 +131,24 @@ document.addEventListener("DOMContentLoaded", () => {
     resetButton.addEventListener("click", () => {
         alert("Réinitialisation du formulaire");
     });
+
+    // Fonctionnalité pour l'accordéon
+    const accordions = document.querySelectorAll(".accordion-faq");
+
+    accordions.forEach(accordion => {
+        accordion.addEventListener("click", () => {
+            // Toggle la classe active pour changer l'apparence du bouton
+            accordion.classList.toggle("active");
+
+            // Gérer l'affichage du panneau associé
+            const panel = accordion.nextElementSibling;
+            if (panel.style.maxHeight) {
+                // Si le panneau est ouvert, on le ferme
+                panel.style.maxHeight = null;
+            } else {
+                // Sinon, on ajuste sa hauteur pour qu'il s'ouvre
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    });
 });

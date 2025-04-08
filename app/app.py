@@ -334,5 +334,9 @@ def last_update():
     except Exception as e:
         return jsonify({"error": "Erreur inconnue"}), 500
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port=5001)  # Assurez-vous que l'application est lancée correctement

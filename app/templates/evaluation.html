@@ -124,11 +124,11 @@
     </form>
 </div>
 
-<!-- Fenêtre pop-up -->
-<div id="thank-you-popup" class="popup" style="display: none;">
-    <div class="popup-content">
-        <p>Merci d'avoir évalué l'enseignement <3</p>
-        <button id="reset-button">Avec plaiz'</button>
+<!-- Fenêtre pop-up consolidée -->
+<div id="popup-evaluation" class="popup-evaluation" style="display: none;">
+    <div class="popup-evaluation-content">
+        <p id="popup-message">Merci d'avoir évalué l'enseignement <3</p>
+        <button id="close-popup">Fermer</button>
     </div>
 </div>
 
@@ -158,8 +158,9 @@
         });
 
         const form = document.getElementById("evaluation-form");
-        const popup = document.getElementById("thank-you-popup");
-        const resetButton = document.getElementById("reset-button");
+        const popup = document.getElementById("popup-evaluation");
+        const popupMessage = document.getElementById("popup-message");
+        const closePopupButton = document.getElementById("close-popup");
 
         form.addEventListener("submit", (event) => {
             event.preventDefault(); // Empêche l'envoi du formulaire
@@ -171,20 +172,33 @@
             })
             .then(response => {
                 if (response.ok) {
-                    popup.style.display = "block"; // Affiche la fenêtre pop-up
+                    popupMessage.textContent = "Merci d'avoir évalué l'enseignement <3";
+                    popup.style.display = "flex"; // Affiche la fenêtre pop-up
                 } else {
-                    alert("Erreur lors de l'enregistrement de l'évaluation.");
+                    popupMessage.textContent = "Erreur lors de l'enregistrement de l'évaluation.";
+                    popup.style.display = "flex";
                 }
             })
             .catch(error => {
                 console.error("Erreur :", error);
-                alert("Erreur lors de l'enregistrement de l'évaluation.");
+                popupMessage.textContent = "Erreur lors de l'enregistrement de l'évaluation.";
+                popup.style.display = "flex";
             });
         });
 
-        resetButton.addEventListener("click", () => {
-            form.reset(); // Réinitialise les champs du formulaire
-            popup.style.display = "none"; // Cache la fenêtre pop-up
+        closePopupButton.addEventListener("click", () => {
+            popup.style.display = "none"; // Cache la pop-up
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const closePopupButton = document.getElementById("close-popup");
+        const form = document.getElementById("evaluation-form");
+
+        closePopupButton.addEventListener("click", () => {
+            form.reset(); // Réinitialise tous les champs du formulaire
+            const suggestions = document.getElementById("search-suggestions");
+            suggestions.innerHTML = ""; // Vide les suggestions de recherche
         });
     });
 </script>

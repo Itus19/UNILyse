@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const courseContainer = document.getElementById("course-container");
+    const courseContainer = document.getElementById("course-tab");
     const searchBar = document.getElementById("search-bar");
     const filterElements = document.querySelectorAll(".filter-row-item");
     const sortButtons = document.querySelectorAll(".sort-button");
@@ -57,37 +57,37 @@ document.addEventListener("DOMContentLoaded", () => {
     function filterCourses() {
         const filters = {};
         filterElements.forEach(filter => {
-            const key = filter.dataset.filter.toLowerCase();
-            const value = filter.value.toLowerCase();
-            if (value) filters[key] = value;
+            const key = filter.dataset.filter.toLowerCase(); // Récupère le type de filtre (e.g., "credits")
+            const value = filter.value.toLowerCase(); // Récupère la valeur sélectionnée
+            if (value) filters[key] = value; // Ajoute le filtre actif
         });
 
-        const searchQuery = searchBar.value.toLowerCase();
+        const searchQuery = searchBar.value.toLowerCase(); // Récupère la recherche dans la barre
 
-        document.querySelectorAll(".course-card").forEach(card => {
+        document.querySelectorAll(".course-container").forEach(container => {
             const matchesFilters = Object.keys(filters).every(key => {
-                return card.dataset[key]?.toLowerCase().includes(filters[key]);
+                // Vérifie si le conteneur correspond à tous les filtres actifs
+                return container.dataset[key]?.toLowerCase().includes(filters[key]);
             });
 
-            const matchesSearch = card.dataset.name.toLowerCase().includes(searchQuery);
+            const matchesSearch = container.dataset.name.toLowerCase().includes(searchQuery); // Vérifie la recherche
 
-            card.style.display = matchesFilters && matchesSearch ? "flex" : "none";
+            // Affiche ou masque le conteneur en fonction des filtres et de la recherche
+            container.style.display = matchesFilters && matchesSearch ? "block" : "none";
         });
     }
 
     function sortCourses(column, order) {
-        const cards = Array.from(courseContainer.children);
-        cards.sort((a, b) => {
+        const containers = Array.from(courseContainer.children);
+        containers.sort((a, b) => {
             const aValue = a.dataset[column] || "";
             const bValue = b.dataset[column] || "";
             return order === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         });
-        cards.forEach(card => courseContainer.appendChild(card));
+        containers.forEach(container => courseContainer.appendChild(container));
     }
 
     const form = document.getElementById("evaluation-form");
-    const popup = document.getElementById("thank-you-popup");
-    const popupContent = popup.querySelector(".popup-content p");
     const resetButton = document.getElementById("reset-button");
 
     form.addEventListener("submit", (event) => {
@@ -106,8 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (!allFilled) {
-            popupContent.textContent = "Veuillez remplir l'évaluation";
-            popup.style.display = "block"; // Affiche la fenêtre pop-up
+            alert("Veuillez remplir l'évaluation");
             return; // Ne pas soumettre le formulaire
         }
 
@@ -118,8 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => {
             if (response.ok) {
-                popupContent.textContent = "Merci d'avoir évalué l'enseignement <3";
-                popup.style.display = "block"; // Affiche la fenêtre pop-up
+                alert("Merci d'avoir évalué l'enseignement <3");
             } else {
                 alert("Erreur lors de l'enregistrement de l'évaluation.");
             }
@@ -131,6 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     resetButton.addEventListener("click", () => {
-        popup.style.display = "none"; // Cache la fenêtre pop-up
+        alert("Réinitialisation du formulaire");
     });
 });

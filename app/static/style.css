@@ -205,10 +205,10 @@ h2 {
     justify-content: space-between; /* Espacement entre les éléments */
     border: 1px solid #ddd; /* Bordure grise */
     border-radius: 5px;
-    margin-bottom: 5px; /* Espace entre les cartes */
+    margin-bottom: 0px; /* Espace entre les cartes */
     background-color: #f9f9f9;
-    margin-left: 10px; /* Espace à gauche */
-    margin-right: 10px; /* Espace à droite */
+    margin-left: 0px; /* Espace à gauche */
+    margin-right: 0px; /* Espace à droite */
     padding: 0px;
     gap: 5px; /* Ajout d'espacement entre les éléments */
 }
@@ -219,7 +219,7 @@ h2 {
 
 /* Ajout d'un style pour le faculty-container */
 .faculty-container {
-    height: 30px; /* Ajuste la hauteur des éléments */
+    height: 25px; /* Ajuste la hauteur des éléments */
     width: 90px; /* Ajuste la largeur des éléments */
     text-align: center;
     margin: 0 0px; /* Ajuste l'espacement entre les éléments */
@@ -325,6 +325,39 @@ h2 {
     background-color: #4ad2bf; /* Meilleure note */
 }
 
+/* Styles pour le course-container */
+.course-container {
+    display: flex;
+    flex-direction: column; /* Aligne la course-card et le commentary-container verticalement */
+    margin-bottom: 10px; /* Espacement entre les conteneurs */
+    margin-left: 10px; /* Espace à gauche */
+    margin-right: 10px; /* Espace à droite */
+    border: none; /* Bordure aucune */
+    border-radius: 5px; /* Coins arrondis */
+    background-color: #f9f9f9; /* Couleur de fond */
+    padding: 0px; /* Espacement interne */
+}
+
+/* ============================
+   COMMENTARY CONTAINER
+   ============================ */
+   .commentary-container {
+    position: relative;
+    top: 0;
+    margin-left: 0px; /* Espace à gauche */
+    margin-right: 0px; /* Espace à droite */
+    margin-top: 0px; /* Espace entre la course-card et le commentary-container */
+    border-left: 1px solid #ae7bc1; 
+    border-right: 1px solid #ae7bc1;
+    border-bottom: 1px solid #ae7bc1;
+    border-bottom-left-radius: 5px; /* Coins arrondis */
+    border-bottom-right-radius: 5px; /* Coins arrondis */ 
+    font-size: 16px; /* Taille de la police */
+    color: #333; /* Couleur du texte */
+    margin-bottom: 0px; /* Espace entre les commentaires */
+    padding-left: 10px; /* Espace à gauche */
+}
+
 /* ============================
    PAGE D'ÉVALUATION
    ============================ */
@@ -338,9 +371,12 @@ h2 {
 
 /* Styles du search-bar 2 */
 .search-bar-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Centrer le texte horizontalement */
     width: 500px;
     height: 30px; /* Ajuste la hauteur */
-    text-align: center;
     font-size: 14px; /* Ajuste la taille de la police */
     border-radius: 5px; /* Arrondit les coins */
     padding: 0 10px; /* Ajoute un espacement interne */
@@ -482,41 +518,42 @@ button[type="submit"]:hover {
 /* ============================
    POPUP
    ============================ */
-/* Styles de la popup */
-.popup {
-    position: center;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Couleur de fond semi-transparente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+
+/* Styles du popup */
+.popup-evaluation-content {
+    display: flex; /* Utilisation de flexbox pour centrer les éléments */
+    flex-direction: column; /* Aligne les éléments verticalement */
+    justify-content: center; /* Centre les éléments horizontalement */
+    align-items: center; /* Centre les éléments verticalement */
+    position: fixed; /* Position fixe pour rester au centre de l'écran */
+    top: 50%; /* Centre verticalement */
+    left: 50%; /* Centre horizontalement */
+    transform: translate(-50%, -50%); /* Ajuste pour centrer parfaitement */
+    background-color: white;
+    padding: 20px;
     border: #272356; /* Bordure violette */
     border-radius: 10px; /* Coins arrondis */
     border-style: solid; /* Bordure solide */
-    border-width: 5px; /* Épaisseur de la bordure */
-}
-
-.popup-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
+    border-width: 3px; /* Épaisseur de la bordure */
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre */
+    max-width: 80%; /* Largeur maximale pour le contenu */
+    max-height: 80%; /* Hauteur maximale pour le contenu */
+    overflow-y: auto; /* Ajoute un défilement si le contenu dépasse */
 }
 
-.popup-content button {
+.popup-evaluation-content button {
     background: linear-gradient(90deg, #272356, #9c54b5); /* Dégradé */
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
 }
 
-.popup-content button:hover {
+.popup-evaluation-content button:hover {
     background-color: #2c3e50; /* Couleur au survol */
 }
+
+

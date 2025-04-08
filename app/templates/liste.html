@@ -14,7 +14,7 @@
             <option value="{{ semester }}">{{ semester }}</option>
             {% endfor %}
         </select>
-        <select id="filter-credits" class="filter-row-item" data-filter="Crédits">
+        <select id="filter-credits" class="filter-row-item" data-filter="credits">
             <option value="">Crédits</option>
             {% for credits in courses|map(attribute='Crédits')|unique %}
             <option value="{{ credits }}">{{ credits }}</option>
@@ -27,9 +27,9 @@
         <button id="sort-interest" class="sort-button" data-column="Moyenne_Intérêt" data-order="asc">Intérêt</button>
     </div>
 
-    <div id="course-container">
+    <div id="course-tab">
         {% for course in courses %}
-        <div class="course-card" 
+        <div class="course-container" 
              data-faculte="{{ course['Faculté'] }}" 
              data-semestre="{{ course['Semestre'] }}" 
              data-credits="{{ course['Crédits'] }}" 
@@ -38,25 +38,30 @@
              data-moyenne_travail="{{ course['Moyenne_Travail'] }}" 
              data-moyenne_difficulte="{{ course['Moyenne_Difficulté'] }}" 
              data-moyenne_interet="{{ course['Moyenne_Intérêt'] }}">
-            <div class="faculty-container">
-                <p>{{ course['Faculté'] }}</p>
+            <div class="course-card">
+                <div class="faculty-container">
+                    <p>{{ course['Faculté'] }}</p>
+                </div>
+                <div class="semester-container">
+                    <p>{{ course['Semestre'] }}</p>
+                </div>
+                <div class="credits-container">
+                    <p>{{ course['Crédits'] }}</p>
+                </div>
+                <div class="course-name-container">
+                    <p><a href="{{ course['Lien'] }}" target="_blank">{{ course['Nom'] }}</a></p>
+                </div>
+                {% for metric, label in {'Moyenne_Globale': 'Globale', 'Moyenne_Travail': 'Travail', 'Moyenne_Difficulté': 'Difficulté', 'Moyenne_Intérêt': 'Intérêt'}.items() %}
+                <div class="evaluation-box" 
+                     data-value="{{ course[metric] }}" 
+                     data-evaluations="({{ course['Nombre_Evaluations'] }})">
+                    <p>{{ course[metric] }}/6{% if metric == 'Moyenne_Globale' %}<span>({{ course['Nombre_Evaluations'] }})</span>{% endif %}</p>
+                </div>
+                {% endfor %}
             </div>
-            <div class="semester-container">
-                <p>{{ course['Semestre'] }}</p>
+            <div class="commentary-container">
+                <p><strong>Enseignant·x·e·s :</strong> {{ course['Professeur'] }}</p>
             </div>
-            <div class="credits-container">
-                <p>{{ course['Crédits'] }}</p>
-            </div>
-            <div class="course-name-container">
-                <p><a href="{{ course['Lien'] }}" target="_blank">{{ course['Nom'] }}</a></p>
-            </div>
-            {% for metric, label in {'Moyenne_Globale': 'Globale', 'Moyenne_Travail': 'Travail', 'Moyenne_Difficulté': 'Difficulté', 'Moyenne_Intérêt': 'Intérêt'}.items() %}
-            <div class="evaluation-box" 
-                 data-value="{{ course[metric] }}" 
-                 data-evaluations="({{ course['Nombre_Evaluations'] }})">
-                <p>{{ course[metric] }}/6{% if metric == 'Moyenne_Globale' %}<span>({{ course['Nombre_Evaluations'] }})</span>{% endif %}</p>
-            </div>
-            {% endfor %}
         </div>
         {% endfor %}
     </div>

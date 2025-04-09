@@ -1,3 +1,7 @@
+/* ============================
+   STYLES GÉNÉRAUX
+   ============================ */
+
 /* Couleur de fond globale */
 body {
     background-color: #f1f0f0;
@@ -119,10 +123,21 @@ h2 {
     outline: none;
 }
 
-/* ============================
-   PAGE DE LISTE DES COURS
-   ============================ */
+/* Responsive design */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
+    .header-center {
+        margin-top: 10px;
+    }
+}
+
+/* ============================
+   STYLES POUR LISTE.HTML
+   ============================ */
 
 /* Styles du container filter-row */
 .filter-row {
@@ -386,7 +401,7 @@ h2 {
 }
 
 /* ============================
-   PAGE D'ÉVALUATION
+   STYLES POUR EVALUATION.HTML
    ============================ */
 
 /* En-tête de section (Intérêt, Difficulté, Travail) */
@@ -452,7 +467,7 @@ h2 {
     margin: -10px 0; /* Espace réduit pour un rendu plus compact */
     margin-bottom: 5px;
     border: none;
-}    
+}
 
 /* ============================
    STYLES DU TABLEAU
@@ -531,16 +546,21 @@ button[type="submit"]:hover {
     background-color: #2c3e50;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+/* ============================
+   STYLES POUR ABOUT.HTML
+   ============================ */
 
-    .header-center {
-        margin-top: 10px;
-    }
+.about-container {
+    margin-left: 50px;
+    margin-right: 90px;
+}
+
+.faq-title {
+    margin-left: 50px;
+}
+
+.contact-title {
+    margin-left: 50px;
 }
 /* ============================
    POPUP
@@ -592,7 +612,7 @@ button[type="submit"]:hover {
     color: white; /* Couleur du texte */
     cursor: pointer; /* Change le curseur pour indiquer que c'est cliquable */
     padding: 15px; /* Espacement interne */
-    width: 100%; /* Largeur du bouton */
+    width: 90%; /* Largeur du bouton */
     border: none; /* Supprime les bordures */
     text-align: left; /* Aligne le texte à gauche */
     outline: none; /* Supprime le contour par défaut */
@@ -600,17 +620,12 @@ button[type="submit"]:hover {
     transition: background-color 0.3s ease; /* Animation pour le changement de couleur */
     border-radius: 5px; /* Coins arrondis */
     margin-bottom: -10px; /* Espacement entre les boutons */
-}
+    margin-left: 50px; /* Espace à gauche */
 
-.accordion-faq:hover {
-    background-color: #7a3e91; /* Couleur au survol */
-}
-
-.accordion-faq.active {
-    background-color: #7a3e91; /* Couleur lorsque le bouton est actif */
 }
 
 .panel-faq {
+    width: 87.5%; /* Largeur du panneau */
     padding: 0 15px; /* Espacement interne horizontal */
     background-color: #f9f9f9; /* Couleur de fond du panneau */
     max-height: 0; /* Hauteur initiale fermée */
@@ -619,8 +634,119 @@ button[type="submit"]:hover {
     border: 1px solid #7a3e91; /* Bordure */
     border-radius: 5px; /* Coins arrondis */
     margin-bottom: 10px; /* Espacement entre les panneaux */
-    font-size: 18px; /* Taille de la police */
-    text-align: justify; /* Justifie le texte */
+    margin-left: 50px; /* Espace à gauche */
+}
+
+/* ============================
+   STYLES POUR PROPOSITIONS.HTML
+   ============================ */
+
+.progress-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 50px auto;
+    background-color: #f2f2f2;
+}
+  
+.progress-bar {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border: 3px solid black;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 2px;
+}
+  
+.progress-fill {
+    height: 100%;
+    background-color: #9b59b6; /* violet */
+    border-radius: 20px 0 0 20px;
+}
+  
+.milestone {
+    position: absolute;
+    text-align: center;
+    font-size: 14px;
+}
+  
+.milestone .line {
+    width: 2px;
+    height: 40px;
+    background-color: black;
+    margin: 0 auto;
+}
+  
+.milestone span {
+    display: block;
+    margin-top: 5px;
+    white-space: nowrap;
+}
+  
+/* Positionnement spécifique des étapes */
+.milestone-1 {
+    left: 10%;
+    top: 15px;
+}
+  
+.milestone-2 {
+    left: 40%;
+    top: 15px;
+}
+  
+.milestone-3 {
+    left: 65%;
+    top: 15px;
+}
+  
+.milestone-4 {
+    right: 5%;
+    top: 15px;
+}
+  
+#proposition-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+  
+.proposition-card {
+    border: 1px solid #9136b3;
+    border-radius: 15px;
+    padding: 1rem;
+    background-color: #f4f2f3;
+    max-width: 700px;
+    margin: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+  
+.proposition-header {
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #9136b3;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+  
+.proposition-body {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+}
+  
+.proposition-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+  
+.reactions span {
+    margin-left: 10px;
+    font-size: 1.1rem;
 }
 
 

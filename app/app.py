@@ -335,6 +335,27 @@ def last_update():
 def about():
     return render_template('about.html')
 
+@app.route('/forum')
+def forum():
+    return render_template('forum.html')
+
+@app.route('/propositions')
+def propositions():
+    propositions_data = []
+    csv_path = os.path.join(os.path.dirname(__file__), '../database/améliorations.csv')
+
+    try:
+        with open(csv_path, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                propositions_data.append(row)
+    except FileNotFoundError:
+        print(f"Le fichier {csv_path} est introuvable.")
+    except Exception as e:
+        print(f"Erreur lors de la lecture du fichier CSV : {e}")
+
+    return render_template('propositions.html', propositions=propositions_data)
+
 if __name__ == '__main__':
     # Met à jour les moyennes dans liste.csv au démarrage
     try:

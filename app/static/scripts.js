@@ -165,4 +165,41 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // Gestion des propositions dynamiques
+    fetch('/propositions.csv')
+        .then(response => response.text())
+        .then(csvText => {
+            const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
+            const propositions = rows.map(row => {
+                const [Categorie, Contenu, Auteur, Date, Like, Dislike, Signalement] = row.split(',');
+                return { Categorie, Contenu, Auteur, Date, Like, Dislike, Signalement };
+            });
+
+            const container = document.getElementById('proposition-container');
+            if (container) {
+                propositions.forEach(proposition => {
+                    const card = document.createElement('div');
+                    card.className = 'proposition-card';
+
+                    card.innerHTML = `
+                        <div class="proposition-header">${proposition.Categorie}</div>
+                        <div class="proposition-body">
+                            <p>${proposition.Contenu}</p>
+                        </div>
+                        <div class="proposition-footer">
+                            <span class="author">${proposition.Auteur} - ${proposition.Date}</span>
+                            <div class="reactions">
+                                <span>👎 ${proposition.Dislike}</span>
+                                <span>👍 ${proposition.Like}</span>
+                                <span>⚠️ ${proposition.Signalement}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            }
+        })
+        .catch(error => console.error('Erreur lors du chargement des propositions :', error));
 });

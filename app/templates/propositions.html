@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<!-- <div class="progression-don"> -->
+<div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: 45%;"></div>
+    </div>
+    <!-- Étiquettes et traits -->
+    <div class="milestone milestone-1">
+      <div class="line"></div>
+      <span>Maintient du site en ligne</span>
+    </div>
+    <div class="milestone milestone-2">
+      <div class="line"></div>
+      <span>Rémunération webmaster</span>
+    </div>
+    <div class="milestone milestone-3">
+      <div class="line"></div>
+      <span>Amélioration 1</span>
+    </div>
+    <div class="milestone milestone-4">
+      <div class="line"></div>
+      <span>Amélioration 2</span>
+    </div>
+  </div>
+<div class="don-container">
+
+    <div id="proposition-container">
+        {% for proposition in propositions %}
+        <div class="proposition-card">
+          <div class="proposition-header">{{ proposition['Categorie'] }}</div>
+          <div class="proposition-body">
+            <p>{{ proposition['Contenu'] }}</p>
+          </div>
+          <div class="proposition-footer">
+            <span class="author">{{ proposition['Auteur'] }} - {{ proposition['Date'] }}</span>
+            <div class="reactions">
+              <span>👎 {{ proposition['Dislike'] }}</span>
+              <span>👍 {{ proposition['Like'] }}</span>
+              <span>⚠️ {{ proposition['Signalement'] }}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+{% endblock %}

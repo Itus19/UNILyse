@@ -8,7 +8,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding-left: 10px;
+    padding-right: 100px;
 }
 
 .header-left {
@@ -82,10 +83,36 @@ h2 {
 
 /* Styles du bouton de menu */
 .header-button {
-    background: none;
-    border: none;
-    font-size: 60px;
-    cursor: pointer;
+    width: 50px; /* Largeur du bouton */
+    height: 50px; /* Hauteur du bouton */
+    border: none; /* Pas de bordure */
+    border-radius: 50%; /* Bords arrondis */
+    display: flex; /* Utilisation de flexbox */
+    align-items: center; /* Centre verticalement */
+    justify-content: center; /* Centre horizontalement */
+    cursor: pointer; /* Curseur pointeur */
+    position: relative; /* Nécessaire pour positionner les barres */
+}
+
+.header-button .bar {
+    width: 70%; /* Largeur des barres */
+    height: 4px; /* Hauteur des barres */
+    background-color: #000000; /* Couleur blanche */
+    border-radius: 2px; /* Coins arrondis */
+    position: absolute; /* Positionnement absolu */
+    transition: all 0.3s ease; /* Animation fluide */
+}
+
+.header-button .bar:nth-child(1) {
+    top: 12px; /* Position de la première barre */
+}
+
+.header-button .bar:nth-child(2) {
+    top: 22px; /* Position de la deuxième barre */
+}
+
+.header-button .bar:nth-child(3) {
+    top: 32px; /* Position de la troisième barre */
 }
 
 .header-button:focus {
@@ -330,7 +357,7 @@ h2 {
 .course-container {
     display: flex;
     flex-direction: column; /* Aligne la course-card et le commentary-container verticalement */
-    margin-bottom: 10px; /* Espacement entre les conteneurs */
+    margin-bottom: 5px; /* Espacement entre les conteneurs */
     margin-left: 10px; /* Espace à gauche */
     margin-right: 10px; /* Espace à droite */
     border: none; /* Bordure aucune */
@@ -592,7 +619,8 @@ button[type="submit"]:hover {
     border: 1px solid #7a3e91; /* Bordure */
     border-radius: 5px; /* Coins arrondis */
     margin-bottom: 10px; /* Espacement entre les panneaux */
-    font-size: 16px; /* Taille de la police */
+    font-size: 18px; /* Taille de la police */
+    text-align: justify; /* Justifie le texte */
 }
 
 

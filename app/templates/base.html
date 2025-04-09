@@ -18,9 +18,13 @@
             <p id="last-update" class="header-update">Dernière màj : Chargement...</p>
         </div>
         <nav aria-label="Menu principal">
-            <button class="header-button" onclick="toggleMenu()" aria-expanded="false" aria-controls="menu">☰</button>
+            <button class="header-button" onclick="toggleMenu()" aria-expanded="false" aria-controls="menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
             <div class="menu" id="menu">
-                <a href="{{ url_for('liste') }}">Liste</a>
+                <a href="{{ url_for('liste') }}">Liste des cours</a>
                 <a href="{{ url_for('evaluation') }}">Évaluer un cours</a>
                 <a href="{{ url_for('about') }}">À propos</a>
             </div>

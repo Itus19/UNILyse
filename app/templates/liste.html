@@ -53,9 +53,9 @@
                 </div>
                 {% for metric, label in {'Moyenne_Globale': 'Globale', 'Moyenne_Travail': 'Travail', 'Moyenne_Difficulté': 'Difficulté', 'Moyenne_Intérêt': 'Intérêt'}.items() %}
                 <div class="evaluation-box" 
-                     data-value="{{ course[metric] }}" 
+                     data-value="{{ course[metric]|float|round(1) }}" 
                      data-evaluations="({{ course['Nombre_Evaluations'] }})">
-                    <p>{{ course[metric] }}/6{% if metric == 'Moyenne_Globale' %}<span>({{ course['Nombre_Evaluations'] }})</span>{% endif %}</p>
+                    <p>{{ course[metric]|float|round(1) }}/6{% if metric == 'Moyenne_Globale' %}<span>({{ course['Nombre_Evaluations'] }})</span>{% endif %}</p>
                 </div>
                 {% endfor %}
             </div>

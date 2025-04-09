@@ -9,15 +9,12 @@ app = Flask(__name__)  # Définition de l'objet app
 EVALUATIONS_CSV = os.path.join(os.path.dirname(__file__), "../database/evaluations.csv")
 LISTE_CSV = os.path.join(os.path.dirname(__file__), "../database/liste.csv")
 
-# Chemin du fichier scraping.csv
-COURSES_CSV = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
-
 def initialize_evaluation_csv():
-    """Crée le fichier evaluation.csv s'il n'existe pas et copie les données de cours_extraits.csv."""
+    """Crée le fichier evaluation.csv s'il n'existe pas et copie les données de liste.csv."""
     if not os.path.exists(EVALUATIONS_CSV):
-        if os.path.exists(COURSES_CSV):
+        if os.path.exists(LISTE_CSV):
             try:
-                with open(COURSES_CSV, newline='', encoding='utf-8-sig') as courses_file, \
+                with open(LISTE_CSV, newline='', encoding='utf-8-sig') as courses_file, \
                      open(EVALUATIONS_CSV, 'w', newline='', encoding='utf-8-sig') as eval_file:
                     reader = csv.DictReader(courses_file, delimiter=';')
                     fieldnames = reader.fieldnames + ['Intérêt_Q1', 'Intérêt_Q2', 'Intérêt_Q3', 'Moyenne_Intérêt', 'Difficulté_Q1', 'Difficulté_Q2', 'Difficulté_Q3', 'Moyenne_Difficulté', 'Travail_Q1', 'Moyenne_Travail', 'Moyenne_Globale', 'Commentaires_Généraux', 'Commentaires_Conseils']
@@ -29,7 +26,7 @@ def initialize_evaluation_csv():
             except Exception as e:
                 print(f"Erreur lors de l'initialisation de evaluation.csv : {e}")
         else:
-            print("Le fichier cours_extraits.csv n'existe pas.")
+            print("Le fichier liste.csv n'existe pas.")
 
 def initialize_liste_csv():
     """Initialise le fichier liste.csv avec les données de scraping.csv."""
@@ -339,4 +336,11 @@ def about():
     return render_template('about.html')
 
 if __name__ == '__main__':
+    # Met à jour les moyennes dans liste.csv au démarrage
+    try:
+        update_liste_csv()
+        print("Les données de liste.csv ont été mises à jour avec succès.")
+    except Exception as e:
+        print(f"Erreur lors de la mise à jour de liste.csv : {e}")
+
     app.run(debug=True, port=5001)  # Assurez-vous que l'application est lancée correctement

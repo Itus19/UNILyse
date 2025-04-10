@@ -201,6 +201,106 @@ document.addEventListener("DOMContentLoaded", () => {
             card.closest(".course-card").style.display = courseName.includes(query) ? "block" : "none";
         });
     });
+
+    // Ajout de logs pour vérifier la correspondance des noms des cours et l'existence des conteneurs
+    fetch('/database/evaluations.csv')
+        .then(response => response.text())
+        .then(csvText => {
+            const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
+            const evaluations = rows.map(row => {
+                const [Nom_Cours, Professeur, Date_Evaluation, , , , , , , , , , , , Commentaires_Generaux, Commentaires_Conseils] = row.split(';');
+                return { Nom_Cours, Professeur, Date_Evaluation, Commentaires_Generaux, Commentaires_Conseils };
+            });
+
+            console.log("Données chargées depuis evaluations.csv :", evaluations);
+
+            const courseContainers = document.querySelectorAll(".course-container");
+
+            courseContainers.forEach(container => {
+                const courseName = container.dataset.name;
+                console.log(`Traitement du cours : ${courseName}`);
+
+                const generalCommentsContainer = container.querySelector(".general-comments");
+                const studyTipsContainer = container.querySelector(".study-tips");
+
+                if (!generalCommentsContainer) {
+                    console.warn(`Conteneur general-comments manquant pour le cours : ${courseName}`);
+                }
+
+                if (!studyTipsContainer) {
+                    console.warn(`Conteneur study-tips manquant pour le cours : ${courseName}`);
+                }
+
+                evaluations.forEach(evaluation => {
+                    if (evaluation.Nom_Cours === courseName) {
+                        console.log(`Correspondance trouvée pour le cours : ${courseName}`);
+
+                        if (evaluation.Commentaires_Generaux) {
+                            const generalCommentCard = createCommentCard(evaluation.Commentaires_Generaux, evaluation.Date_Evaluation);
+                            generalCommentsContainer?.appendChild(generalCommentCard);
+                            console.log(`Carte ajoutée dans general-comments pour le cours : ${courseName}`);
+                        }
+
+                        if (evaluation.Commentaires_Conseils) {
+                            const studyTipCard = createCommentCard(evaluation.Commentaires_Conseils, evaluation.Date_Evaluation);
+                            studyTipsContainer?.appendChild(studyTipCard);
+                            console.log(`Carte ajoutée dans study-tips pour le cours : ${courseName}`);
+                        }
+                    }
+                });
+            });
+        })
+        .catch(error => console.error('Erreur lors du chargement des évaluations :', error));
+
+    // Ajout de logs pour suivre la génération dynamique des cartes
+    fetch('/database/evaluations.csv')
+        .then(response => response.text())
+        .then(csvText => {
+            const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
+            const evaluations = rows.map(row => {
+                const [Nom_Cours, Professeur, Date_Evaluation, , , , , , , , , , , , Commentaires_Generaux, Commentaires_Conseils] = row.split(';');
+                return { Nom_Cours, Professeur, Date_Evaluation, Commentaires_Generaux, Commentaires_Conseils };
+            });
+
+            console.log("Données chargées depuis evaluations.csv :", evaluations);
+
+            const courseContainers = document.querySelectorAll(".course-container");
+
+            courseContainers.forEach(container => {
+                const courseName = container.dataset.name;
+                console.log(`Traitement du cours : ${courseName}`);
+
+                const generalCommentsContainer = container.querySelector(".general-comments");
+                const studyTipsContainer = container.querySelector(".study-tips");
+
+                if (!generalCommentsContainer || !studyTipsContainer) {
+                    console.warn(`Conteneurs manquants pour le cours : ${courseName}`);
+                    return;
+                }
+
+                evaluations.forEach(evaluation => {
+                    if (evaluation.Nom_Cours === courseName) {
+                        console.log(`Correspondance trouvée pour le cours : ${courseName}`);
+
+                        if (evaluation.Commentaires_Generaux) {
+                            const generalCommentCard = createCommentCard(evaluation.Commentaires_Generaux, evaluation.Date_Evaluation);
+                            generalCommentsContainer.appendChild(generalCommentCard);
+                            console.log(`Carte ajoutée dans general-comments pour le cours : ${courseName}`);
+                        }
+
+                        if (evaluation.Commentaires_Conseils) {
+                            const studyTipCard = createCommentCard(evaluation.Commentaires_Conseils, evaluation.Date_Evaluation);
+                            studyTipsContainer.appendChild(studyTipCard);
+                            console.log(`Carte ajoutée dans study-tips pour le cours : ${courseName}`);
+                        }
+                    }
+                });
+            });
+
+            // Log des noms des cours dans le DOM pour vérifier leur correspondance
+            console.log("Noms des cours dans le DOM :", Array.from(document.querySelectorAll(".course-container")).map(container => container.dataset.name));
+        })
+        .catch(error => console.error('Erreur lors du chargement des évaluations :', error));
 });
 
 // Déplacer la déclaration de filterCourses en dehors du bloc try-catch pour garantir son accessibilité globale
@@ -222,3 +322,172 @@ function filterCourses() {
         container.style.display = matchesFilters ? "block" : "none";
     });
 }
+
+// Gestion des interactions avec les fiches de commentaires
+document.addEventListener("DOMContentLoaded", () => {
+    const commentCards = document.querySelectorAll(".comment-card");
+
+    commentCards.forEach(card => {
+        const likeButton = card.querySelector(".reactions span:nth-child(1)");
+        const dislikeButton = card.querySelector(".reactions span:nth-child(2)");
+        const reportButton = card.querySelector(".reactions span:nth-child(3)");
+
+        likeButton.addEventListener("click", () => {
+            const currentLikes = parseInt(likeButton.textContent.split(" ")[1]);
+            likeButton.textContent = `👍 ${currentLikes + 1}`;
+        });
+
+        dislikeButton.addEventListener("click", () => {
+            const currentDislikes = parseInt(dislikeButton.textContent.split(" ")[1]);
+            dislikeButton.textContent = `👎 ${currentDislikes + 1}`;
+        });
+
+        reportButton.addEventListener("click", () => {
+            const currentReports = parseInt(reportButton.textContent.split(" ")[1]);
+            reportButton.textContent = `⚠️ ${currentReports + 1}`;
+        });
+    });
+});
+
+// Consolidation de la logique de génération des comment-card
+function createCommentCard(content, date) {
+    const commentCard = document.createElement("div");
+    commentCard.className = "comment-card";
+
+    commentCard.innerHTML = `
+        <p>${content}</p>
+        <span class="comment-date">${date}</span>
+        <div class="reactions">
+            <span>👍 0</span>
+            <span>👎 0</span>
+            <span>⚠️ 0</span>
+        </div>
+    `;
+
+    return commentCard;
+}
+
+// Correction de la fonction pour vérifier uniquement les `comment-card`
+function updateNoCommentsMessage(container, message) {
+    const noCommentsMessage = container.querySelector(".no-comments-message");
+    const hasComments = container.querySelectorAll(".comment-card").length > 0;
+
+    console.log(`Vérification du conteneur: ${container.className}, Contient des commentaires: ${hasComments}`);
+
+    if (!hasComments) {
+        if (!noCommentsMessage) {
+            const messageElement = document.createElement("p");
+            messageElement.className = "no-comments-message";
+            messageElement.textContent = message;
+            container.appendChild(messageElement);
+            console.log("Message ajouté: Pas de commentaire pour le moment 🙁");
+        }
+    } else {
+        if (noCommentsMessage) {
+            noCommentsMessage.remove();
+            console.log("Message supprimé: Des commentaires sont présents.");
+        }
+    }
+}
+
+// Mise à jour de la logique pour gérer les messages par défaut indépendamment pour chaque course-card
+fetch('/database/evaluations.csv')
+    .then(response => response.text())
+    .then(csvText => {
+        const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
+        const evaluations = rows.map(row => {
+            const [Nom_Cours, Professeur, Date_Evaluation, , , , , , , , , , , , Commentaires_Generaux, Commentaires_Conseils] = row.split(';');
+            return { Nom_Cours, Professeur, Date_Evaluation, Commentaires_Generaux, Commentaires_Conseils };
+        });
+
+        const courseContainers = document.querySelectorAll(".course-container");
+
+        courseContainers.forEach(container => {
+            const courseName = container.dataset.name;
+            const generalCommentsContainer = container.querySelector(".general-comments");
+            const studyTipsContainer = container.querySelector(".study-tips");
+
+            // Initialiser les messages par défaut pour chaque section
+            updateNoCommentsMessage(generalCommentsContainer, "Pas de commentaire pour le moment 🙁");
+            updateNoCommentsMessage(studyTipsContainer, "Pas de commentaire pour le moment 🙁");
+
+            evaluations.forEach(evaluation => {
+                if (evaluation.Nom_Cours === courseName) {
+                    if (evaluation.Commentaires_Generaux) {
+                        const generalCommentCard = createCommentCard(evaluation.Commentaires_Generaux, evaluation.Date_Evaluation);
+                        generalCommentsContainer.appendChild(generalCommentCard);
+                    }
+
+                    if (evaluation.Commentaires_Conseils) {
+                        const studyTipCard = createCommentCard(evaluation.Commentaires_Conseils, evaluation.Date_Evaluation);
+                        studyTipsContainer.appendChild(studyTipCard);
+                    }
+                }
+            });
+
+            // Mettre à jour les messages après l'ajout des commentaires pour chaque section
+            updateNoCommentsMessage(generalCommentsContainer, "Pas de commentaire pour le moment 🙁");
+            updateNoCommentsMessage(studyTipsContainer, "Pas de commentaire pour le moment 🙁");
+        });
+    })
+    .catch(error => console.error('Erreur lors du chargement des évaluations :', error));
+
+// Ajout de journaux pour vérifier les conteneurs et les données associées
+fetch('/database/evaluations.csv')
+    .then(response => response.text())
+    .then(csvText => {
+        const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
+        const evaluations = rows.map(row => {
+            const [Nom_Cours, Professeur, Date_Evaluation, , , , , , , , , , , , Commentaires_Generaux, Commentaires_Conseils] = row.split(';');
+            return { Nom_Cours, Professeur, Date_Evaluation, Commentaires_Generaux, Commentaires_Conseils };
+        });
+
+        const courseContainers = document.querySelectorAll(".course-container");
+
+        courseContainers.forEach(container => {
+            const courseName = container.dataset.name;
+            console.log(`Traitement du cours : ${courseName}`);
+
+            const generalCommentsContainer = container.querySelector(".general-comments");
+            const studyTipsContainer = container.querySelector(".study-tips");
+
+            if (!generalCommentsContainer) {
+                console.warn(`Conteneur general-comments manquant pour le cours : ${courseName}`);
+            } else {
+                console.log(`Conteneur general-comments trouvé pour le cours : ${courseName}`);
+            }
+
+            if (!studyTipsContainer) {
+                console.warn(`Conteneur study-tips manquant pour le cours : ${courseName}`);
+            } else {
+                console.log(`Conteneur study-tips trouvé pour le cours : ${courseName}`);
+            }
+
+            // Initialiser les messages par défaut pour chaque section
+            updateNoCommentsMessage(generalCommentsContainer, "Pas de commentaire pour le moment 🙁");
+            updateNoCommentsMessage(studyTipsContainer, "Pas de commentaire pour le moment 🙁");
+
+            evaluations.forEach(evaluation => {
+                if (evaluation.Nom_Cours === courseName) {
+                    console.log(`Correspondance trouvée pour le cours : ${courseName}`);
+
+                    if (evaluation.Commentaires_Generaux) {
+                        const generalCommentCard = createCommentCard(evaluation.Commentaires_Generaux, evaluation.Date_Evaluation);
+                        generalCommentsContainer.appendChild(generalCommentCard);
+                        console.log(`Commentaire ajouté dans general-comments pour le cours : ${courseName}`);
+                    }
+
+                    if (evaluation.Commentaires_Conseils) {
+                        const studyTipCard = createCommentCard(evaluation.Commentaires_Conseils, evaluation.Date_Evaluation);
+                        studyTipsContainer.appendChild(studyTipCard);
+                        console.log(`Commentaire ajouté dans study-tips pour le cours : ${courseName}`);
+                    }
+                }
+            });
+
+            // Mettre à jour les messages après l'ajout des commentaires pour chaque section
+            updateNoCommentsMessage(generalCommentsContainer, "Pas de commentaire pour le moment 🙁");
+            updateNoCommentsMessage(studyTipsContainer, "Pas de commentaire pour le moment 🙁");
+        });
+    })
+    .catch(error => console.error('Erreur lors du chargement des évaluations :', error));

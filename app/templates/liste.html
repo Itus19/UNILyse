@@ -61,6 +61,54 @@
             </div>
             <div class="commentary-container">
                 <p><strong>Enseignant·x·e·s :</strong> {{ course['Professeur'] }}</p>
+                <div class="commentary-columns">
+                    <!-- Colonne des commentaires généraux -->
+                    <div class="general-comments" data-section="general-comments">
+                        <h4>Commentaires généraux</h4>
+                        <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
+                        {% for comment in course['Commentaires_Generaux'] %}
+                        <div class="comment-card">
+                            <div class="comment-body">
+                            <p>{{ comment['Commentaires_Generaux'] }}</div>
+                            <div class="comment-footer">
+                                <span class="author">{{ comment['Auteur'] }}</span>
+                                <span class="comment-date">{{ comment['Date'] }}</span>
+                                <div class="reactions">
+                                    <span>👍 {{ comment['Like'] }}</span>
+                                    <span>👎 {{ comment['Dislike'] }}</span>
+                                    <span>⚠️ {{ comment['Signalement'] }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Colonne des conseils d'étude -->
+                    <div class="study-tips" data-section="study-tips">
+                        <h4>Conseil d'étude</h4>
+                        <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
+                        {% for comment in course['Commentaires_Conseils'] %}
+                        <div class="comment-card">
+                            <div class="comment-body">
+                            <p>{{ comment['Commentaires_Conseils'] }}</div>
+                            <div class="comment-footer">
+                                <span class="author">{{ comment['Auteur'] }}</span>
+                                <span class="comment-date">{{ comment['Date'] }}</span>
+                                <div class="reactions">
+                                    <span>👍 {{ comment['Like'] }}</span>
+                                    <span>👎 {{ comment['Dislike'] }}</span>
+                                    <span>⚠️ {{ comment['Signalement'] }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Colonne des détails d'évaluation -->
+                    <div class="evaluation-details">
+                        <h4>Détail évaluation</h4>
+                        <p>À implémenter si nécessaire.</p>
+                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -97,7 +145,7 @@
             });
         });
 
-        const courseData = {{ courses|tojson|safe }};
+        const courseData = JSON.parse('{{ courses|tojson|safe }}');
         const courseContainer = document.getElementById("course-tab");
         courseContainer.setAttribute("data-courses", JSON.stringify(courseData));
     });

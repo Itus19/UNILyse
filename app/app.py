@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory
 import os
 import csv
 from datetime import datetime
@@ -355,6 +355,15 @@ def propositions():
         print(f"Erreur lors de la lecture du fichier CSV : {e}")
 
     return render_template('propositions.html', propositions=propositions_data)
+
+@app.route('/database/evaluations.csv')
+def serve_evaluations_csv():
+    """Route pour servir le fichier evaluations.csv."""
+    try:
+        directory = os.path.join(os.path.dirname(__file__), '../database')
+        return send_from_directory(directory, 'evaluations.csv')
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     # Met à jour les moyennes dans liste.csv au démarrage

@@ -30,7 +30,7 @@
     <div id="course-tab">
         {% for course in courses %}
         <div class="course-container" 
-             data-faculte="{{ course['Faculté'] }}" 
+             data-faculté="{{ course['Faculté'] }}" 
              data-semestre="{{ course['Semestre'] }}" 
              data-credits="{{ course['Crédits'] }}" 
              data-name="{{ course['Nom'] }}" 
@@ -68,6 +68,19 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        const searchBar = document.getElementById("search-bar");
+        const courseContainers = document.querySelectorAll(".course-container");
+
+        searchBar.addEventListener("input", () => {
+            const query = searchBar.value.toLowerCase();
+
+            courseContainers.forEach(container => {
+                const courseName = container.querySelector(".course-name-container a").textContent.toLowerCase();
+                // Masquer ou afficher les conteneurs en fonction de la recherche
+                container.style.display = courseName.includes(query) ? "block" : "none";
+            });
+        });
+
         const courseCards = document.querySelectorAll(".course-card");
 
         courseCards.forEach(courseCard => {
@@ -83,6 +96,10 @@
                 }
             });
         });
+
+        const courseData = {{ courses|tojson|safe }};
+        const courseContainer = document.getElementById("course-tab");
+        courseContainer.setAttribute("data-courses", JSON.stringify(courseData));
     });
 </script>
 

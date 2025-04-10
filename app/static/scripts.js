@@ -1,6 +1,17 @@
+const filterElements = document.querySelectorAll(".filter-row-item");
+
+function sortCourses(courseContainer, column, order) {
+    const containers = Array.from(courseContainer.children);
+    containers.sort((a, b) => {
+        const aValue = a.dataset[column] || "";
+        const bValue = b.dataset[column] || "";
+        return order === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    });
+    containers.forEach(container => courseContainer.appendChild(container));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const courseContainer = document.getElementById("course-tab");
-    const filterElements = document.querySelectorAll(".filter-row-item");
     const sortButtons = document.querySelectorAll(".sort-button");
 
     // Filtrage dynamique
@@ -15,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener("click", () => {
             const column = button.dataset.column.toLowerCase();
             const order = button.dataset.order;
-            sortCourses(column, order);
+            sortCourses(courseContainer, column, order);
             button.dataset.order = order === "asc" ? "desc" : "asc";
         });
     });
@@ -50,34 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Mise à jour pour refléter les données de evaluation.csv
-            function filterCourses() {
-                const filters = {};
-                filterElements.forEach(filter => {
-                    const key = filter.dataset.filter.toLowerCase(); // Récupère le type de filtre (e.g., "credits")
-                    const value = filter.value.toLowerCase(); // Récupère la valeur sélectionnée
-                    if (value) filters[key] = value; // Ajoute le filtre actif
-                });
-
-                document.querySelectorAll(".course-container").forEach(container => {
-                    const matchesFilters = Object.keys(filters).every(key => {
-                        // Vérifie si le conteneur correspond à tous les filtres actifs
-                        return container.dataset[key]?.toLowerCase().includes(filters[key]);
-                    });
-
-                    // Affiche ou masque le conteneur en fonction des filtres
-                    container.style.display = matchesFilters ? "block" : "none";
-                });
-            }
-
-            function sortCourses(column, order) {
-                const containers = Array.from(courseContainer.children);
-                containers.sort((a, b) => {
-                    const aValue = a.dataset[column] || "";
-                    const bValue = b.dataset[column] || "";
-                    return order === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-                });
-                containers.forEach(container => courseContainer.appendChild(container));
-            }
         } catch (error) {
             console.error("Erreur lors de l'analyse du JSON :", error);
         }
@@ -202,4 +185,40 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
         .catch(error => console.error('Erreur lors du chargement des propositions :', error));
+    
+    // Nettoyage des déclarations redondantes
+    const searchBar = document.getElementById("search-bar");
+    const courseData = JSON.parse(courseContainer.getAttribute("data-courses"));
+
+    searchBar.addEventListener("input", () => {
+        const query = searchBar.value.toLowerCase();
+
+        // Parcourir toutes les course-card dans le conteneur
+        document.querySelectorAll(".course-container .course-card").forEach(card => {
+            const courseName = card.closest(".course-card").dataset.name.toLowerCase();
+
+            // Afficher ou masquer les cartes en fonction de la correspondance
+            card.closest(".course-card").style.display = courseName.includes(query) ? "block" : "none";
+        });
+    });
 });
+
+// Déplacer la déclaration de filterCourses en dehors du bloc try-catch pour garantir son accessibilité globale
+function filterCourses() {
+    const filters = {};
+    filterElements.forEach(filter => {
+        const key = filter.dataset.filter.toLowerCase(); // Récupère le type de filtre (e.g., "credits")
+        const value = filter.value.toLowerCase(); // Récupère la valeur sélectionnée
+        if (value) filters[key] = value; // Ajoute le filtre actif
+    });
+
+    document.querySelectorAll(".course-container").forEach(container => {
+        const matchesFilters = Object.keys(filters).every(key => {
+            // Vérifie si le conteneur correspond à tous les filtres actifs
+            return container.dataset[key]?.toLowerCase().includes(filters[key]);
+        });
+
+        // Affiche ou masque le conteneur en fonction des filtres
+        container.style.display = matchesFilters ? "block" : "none";
+    });
+}

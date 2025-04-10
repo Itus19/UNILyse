@@ -706,10 +706,10 @@ button[type="submit"]:hover {
 }
   
 #proposition-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colonnes de même largeur */
+    gap: 1.5rem; /* Espacement entre les colonnes et les lignes */
+    padding: 1rem; /* Espacement interne */
 }
   
 .proposition-card {

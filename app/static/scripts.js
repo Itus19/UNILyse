@@ -349,20 +349,47 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// Consolidation de la logique de génération des comment-card
-function createCommentCard(content, date) {
+// Fonction pour générer dynamiquement un comment-footer
+function createCommentFooter(auteur, date, like, dislike, signalement) {
+    const footer = document.createElement('div');
+    footer.className = 'comment-footer';
+
+    footer.innerHTML = `
+        <span class="author">${auteur}</span>
+        <span class="comment-date">${date}</span>
+        <div class="reactions">
+            <span>👍 ${like}</span>
+            <span>👎 ${dislike}</span>
+            <span>⚠️ ${signalement}</span>
+        </div>
+    `;
+
+    return footer;
+}
+
+// Fusion des deux fonctions createCommentCard en une seule
+function createCommentCard(content, date, auteur = null, like = 0, dislike = 0, signalement = 0) {
     const commentCard = document.createElement("div");
     commentCard.className = "comment-card";
 
-    commentCard.innerHTML = `
-        <p>${content}</p>
+    const commentBody = document.createElement("div");
+    commentBody.className = "comment-body";
+    commentBody.innerHTML = `<p>${content}</p>`;
+
+    const commentFooter = document.createElement("div");
+    commentFooter.className = "comment-footer";
+    commentFooter.innerHTML = `
+        ${auteur ? `<span class="author">${auteur}</span>` : ""}
         <span class="comment-date">${date}</span>
         <div class="reactions">
-            <span>👍 0</span>
-            <span>👎 0</span>
-            <span>⚠️ 0</span>
+            <span>👍 ${like}</span>
+            <span>👎 ${dislike}</span>
+            <span>⚠️ ${signalement}</span>
         </div>
     `;
+
+    commentCard.appendChild(commentBody);
+    commentCard.appendChild(commentFooter);
 
     return commentCard;
 }
@@ -491,3 +518,56 @@ fetch('/database/evaluations.csv')
         });
     })
     .catch(error => console.error('Erreur lors du chargement des évaluations :', error));
+
+// Fonction pour charger les données depuis evaluations.csv et générer les commentaires dynamiquement
+function loadCommentsFromCSV() {
+    fetch('/database/evaluations.csv')
+        .then(response => response.text())
+        .then(csvText => {
+            const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
+            const evaluations = rows.map(row => {
+                const [Nom_Cours, Professeur, Date_Evaluation, , , , , , , , , , , , Commentaires_Generaux, Commentaires_Conseils, Like, Dislike, Signalement, Auteur] = row.split(';');
+                return { Nom_Cours, Date_Evaluation, Commentaires_Generaux, Commentaires_Conseils, Like, Dislike, Signalement, Auteur };
+            });
+
+            const courseContainers = document.querySelectorAll(".course-container");
+
+            courseContainers.forEach(container => {
+                const courseName = container.dataset.name;
+                const generalCommentsContainer = container.querySelector(".general-comments");
+                const studyTipsContainer = container.querySelector(".study-tips");
+
+                evaluations.forEach(evaluation => {
+                    if (evaluation.Nom_Cours === courseName) {
+                        if (evaluation.Commentaires_Generaux) {
+                            const generalCommentCard = createCommentCard(
+                                evaluation.Commentaires_Generaux,
+                                evaluation.Date_Evaluation,
+                                evaluation.Auteur,
+                                evaluation.Like,
+                                evaluation.Dislike,
+                                evaluation.Signalement
+                            );
+                            generalCommentsContainer.appendChild(generalCommentCard);
+                        }
+
+                        if (evaluation.Commentaires_Conseils) {
+                            const studyTipCard = createCommentCard(
+                                evaluation.Commentaires_Conseils,
+                                evaluation.Date_Evaluation,
+                                evaluation.Auteur,
+                                evaluation.Like,
+                                evaluation.Dislike,
+                                evaluation.Signalement
+                            );
+                            studyTipsContainer.appendChild(studyTipCard);
+                        }
+                    }
+                });
+            });
+        })
+        .catch(error => console.error('Erreur lors du chargement des évaluations :', error));
+}
+
+// Appeler la fonction pour charger les commentaires au chargement de la page
+document.addEventListener("DOMContentLoaded", loadCommentsFromCSV);

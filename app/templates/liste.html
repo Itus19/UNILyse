@@ -66,19 +66,23 @@
                     <div class="general-comments" data-section="general-comments">
                         <h4>Commentaires généraux</h4>
                         <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
-                        {% for comment in course['Commentaires_Generaux'] %}
-                        <div class="comment-card">
-                            <div class="comment-body">
-                            <p>{{ comment['Commentaires_Generaux'] }}</div>
-                            <div class="comment-footer">
-                                <span class="author">{{ comment['Auteur'] }}</span>
-                                <span class="comment-date">{{ comment['Date'] }}</span>
-                                <div class="reactions">
-                                    <span>👍 {{ comment['Like'] }}</span>
-                                    <span>👎 {{ comment['Dislike'] }}</span>
-                                    <span>⚠️ {{ comment['Signalement'] }}</span>
+                        {% for evaluation in evaluations %}
+                            {% if evaluation['Nom_Cours'] == course['Nom'] %}
+                            <div class="comment-card">
+                                <div class="comment-body">
+                                    <p>{{ evaluation['Commentaires_Généraux'] }}</p>
+                                </div>
+                                <div class="comment-footer">
+                                    <span class="author">{{ evaluation['Auteur'] }}</span>
+                                    <span class="comment-date">{{ evaluation['Date_Evaluation'] }}</span>
+                                    <div class="reactions">
+                                        <span>👍 {{ evaluation['Like'] }}</span>
+                                        <span>👎 {{ evaluation['Dislike'] }}</span>
+                                        <span>⚠️ {{ evaluation['Signalement'] }}</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
 
@@ -86,20 +90,23 @@
                     <div class="study-tips" data-section="study-tips">
                         <h4>Conseil d'étude</h4>
                         <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
-                        {% for comment in course['Commentaires_Conseils'] %}
-                        <div class="comment-card">
-                            <div class="comment-body">
-                            <p>{{ comment['Commentaires_Conseils'] }}</div>
-                            <div class="comment-footer">
-                                <span class="author">{{ comment['Auteur'] }}</span>
-                                <span class="comment-date">{{ comment['Date'] }}</span>
-                                <div class="reactions">
-                                    <span>👍 {{ comment['Like'] }}</span>
-                                    <span>👎 {{ comment['Dislike'] }}</span>
-                                    <span>⚠️ {{ comment['Signalement'] }}</span>
+                        {% for evaluation in evaluations %}
+                            {% if evaluation['Nom_Cours'] == course['Nom'] %}
+                            <div class="comment-card">
+                                <div class="comment-body">
+                                    <p>{{ evaluation['Commentaires_Conseils'] }}</p>
+                                </div>
+                                <div class="comment-footer">
+                                    <span class="author">{{ evaluation['Auteur'] }}</span>
+                                    <span class="comment-date">{{ evaluation['Date_Evaluation'] }}</span>
+                                    <div class="reactions">
+                                        <span>👍 {{ evaluation['Like'] }}</span>
+                                        <span>👎 {{ evaluation['Dislike'] }}</span>
+                                        <span>⚠️ {{ evaluation['Signalement'] }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
 

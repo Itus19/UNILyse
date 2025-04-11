@@ -2,6 +2,9 @@ from flask import Flask, render_template, jsonify, request, send_from_directory
 import os
 import csv
 from datetime import datetime
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import threading
 
 app = Flask(__name__)  # Définition de l'objet app
 
@@ -259,7 +262,8 @@ def update_liste_csv():
 @app.route('/')
 def liste():
     courses = read_courses_data()  # Lire les données depuis liste.csv
-    return render_template('liste.html', courses=courses)
+    evaluations = read_evaluation_data()  # Lire les données depuis evaluations.csv
+    return render_template('liste.html', courses=courses, evaluations=evaluations)
 
 @app.route('/evaluation', methods=['GET', 'POST'])
 def evaluation():
@@ -364,6 +368,28 @@ def serve_evaluations_csv():
         return send_from_directory(directory, 'evaluations.csv')
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+class EvaluationsFileHandler(FileSystemEventHandler):
+    def on_modified(self, event):
+        if event.src_path.endswith("evaluations.csv"):
+            print("Modification détectée dans evaluations.csv. Mise à jour de liste.csv...")
+            update_liste_csv()
+
+def start_file_watcher():
+    observer = Observer()
+    handler = EvaluationsFileHandler()
+    observer.schedule(handler, path=os.path.dirname(EVALUATIONS_CSV), recursive=False)
+    observer.start()
+
+    # Assurer que l'observateur s'arrête proprement à la fin
+    def stop_observer():
+        observer.stop()
+        observer.join()
+
+    threading.Thread(target=stop_observer, daemon=True).start()
+
+# Démarrer le watcher au lancement de l'application
+start_file_watcher()
 
 if __name__ == '__main__':
     # Met à jour les moyennes dans liste.csv au démarrage

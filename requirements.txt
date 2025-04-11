@@ -4,3 +4,4 @@ beautifulsoup4
 pandas
 flask
 flask-caching
+watchdog

@@ -491,3 +491,95 @@ fetch('/database/evaluations.csv')
         });
     })
     .catch(error => console.error('Erreur lors du chargement des évaluations :', error));
+
+// Initialisation de la connexion WebSocket
+const socket = io.connect('http://' + document.domain + ':' + location.port);
+
+// Écouter l'événement 'update_evaluations' émis par le serveur
+socket.on('update_evaluations', (data) => {
+    console.log(data.message); // Afficher le message dans la console
+
+    // Mettre à jour les évaluations affichées
+    fetchUpdatedEvaluations();
+});
+
+function fetchUpdatedEvaluations() {
+    fetch('/database/evaluations.csv')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération des évaluations.');
+            }
+            return response.text();
+        })
+        .then(data => {
+            const rows = data.split('\n').slice(1); // Ignorer l'en-tête
+            const tableBody = document.getElementById('evaluations-table-body');
+            if (tableBody) {
+                tableBody.innerHTML = ''; // Réinitialiser le contenu
+
+                if (rows.length === 0 || (rows.length === 1 && rows[0].trim() === '')) {
+                    const emptyRow = document.createElement('tr');
+                    const emptyCell = document.createElement('td');
+                    emptyCell.colSpan = 5; // Ajuster selon le nombre de colonnes
+                    emptyCell.textContent = 'Aucune évaluation disponible.';
+                    emptyRow.appendChild(emptyCell);
+                    tableBody.appendChild(emptyRow);
+                } else {
+                    rows.forEach(row => {
+                        if (row.trim() !== '') {
+                            const columns = row.split(';');
+                            const tr = document.createElement('tr');
+
+                            columns.forEach(column => {
+                                const td = document.createElement('td');
+                                td.textContent = column;
+                                tr.appendChild(td);
+                            });
+
+                            tableBody.appendChild(tr);
+                        }
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
+}
+
+// Ajout d'une vérification stricte pour éviter les doublons
+function ensureNoDuplicateComments(container, commentContent) {
+    const existingComments = Array.from(container.querySelectorAll('.comment-card p'));
+    return !existingComments.some(comment => comment.textContent === commentContent);
+}
+
+function updateCommentsForCourse(courseName, evaluations, generalCommentsContainer, studyTipsContainer) {
+    // Réinitialiser les conteneurs pour éviter les doublons
+    generalCommentsContainer.innerHTML = '';
+    studyTipsContainer.innerHTML = '';
+
+    evaluations.forEach(evaluation => {
+        if (evaluation.Nom_Cours === courseName) {
+            if (evaluation.Commentaires_Generaux && ensureNoDuplicateComments(generalCommentsContainer, evaluation.Commentaires_Generaux)) {
+                const generalCommentCard = createCommentCard(evaluation.Commentaires_Generaux, evaluation.Date_Evaluation);
+                generalCommentsContainer.appendChild(generalCommentCard);
+            }
+
+            if (evaluation.Commentaires_Conseils && ensureNoDuplicateComments(studyTipsContainer, evaluation.Commentaires_Conseils)) {
+                const studyTipCard = createCommentCard(evaluation.Commentaires_Conseils, evaluation.Date_Evaluation);
+                studyTipsContainer.appendChild(studyTipCard);
+            }
+        }
+    });
+
+    // Mettre à jour les messages "Pas de commentaire" si nécessaire
+    updateNoCommentsMessage(generalCommentsContainer, "Pas de commentaire pour le moment 🙁");
+    updateNoCommentsMessage(studyTipsContainer, "Pas de commentaire pour le moment 🙁");
+}
+
+// Remplacement des ajouts directs par l'appel à updateCommentsForCourse
+// Vérification pour éviter les appels multiples
+if (!generalCommentsContainer.hasAttribute('data-initialized')) {
+    updateCommentsForCourse(courseName, evaluations, generalCommentsContainer, studyTipsContainer);
+    generalCommentsContainer.setAttribute('data-initialized', 'true');
+}

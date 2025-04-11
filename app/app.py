@@ -2,8 +2,13 @@ from flask import Flask, render_template, jsonify, request, send_from_directory
 import os
 import csv
 from datetime import datetime
+from flask_socketio import SocketIO
+from watchdog.events import FileSystemEventHandler
 
 app = Flask(__name__)  # Définition de l'objet app
+
+# Initialisation de SocketIO
+socketio = SocketIO(app)
 
 # Chemins des fichiers CSV
 EVALUATIONS_CSV = os.path.join(os.path.dirname(__file__), "../database/evaluations.csv")
@@ -374,3 +379,20 @@ if __name__ == '__main__':
         print(f"Erreur lors de la mise à jour de liste.csv : {e}")
 
     app.run(debug=True, port=5001)  # Assurez-vous que l'application est lancée correctement
+
+class EvaluationFileHandler(FileSystemEventHandler):
+    def on_modified(self, event):
+        if event.src_path.endswith("evaluations.csv"):
+            print("Le fichier evaluations.csv a été modifié. Mise à jour de liste.csv...")
+            if os.path.getsize(event.src_path) == 0:
+                print("Le fichier evaluations.csv est vide. Réinitialisation des moyennes dans liste.csv...")
+                reset_liste_csv_averages()
+            else:
+                update_liste_csv()
+
+            # Émettre un événement WebSocket pour notifier les clients, même si le fichier est vide
+            socketio.emit('update_evaluations', {'message': 'Les évaluations ont été mises à jour ou réinitialisées.'})
+
+if __name__ == '__main__':
+    # Lancer l'application avec SocketIO
+    socketio.run(app, debug=True, port=5001)

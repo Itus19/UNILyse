@@ -65,42 +65,29 @@
                     <!-- Colonne des commentaires généraux -->
                     <div class="general-comments" data-section="general-comments">
                         <h4>Commentaires généraux</h4>
-                        <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
-                        {% for comment in course['Commentaires_Generaux'] %}
+                        {% if course['Commentaires_Generaux'] %}
                         <div class="comment-card">
                             <div class="comment-body">
-                            <p>{{ comment['Commentaires_Generaux'] }}</div>
-                            <div class="comment-footer">
-                                <span class="author">{{ comment['Auteur'] }}</span>
-                                <span class="comment-date">{{ comment['Date'] }}</span>
-                                <div class="reactions">
-                                    <span>👍 {{ comment['Like'] }}</span>
-                                    <span>👎 {{ comment['Dislike'] }}</span>
-                                    <span>⚠️ {{ comment['Signalement'] }}</span>
+                                <p>{{ course['Commentaires_Generaux'] }}</p>
                             </div>
                         </div>
-                        {% endfor %}
+                        {% else %}
+                        <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
+                        {% endif %}
                     </div>
 
                     <!-- Colonne des conseils d'étude -->
                     <div class="study-tips" data-section="study-tips">
                         <h4>Conseil d'étude</h4>
-                        <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
-                        {% for comment in course['Commentaires_Conseils'] %}
+                        {% if course['Commentaires_Conseils'] %}
                         <div class="comment-card">
                             <div class="comment-body">
-                            <p>{{ comment['Commentaires_Conseils'] }}</div>
-                            <div class="comment-footer">
-                                <span class="author">{{ comment['Auteur'] }}</span>
-                                <span class="comment-date">{{ comment['Date'] }}</span>
-                                <div class="reactions">
-                                    <span>👍 {{ comment['Like'] }}</span>
-                                    <span>👎 {{ comment['Dislike'] }}</span>
-                                    <span>⚠️ {{ comment['Signalement'] }}</span>
-                                </div>
+                                <p>{{ course['Commentaires_Conseils'] }}</p>
                             </div>
                         </div>
-                        {% endfor %}
+                        {% else %}
+                        <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
+                        {% endif %}
                     </div>
 
                     <!-- Colonne des détails d'évaluation -->

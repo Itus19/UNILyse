@@ -404,7 +404,7 @@ h2 {
 .commentary-columns {
     display: flex;
     justify-content: space-between;
-    gap: 20px; 
+    gap: 10px; 
     margin-top: 10px;
 }
 
@@ -419,7 +419,8 @@ h2 {
 .general-comments h4, .study-tips h4, .evaluation-details h4 {
     text-align: center;
     font-size: 16px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    margin-top: 2px;
 }
 
 /* Styles pour les fiches de commentaires */
@@ -437,18 +438,7 @@ h2 {
     font-size: 14px;
 }
 
-.comment-card .comment-date {
-    font-size: 12px;
-    color: #666;
-    display: block;
-    margin-bottom: 5px;
-}
 
-.comment-card .reactions {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-}
 
 /* Styles pour le message "Pas de commentaire pour le moment 🙁" */
 .no-comments-message {
@@ -456,6 +446,34 @@ h2 {
     color: #666;
     text-align: center;
     margin: 10px 0;
+}
+
+.comment-card .comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment-card .comment-footer .author {
+    height: 7px;
+    margin-left: auto;
+    text-align: right;
+    font-size: 14px; /* Taille de la police pour le nom de l'auteur */
+}
+
+.comment-card .comment-footer .comment-date {
+    height: 5px; /* Ajuste la hauteur de la date */
+    flex-grow: 1;
+    text-align: center;
+    font-size: 12px; /* Taille de la police pour la date */
+}
+
+.comment-card .comment-footer .reactions {
+    height: 13px; /* Ajuste la hauteur des réactions */
+    display: flex; /* Utilisation de flexbox pour aligner les éléments */
+    justify-content: flex-end; /* Aligne les réactions à droite */
+    gap: 5px; /* Espace entre les réactions */
+    font-size: 12px; 
 }
 
 /* ============================

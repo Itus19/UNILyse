@@ -1,17 +1,3 @@
-﻿Nom_Cours;Professeur;Date_Evaluation;Intérêt_Q1;Intérêt_Q2;Intérêt_Q3;Moyenne_Intérêt;Difficulté_Q1;Difficulté_Q2;Difficulté_Q3;Moyenne_Difficulté;Travail_Q1;Moyenne_Travail;Moyenne_Globale;Commentaires_Généraux;Commentaires_Conseils
-Anthropologie culturelle et sociale I;Mark Goodale;2025-04-11;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;fdsaf sdkjéfanfjkésdjflskfprèjnjk fweoèfsafnjkd fon jsamf9oqnr fsmaélésJFN JEK S,FAmid jraskmf aDOèN FKASD;FAS JSF,.NAS DJFKLKMASFNJ KDSAfdjs afMAS FJK S.Mokasdfn nmsd, .aMFNAS DJFMD,ASIV JKDSafaànsd jk
-Anthropologie culturelle et sociale A;Mark Goodale;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;3;4
-Anthropologie culturelle et sociale A;Mark Goodale;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;3;4
-Anthropologie culturelle et sociale I;Mark Goodale;2025-04-15;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;43;654
-Anthropologie culturelle et sociale I;Mark Goodale;2025-04-15;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;43;654
-Anthropologie culturelle et sociale A;Mark Goodale;2025-04-15;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;565656;6756564747
-Anthropologie culturelle et sociale A;Mark Goodale;2025-04-15;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;565656;6756564747
-Introduction à la recherche: la construction sociale du corps;Pierre-Emmanuel Sorignet;2025-04-15;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;11212121212;1221212121212
-Introduction à la recherche: la construction sociale du corps;Pierre-Emmanuel Sorignet;2025-04-15;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;11212121212;1221212121212
-Anthropologie culturelle et sociale I;Mark Goodale;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;5678;bhjo
-Anthropologie culturelle et sociale I;Mark Goodale;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;5678;bhjo
-Anthropologie culturelle et sociale I;Mark Goodale;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;5678;bhjo
-Anthropologie culturelle et sociale I;Mark Goodale;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;5678;bhjo
-Anthropologie culturelle et sociale A;Mark Goodale;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;t4;t4
-Anthropologie culturelle et sociale A;Mark Goodale;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;t4;t4
-Histoire de la psychologie;Rémy Amouroux;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;t5;t5
+﻿Nom_Cours;Professeur;Auteur;Date_Evaluation;Intérêt_Q1;Intérêt_Q2;Intérêt_Q3;Moyenne_Intérêt;Difficulté_Q1;Difficulté_Q2;Difficulté_Q3;Moyenne_Difficulté;Travail_Q1;Moyenne_Travail;Moyenne_Globale;Commentaires_Généraux;Commentaires_Conseils
+Anthropologie culturelle et sociale A;Mark Goodale;Jacques;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;12;12
+Anthropologie culturelle et sociale B;Irene Maffi;Jean;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1232;124341

@@ -170,44 +170,42 @@
         const popupMessage = document.getElementById("popup-message");
         const closePopupButton = document.getElementById("close-popup");
 
-        form.addEventListener("submit", (event) => {
-            event.preventDefault(); // Empêche l'envoi du formulaire
+        // Supprimer les gestionnaires multiples
+        if (!form.dataset.initialized) {
+            form.addEventListener("submit", (event) => {
+                event.preventDefault(); // Empêche l'envoi direct du formulaire
 
-            const formData = new FormData(form);
-            fetch('/evaluation', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    popupMessage.textContent = "Merci d'avoir évalué l'enseignement <3";
-                    popup.style.display = "flex"; // Affiche la fenêtre pop-up
-                } else {
+                const formData = new FormData(form);
+                fetch('/evaluation', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        popupMessage.textContent = "Merci d'avoir évalué l'enseignement <3";
+                        popup.style.display = "flex"; // Affiche la fenêtre pop-up
+                    } else {
+                        popupMessage.textContent = "Erreur lors de l'enregistrement de l'évaluation.";
+                        popup.style.display = "flex";
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur :", error);
                     popupMessage.textContent = "Erreur lors de l'enregistrement de l'évaluation.";
                     popup.style.display = "flex";
-                }
-            })
-            .catch(error => {
-                console.error("Erreur :", error);
-                popupMessage.textContent = "Erreur lors de l'enregistrement de l'évaluation.";
-                popup.style.display = "flex";
+                });
             });
-        });
 
-        closePopupButton.addEventListener("click", () => {
-            popup.style.display = "none"; // Cache la pop-up
-        });
-    });
+            closePopupButton.addEventListener("click", () => {
+                popup.style.display = "none"; // Cache la pop-up
+                form.reset(); // Réinitialise tous les champs du formulaire
+                const suggestions = document.getElementById("search-suggestions");
+                suggestions.innerHTML = ""; // Vide les suggestions de recherche
+            });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const closePopupButton = document.getElementById("close-popup");
-        const form = document.getElementById("evaluation-form");
-
-        closePopupButton.addEventListener("click", () => {
-            form.reset(); // Réinitialise tous les champs du formulaire
-            const suggestions = document.getElementById("search-suggestions");
-            suggestions.innerHTML = ""; // Vide les suggestions de recherche
-        });
+            // Marquer le formulaire comme initialisé
+            form.dataset.initialized = "true";
+        }
     });
 </script>
 

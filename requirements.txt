@@ -5,4 +5,5 @@ pandas
 flask
 flask-caching
 flask-socketio
+flask-login
 watchdog

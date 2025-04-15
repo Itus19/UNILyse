@@ -74,53 +74,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const form = document.getElementById("evaluation-form");
 
-    // Empêcher les gestionnaires multiples sur le formulaire
-    if (!form.dataset.initialized) {
-        form.addEventListener("submit", (event) => {
-            event.preventDefault(); // Empêche l'envoi du formulaire
+    form.addEventListener("submit", (event) => {
+        event.preventDefault(); // Empêche l'envoi du formulaire
 
-            // Vérification des boutons radio
-            const requiredFields = ["interest_q1", "interest_q2", "interest_q3", "difficulty_q1", "difficulty_q2", "difficulty_q3", "work_q1"];
-            let allFilled = true;
+        // Vérification des boutons radio
+        const requiredFields = ["interest_q1", "interest_q2", "interest_q3", "difficulty_q1", "difficulty_q2", "difficulty_q3", "work_q1"];
+        let allFilled = true;
 
-            requiredFields.forEach(fieldName => {
-                const radios = document.getElementsByName(fieldName);
-                const isChecked = Array.from(radios).some(radio => radio.checked);
-                if (!isChecked) {
-                    allFilled = false;
-                }
-            });
-
-            if (!allFilled) {
-                alert("Veuillez remplir l'évaluation");
-                return; // Ne pas soumettre le formulaire
+        requiredFields.forEach(fieldName => {
+            const radios = document.getElementsByName(fieldName);
+            const isChecked = Array.from(radios).some(radio => radio.checked);
+            if (!isChecked) {
+                allFilled = false;
             }
-
-            const formData = new FormData(form);
-            fetch('/evaluation', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Afficher uniquement le popup personnalisé
-                    popupMessage.textContent = "Merci d'avoir évalué l'enseignement <3";
-                    popup.style.display = "flex";
-                } else {
-                    popupMessage.textContent = "Erreur lors de l'enregistrement de l'évaluation.";
-                    popup.style.display = "flex";
-                }
-            })
-            .catch(error => {
-                console.error("Erreur :", error);
-                popupMessage.textContent = "Erreur lors de l'enregistrement de l'évaluation.";
-                popup.style.display = "flex";
-            });
         });
 
-        // Marquer le formulaire comme initialisé
-        form.dataset.initialized = "true";
-    }
+        if (!allFilled) {
+            alert("Veuillez remplir l'évaluation");
+            return; // Ne pas soumettre le formulaire
+        }
+
+        const formData = new FormData(form);
+        fetch('/evaluation', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Merci d'avoir évalué l'enseignement <3");
+            } else {
+                alert("Erreur lors de l'enregistrement de l'évaluation.");
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            alert("Erreur lors de l'enregistrement de l'évaluation.");
+        });
+    });
 
     // Fonctionnalité pour l'accordéon
     const accordions = document.querySelectorAll(".accordion-faq");

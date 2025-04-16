@@ -392,7 +392,7 @@ h2 {
     margin-top: 0px; /* Espace entre la course-card et le commentary-container */ 
     font-size: 16px; /* Taille de la police */
     color: #333; /* Couleur du texte */
-    margin-bottom: 5px; /* Espace entre les commentaires */
+    margin-bottom: 0px; /* Espace entre les commentaires */
     padding-left: 10px; /* Espace à gauche */
     overflow: hidden;
     max-height: 0;
@@ -406,9 +406,10 @@ h2 {
     justify-content: space-between;
     gap: 10px; 
     margin-top: 10px;
+    margin-bottom: 5px;
 }
 
-.general-comments, .study-tips, .evaluation-details {
+.general-comments, .study-tips {
     flex: 1;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -416,15 +417,16 @@ h2 {
     background-color: #f9f9f9;
 }
 
-.general-comments h4, .study-tips h4, .evaluation-details h4 {
+.general-comments h4, .study-tips h4 {
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     margin-bottom: 5px;
     margin-top: 2px;
 }
 
 /* Styles pour les fiches de commentaires */
 .comment-card {
+    font-size: 16px; /* Taille de la police */
     border: 1px solid #9136b3;
     border-radius: 10px;
     padding: 10px;
@@ -435,7 +437,7 @@ h2 {
 
 .comment-card p {
     margin: 0 0 5px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 
@@ -459,6 +461,7 @@ h2 {
     margin-left: auto;
     text-align: right;
     font-size: 14px; /* Taille de la police pour le nom de l'auteur */
+    color: #666;
 }
 
 .comment-card .comment-footer .comment-date {
@@ -466,6 +469,7 @@ h2 {
     flex-grow: 1;
     text-align: center;
     font-size: 12px; /* Taille de la police pour la date */
+    color: #666;
 }
 
 .comment-card .comment-footer .reactions {

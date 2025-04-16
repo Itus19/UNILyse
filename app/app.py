@@ -172,7 +172,7 @@ def read_courses_data():
 def update_evaluation_with_reference(course_name, data):
     """Ajoute une nouvelle évaluation en complétant les données manquantes avec liste.csv."""
     courses = read_courses_data()
-    course_data = next((course for course in courses if course['Nom'] == course_name), None)  # Utiliser 'Nom' au lieu de 'Nom_Cours'
+    course_data = next((course for course in courses if course['Nom'] == course_name), None)
 
     if not course_data:
         print(f"Erreur : le cours '{course_name}' n'existe pas dans liste.csv.")
@@ -183,12 +183,31 @@ def update_evaluation_with_reference(course_name, data):
         'Nom_Cours': course_name,
         'Professeur': course_data['Professeur'],
         'Date_Evaluation': datetime.now().strftime('%d-%m-%Y'),
-        **data
+        'Auteur': 'Anne Onyme',  # Remplacer par l'utilisateur actuel si nécessaire
+        'Intérêt_Q1': '',
+        'Intérêt_Q2': '',
+        'Intérêt_Q3': '',
+        'Moyenne_Intérêt': '',
+        'Difficulté_Q1': '',
+        'Difficulté_Q2': '',
+        'Difficulté_Q3': '',
+        'Moyenne_Difficulté': '',
+        'Travail_Q1': '',
+        'Moyenne_Travail': '',
+        'Moyenne_Globale': '',
+        'Commentaires_Généraux': '',
+        'Commentaires_Conseils': '',
+        'Like': '0',
+        'Dislike': '0',
+        'Signalement': '0'
     }
+
+    # Mettre à jour les colonnes avec les données fournies
+    new_evaluation.update(data)
 
     try:
         with open(EVALUATIONS_CSV, 'a', newline='', encoding='utf-8-sig') as eval_file:
-            fieldnames = ['Nom_Cours', 'Professeur', 'Date_Evaluation', 'Intérêt_Q1', 'Intérêt_Q2', 'Intérêt_Q3', 'Moyenne_Intérêt', 'Difficulté_Q1', 'Difficulté_Q2', 'Difficulté_Q3', 'Moyenne_Difficulté', 'Travail_Q1', 'Moyenne_Travail', 'Moyenne_Globale', 'Commentaires_Généraux', 'Commentaires_Conseils']
+            fieldnames = ['Nom_Cours', 'Professeur', 'Auteur', 'Date_Evaluation', 'Intérêt_Q1', 'Intérêt_Q2', 'Intérêt_Q3', 'Moyenne_Intérêt', 'Difficulté_Q1', 'Difficulté_Q2', 'Difficulté_Q3', 'Moyenne_Difficulté', 'Travail_Q1', 'Moyenne_Travail', 'Moyenne_Globale', 'Commentaires_Généraux', 'Commentaires_Conseils', 'Like', 'Dislike', 'Signalement']
             writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
 
             # Écrire l'évaluation dans le fichier

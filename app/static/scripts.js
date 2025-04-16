@@ -222,8 +222,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(csvText => {
             const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
             const evaluations = rows.map(row => {
-                const [Nom_Cours, Professeur, Auteur, Date_Evaluation, , , , , , , , , , , Commentaires_Generaux, Commentaires_Conseils] = row.split(';');
-                return { Nom_Cours, Professeur, Auteur, Date_Evaluation, Commentaires_Generaux, Commentaires_Conseils };
+                const [Nom_Cours, Professeur, Auteur, Date_Evaluation, , , , , , , , , , , Commentaires_Généraux, Commentaires_Conseils] = row.split(';');
+                return { Nom_Cours, Professeur, Auteur, Date_Evaluation, Commentaires_Généraux, Commentaires_Conseils };
             });
 
             console.log("Données chargées depuis evaluations.csv :", evaluations);
@@ -249,9 +249,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (evaluation.Nom_Cours === courseName) {
                         console.log(`Correspondance trouvée pour le cours : ${courseName}`);
 
-                        if (evaluation.Commentaires_Generaux) {
+                        if (evaluation.Commentaires_Généraux) {
                             const generalCommentCard = createCommentCard(
-                                evaluation.Commentaires_Generaux,
+                                evaluation.Commentaires_Généraux,
                                 evaluation.Date_Evaluation,
                                 evaluation.Auteur,
                                 evaluation.Like,
@@ -286,8 +286,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(csvText => {
             const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
             const evaluations = rows.map(row => {
-                const [Nom_Cours, Professeur, Auteur, Date_Evaluation, , , , , , , , , , , Commentaires_Generaux, Commentaires_Conseils] = row.split(';');
-                return { Nom_Cours, Professeur, Auteur, Date_Evaluation, Commentaires_Generaux, Commentaires_Conseils };
+                const [Nom_Cours, Professeur, Auteur, Date_Evaluation, , , , , , , , , , , Commentaires_Généraux, Commentaires_Conseils] = row.split(';');
+                return { Nom_Cours, Professeur, Auteur, Date_Evaluation, Commentaires_Généraux, Commentaires_Conseils };
             });
 
             console.log("Données chargées depuis evaluations.csv :", evaluations);
@@ -310,9 +310,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (evaluation.Nom_Cours === courseName) {
                         console.log(`Correspondance trouvée pour le cours : ${courseName}`);
 
-                        if (evaluation.Commentaires_Generaux) {
+                        if (evaluation.Commentaires_Généraux) {
                             const generalCommentCard = createCommentCard(
-                                evaluation.Commentaires_Generaux,
+                                evaluation.Commentaires_Généraux,
                                 evaluation.Date_Evaluation,
                                 evaluation.Auteur,
                                 evaluation.Like,
@@ -392,14 +392,20 @@ function createCommentCard(content, date, auteur = null, like = 0, dislike = 0, 
     return commentCard;
 }
 
-// Création comment-card 
+// Ajout d'une vérification explicite pour les données vides et affichage des messages appropriés
 fetch('/database/evaluations.csv')
     .then(response => response.text())
     .then(csvText => {
         const rows = csvText.split('\n').slice(1); // Ignorer l'en-tête
+        const headers = csvText.split('\n')[0].split(';'); // Récupérer les en-têtes
+
         const evaluations = rows.map(row => {
-            const [Nom_Cours, Professeur, Auteur, Date_Evaluation, , , , , , , , , , , Commentaires_Generaux, Commentaires_Conseils] = row.split(';');
-            return { Nom_Cours, Professeur, Auteur, Date_Evaluation, Commentaires_Generaux, Commentaires_Conseils };
+            const values = row.split(';');
+            const evaluation = {};
+            headers.forEach((header, index) => {
+                evaluation[header.trim()] = values[index]?.trim();
+            });
+            return evaluation;
         });
 
         const courseContainers = document.querySelectorAll(".course-container");
@@ -414,52 +420,47 @@ fetch('/database/evaluations.csv')
                 return;
             }
 
-            const courseEvaluations = evaluations.filter(evaluation => evaluation.Nom_Cours === courseName);
+            const courseEvaluations = evaluations.filter(evaluation => evaluation["Nom_Cours"] === courseName);
 
-            const noGeneralCommentsMessage = generalCommentsContainer.querySelector(".no-comments-message");
-            const noStudyTipsMessage = studyTipsContainer.querySelector(".no-comments-message");
-
-            if (courseEvaluations.length === 0) {
-                if (!noGeneralCommentsMessage) {
+            // Gestion des commentaires généraux
+            if (courseEvaluations.every(evaluation => !evaluation["Commentaires_Généraux"])) {
+                if (!generalCommentsContainer.querySelector(".no-comments-message")) {
                     const messageElement = document.createElement("p");
                     messageElement.className = "no-comments-message";
                     messageElement.textContent = "Pas de commentaire pour le moment 🙁";
                     generalCommentsContainer.appendChild(messageElement);
                 }
+            } else {
+                generalCommentsContainer.querySelectorAll(".no-comments-message").forEach(msg => msg.remove());
+                courseEvaluations.forEach(evaluation => {
+                    if (evaluation["Commentaires_Généraux"] && evaluation["Commentaires_Généraux"].length > 0) {
+                        const generalCommentCard = createCommentCard(
+                            evaluation["Commentaires_Généraux"],
+                            evaluation["Date_Evaluation"],
+                            evaluation["Auteur"]
+                        );
+                        generalCommentsContainer.appendChild(generalCommentCard);
+                    }
+                });
+            }
 
-                if (!noStudyTipsMessage) {
+            // Gestion des conseils d'étude
+            if (courseEvaluations.every(evaluation => !evaluation["Commentaires_Conseils"])) {
+                if (!studyTipsContainer.querySelector(".no-comments-message")) {
                     const messageElement = document.createElement("p");
                     messageElement.className = "no-comments-message";
                     messageElement.textContent = "Pas de conseils pour le moment 🙁";
                     studyTipsContainer.appendChild(messageElement);
                 }
             } else {
-                if (noGeneralCommentsMessage) {
-                    noGeneralCommentsMessage.remove();
-                }
-
-                if (noStudyTipsMessage) {
-                    noStudyTipsMessage.remove();
-                }
-
+                studyTipsContainer.querySelectorAll(".no-comments-message").forEach(msg => msg.remove());
                 courseEvaluations.forEach(evaluation => {
-                    if (evaluation.Commentaires_Generaux) {
-                        const commentCard = createCommentCard(
-                            evaluation.Commentaires_Generaux,
-                            evaluation.Date_Evaluation,
-                            evaluation.Auteur // Ajout de l'auteur ici
-                        );
-
-                        generalCommentsContainer.appendChild(commentCard);
-                    }
-
-                    if (evaluation.Commentaires_Conseils) {
+                    if (evaluation["Commentaires_Conseils"] && evaluation["Commentaires_Conseils"].length > 0) {
                         const studyTipCard = createCommentCard(
-                            evaluation.Commentaires_Conseils,
-                            evaluation.Date_Evaluation,
-                            evaluation.Auteur // Ajout de l'auteur ici
+                            evaluation["Commentaires_Conseils"],
+                            evaluation["Date_Evaluation"],
+                            evaluation["Auteur"]
                         );
-
                         studyTipsContainer.appendChild(studyTipCard);
                     }
                 });

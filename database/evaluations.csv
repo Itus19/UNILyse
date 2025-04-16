@@ -1,5 +1,9 @@
-﻿Nom_Cours;Professeur;Auteur;Date_Evaluation;Intérêt_Q1;Intérêt_Q2;Intérêt_Q3;Moyenne_Intérêt;Difficulté_Q1;Difficulté_Q2;Difficulté_Q3;Moyenne_Difficulté;Travail_Q1;Moyenne_Travail;Moyenne_Globale;Commentaires_Généraux;Commentaires_Conseils
-Anthropologie culturelle et sociale A;Mark Goodale;Jacques;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;12;12
-Anthropologie culturelle et sociale B;Irene Maffi;Jean;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Cool;Travail bien
-Anthropologie culturelle et sociale B;Irene Maffi;Jules;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Bien;
-Anthropologie culturelle et sociale I;Mark Goodale;Gabriel;2025-04-15;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;C'est super !;
+﻿Nom_Cours;Professeur;Auteur;Date_Evaluation;Intérêt_Q1;Intérêt_Q2;Intérêt_Q3;Moyenne_Intérêt;Difficulté_Q1;Difficulté_Q2;Difficulté_Q3;Moyenne_Difficulté;Travail_Q1;Moyenne_Travail;Moyenne_Globale;Commentaires_Généraux;Commentaires_Conseils;Like;Dislike;Signalement
+Anthropologie culturelle et sociale A;Mark Goodale;Jacques;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Trop bien;Va aux cours
+Anthropologie culturelle et sociale B;Irene Maffi;Jean;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Cool;Travail bien
+Anthropologie culturelle et sociale B;Irene Maffi;Jules;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Bien;
+Anthropologie culturelle et sociale I;Mark Goodale;Gabriel;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;C'est super !;impossible
+Anthropologie culturelle et sociale I;Mark Goodale;Marcel;16-04-2025;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;;Dur dur 
+Anthropologie culturelle et sociale I;Mark Goodale;François;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;C'est très chouette;Des fiches de révision c'est cool
+Anthropologie culturelle et sociale A;Mark Goodale;Pascaline;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Top TOp Top;Podcast
+Concepts de base en sciences sociales;Laurence Kaufmann;Claude;16-04-2025;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;Vraiment chouette;

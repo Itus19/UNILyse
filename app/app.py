@@ -82,6 +82,7 @@ def read_evaluation_data():
         with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
             reader = csv.DictReader(eval_file, delimiter=';')
             for row in reader:
+                row['Date_Evaluation'] = format_date_to_dd_mm_yyyy(row['Date_Evaluation'])
                 evaluations.append(row)
     except Exception as e:
         print(f"Erreur lors de la lecture de evaluation.csv : {e}")
@@ -222,10 +223,16 @@ def update_liste_csv():
                 'Nombre_Evaluations': 0
             }
 
-        course_averages[course_name]['Moyenne_Intérêt'] += float(eval_row['Moyenne_Intérêt'])
-        course_averages[course_name]['Moyenne_Difficulté'] += float(eval_row['Moyenne_Difficulté'])
-        course_averages[course_name]['Moyenne_Travail'] += float(eval_row['Moyenne_Travail'])
-        course_averages[course_name]['Moyenne_Globale'] += float(eval_row['Moyenne_Globale'])
+        def safe_float_conversion(value):
+            try:
+                return float(value)
+            except ValueError:
+                return 0.0
+
+        course_averages[course_name]['Moyenne_Intérêt'] += safe_float_conversion(eval_row['Moyenne_Intérêt'])
+        course_averages[course_name]['Moyenne_Difficulté'] += safe_float_conversion(eval_row['Moyenne_Difficulté'])
+        course_averages[course_name]['Moyenne_Travail'] += safe_float_conversion(eval_row['Moyenne_Travail'])
+        course_averages[course_name]['Moyenne_Globale'] += safe_float_conversion(eval_row['Moyenne_Globale'])
         course_averages[course_name]['Nombre_Evaluations'] += 1
 
     # Calculer les moyennes finales
@@ -396,3 +403,12 @@ class EvaluationFileHandler(FileSystemEventHandler):
 if __name__ == '__main__':
     # Lancer l'application avec SocketIO
     socketio.run(app, debug=True, port=5001)
+
+from datetime import datetime
+
+def format_date_to_dd_mm_yyyy(date_str):
+    """Convertit une date de format aaaa-mm-jj en jj-mm-aaaa."""
+    try:
+        return datetime.strptime(date_str, '%Y-%m-%d').strftime('%d-%m-%Y')
+    except ValueError:
+        return date_str

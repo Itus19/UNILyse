@@ -1,0 +1,356 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="css/bootstrap.3.4.1.min.css"/>
+    <link rel="stylesheet" href="css/unil.css?v=2"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/fontawesome.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="lib/ens.css?v=10" type="text/css" media="all" >    <link rel="stylesheet" href="lib/ensprint.css" type="text/css" media="print">
+
+    <script type="text/javascript" language="javascript" src="../Sy/js/jscalendar/calendar.js"></script>
+    <script type="text/javascript" language="javascript" src="../Sy/js/jscalendar/calendar-setup.js"></script>
+    <script type="text/javascript" language="javascript" src="../Sy/js/jscalendar/lang/calendar-fr.js"></script>
+    <link rel="stylesheet" type="text/css" href="../Sy/js/jscalendar/calendar-blue.css"/>
+    <script type="text/javascript" language="javascript">
+        function getElementsByClassName(className, tag, elm){
+            var testClass = new RegExp("(^|\\s)" + className + "(\\s|$)");
+            var tag = tag || "*";
+            var elm = elm || document;
+            var elements = (tag == "*" && elm.all)? elm.all : elm.getElementsByTagName(tag);
+            var returnElements = [];
+            var current;
+            var length = elements.length;
+            for(var i=0; i<length; i++){
+                current = elements[i];
+                if(testClass.test(current.className)){
+                    returnElements.push(current);
+                }
+            }
+            return returnElements;
+        }
+    </script>
+
+    <title>UNIL Enseignement</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
+    <meta name="keywords"
+          content="Universit&eacute;, facult&eacute;s, Suisse, recherche, enseignement, acad&eacute;mie, campus, formation, &eacute;coles, &eacute;tudes, Switzerland, &eacute;tudiants, professeurs, Schweiz"/>
+    <meta name="description"
+          content="Bienvenue sur le portail d&eacute;di&eacute; &agrave; la communaut&eacute; universitaire de l'Universit&eacute; de Lausanne."/>
+    <meta http-equiv="Content-Language" content="fr" />
+    <meta name="language" content="fr" />
+</head>
+
+<body class="" >
+
+<div class="container">
+    <!--  logo - unilinks - langues - recherche -->
+    <div class="row">
+        <div class="col-md-10 col-md-push-2" id="linkstop">
+            <div class="row">
+                <!-- unilinks -->
+                <div class="col-xs-10 col-sm-pull-2">
+                    <div id="unilinksblock">
+                        <div data-toggle="collapse" data-target="#unilinks1" id="liensunil"
+                             style="padding-top: 0; text-align: center;">Liens UNIL&nbsp;<span
+                                class="glyphicon glyphicon-menu-down" style="font-size: 80%;"></span></div>
+                        <div class="collapse" id="unilinks1">
+                            <ul class="nav nav-tabs" id="unilinks">
+                                <li><a href="https://www.unil.ch">UNIL</a></li>
+                                <li><a href="https://www.unil.ch/actu">L'Actu</a></li>
+                                <li><a href="https://agenda.unil.ch/">L'Agenda</a></li>
+                                <li><a href="https://www.unil.ch/central/home/menuinst/campus/campus-pratique.html">Campus pratique</a></li>
+                                <li><a href="https://my.unil.ch/">MyUNIL</a></li>
+
+                                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
+                                                        href="#"
+                                                        style="background: transparent;">Facultés <span class="caret"></span></a>
+                                    <ul class="dropdown-menu facs">
+                                        <li><a href="https://www.unil.ch/ftsr"
+                                               title="Faculté de théologie et de sciences des religions">Faculté de théologie et de sciences des religions</a></li>
+                                        <li><a href="https://www.unil.ch/fdca"
+                                               title="Faculté de droit, des sciences criminelles et d'administration publique">Faculté de droit, des sciences criminelles et d'administration publique</a></li>
+                                        <li><a href="https://www.unil.ch/lettres"
+                                               title="Faculté des lettres">Faculté des lettres</a></li>
+                                        <li><a href="https://www.unil.ch/ssp"
+                                               title="Faculté des sciences sociales et politiques">Faculté des sciences sociales et politiques</a></li>
+                                        <li><a href="https://www.unil.ch/hec"
+                                               title="Faculté des hautes études commerciales">Faculté des hautes études commerciales</a></li>
+                                        <li><a href="https://www.unil.ch/fbm"
+                                               title="Faculté de biologie et de médecine">Faculté de biologie et de médecine</a></li>
+                                        <li><a href="https://www.unil.ch/gse"
+                                               title="Faculté des géosciences et de l'environnement">Faculté des géosciences et de l'environnement</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="https://www.unil.ch/central/home/menuinst/organisation/centres-interdisciplinaires.html">Centres</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- logo -->
+        <div class="col-md-2 col-md-pull-10">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="emet_logo"><a href="https://www.unil.ch" title="Université de Lausanne"><img
+                                src="images/logo_unil.svg" alt="Logo Université de Lausanne"></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- emetteur -->
+    <div class="row">
+        <!-- Hidden h1 tag with the header for indexing purposes -->
+        <h1 class="hidden">Enseignement</h1>
+        <!-- Emetteur -->
+        <div id="emet_unit">
+            <div id="emet_unit2">
+                <strong>
+                    <a href="index.php?v_langue=fr&amp;v_isinterne=">L'enseignement : Les horaires</a>
+                </strong>
+            </div>
+        </div>
+        <!-- Fin emetteur -->
+    </div>
+
+    <div class="row">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand visible-xs" style="color: #FFF;" href="index.php?v_langue=fr&amp;v_isinterne=">
+                    <span class="glyphicon glyphicon-home" id="home"></span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li class="hidden-xs"><a href="index.php?v_langue=fr&amp;v_isinterne="><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
+                    </li>
+                    <li><a href="index.php?v_langue=fr&amp;v_isinterne=">Facultés et écoles</a></li>
+                                            <li><a href="listeCours.php?v_ueid=253&amp;v_etapeid1=29964&amp;v_semposselected=169&amp;v_langue=fr&amp;v_isinterne=">Liste des enseignements</a></li>
+                                    </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="text-right"><a href="recherche.php?v_ueid=253&amp;v_etapeid1=29964&amp;v_semposselected=169&amp;v_langue=fr&amp;v_isinterne=">Recherche d'enseignements <span class="glyphicon glyphicon-search"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    </div>
+    <!-- end of Header -->
+
+    <!-- Chemin acces -->
+    <div id="path" class="hidden-xs">
+        <a name="navigation" id="navigation"></a>
+        <span style="vertical-align: middle">
+          <em>Vous &ecirc;tes ici</em>:
+<a class="address" href="http://www.unil.ch">UNIL</a> &gt; <a class="address" href="http://www.unil.ch/formations/fr/home.html">L'enseignement</a> &gt; <a class="address" href="index.php?v_langue=fr&amp;v_isinterne=">Choisissez la faculté</a> &gt; <a class="address" href="index.php?v_ueid=253&amp;v_langue=fr&amp;v_isinterne=">Faculté de théologie et de sciences des religions (FTSR)</a> &gt; <a class="lienon" href="listeCours.php?v_ueid=253&amp;v_etapeid1=29964&amp;v_semposselected=169&amp;v_langue=fr&amp;v_isinterne=">Liste des enseignements</a>        </span>
+    </div>
+    <!-- Fin chemin acces -->
+    <div id="main" class="" >
+        <div style="text-align: right;">
+            <span class="lienon">Français</span> | <a class="lienns" href="/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&amp;v_etapeid1=29964&amp;v_semposselected=169&amp;v_langue=en&amp;v_isinterne=">English</a>&nbsp;&nbsp;
+<a href="#" onClick="window.open('/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29964&print=1','print','width=650,height=600,toolbar=yes,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,copyhistory=no,resizable=yes'); return false"><img src="images/print.png" alt="Imprimer" title="Imprimer" style="vertical-align: middle;" /></a>
+&nbsp;&nbsp;        </div>
+
+        <div id="UniDocContent">
+<h1>Faculté de théologie et de sciences des religions (FTSR) - Automne 2024</h1><h2>Votre sélection</h2>Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie<br/><br/><h2>Liste des cours</h2>
+	<div style="float: right;">
+		<a href="catalogueCours.php?v_ueid=253&amp;v_etapeid1=29964&amp;v_semposselected=169&amp;v_langue=fr&amp;v_isinterne=" class="link-pdf"><img src="images/pdf.png" border="0" alt="Format PDF" title="Format PDF"/></a>&nbsp;<a href="catalogueCours.php?v_ueid=253&amp;v_etapeid1=29964&amp;v_semposselected=169&amp;v_langue=fr&amp;v_isinterne=" class="link-pdf">Version PDF</a>
+	</div>
+<ul>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96675&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96675','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Analyse de texte 1 : Minucius Felix, Octavius -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=68433&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours68433','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Approfondissement des compétences linguistiques et textuelles : latin et histoire antique A - A <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=61204&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours61204','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Approfondissement des compétences linguistiques et textuelles : latin et histoire médiévale et moderne A - A <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96666&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96666','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Approfondissement des compétences linguistiques et textuelles : latin et littérature A - A <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92006&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92006','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Approfondissement des compétences linguistiques et textuelles : latin et traduction A - COURS BLOC - CB <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=45946&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours45946','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Approfondissement des connaissances textuelles et linguistiques en grec ancien -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96029&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96029','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Arabes et Juifs dans le conflit israélo-palestinen  -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95431&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95431','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Araméen I -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95439&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95439','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Atelier de lectures en Nouveau Testament -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=25023&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours25023','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Biologie évolutive et comportementale -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95102&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95102','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Champs et pratiques de l'histoire -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95471&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95471','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Dans la fabrique des cinémas indiens -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=81524&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours81524','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Des activités mentales au comportement : le cerveau dans tous ses états -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95116&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95116','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Diversité religieuse, pluralisme et reconnaissance  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96804&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96804','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Du Veda aux contes des 1001 Nuits: une introduction à la littérature de l'Inde ancienne -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95242&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95242','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Enjeux de la diversité religieuse et culturelle dans un cadre institutionnel (I.)  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92538&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92538','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Enseignement CIVIS -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92290&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92290','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Entre Inde et Europe : religions et cultures en contact (période antique) - Automne <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95117&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95117','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Genre et spiritualité dans l’engagement écologique : Approches théoriques et empiriques (I.)  -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92466&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92466','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Grec postclassique I -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92489&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92489','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Grec postclassique II -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96035&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96035','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Habiter la campagne dans l’Israël ancien aux époques hellénistique et romaine  -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95447&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95447','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Hébreu I -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92488&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92488','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Hébreu II -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96024&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96024','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Hébreu moderne II -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=82013&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours82013','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Hindi intermédiaire : expression orale (niveau 2) -  <span style="font-size: 80%;">[Travaux pratiques]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=82014&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours82014','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Hindi intermédiaire : syntaxe (niveau 2) -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95354&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95354','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Histoire des idées politiques -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96688&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96688','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Histoire et réception de la littérature antique. Voix d'outre-tombe. Faire parler les morts hier et aujourd’hui -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95783&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95783','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Histoire médiévale. Histoire culturelle de l'écrit et paléographie médiévale -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96018&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96018','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Initiation à la langue arabe moderne (niveau I) -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96023&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96023','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Initiation à la langue arabe moderne (niveau II & III)  -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=45945&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours45945','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Initiation au grec ancien -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96668&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96668','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la langue latine I - JE <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=51286&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours51286','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la langue latine I - LU <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=46338&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours46338','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la langue latine I - ME1 <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=68428&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours68428','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la langue latine I - ME2 <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=68427&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours68427','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la langue latine I - COURS BLOC - CB <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95435&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95435','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l'Ancien Testament/Bible hébraïque I. L'histoire de l'Israël ancien et le Pentateuque. -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95939&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95939','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l'anthropologie du religieux : histoire et méthodologie -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95995&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95995','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l'anthropologie visuelle : rites, altérités, colonialités -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95578&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95578','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la philosophie antique (Platon, Aristote) -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92356&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92356','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la psychologie de la religion : Approche psychologique du champ religieux -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95396&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95396','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la religion de l'Egypte ancienne -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96034&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96034','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l’art islamique  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95444&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95444','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à la théologie systématique I -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=81940&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours81940','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l'hindouisme -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96303&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96303','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l'histoire ancienne - Annuel (HANC) <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=78842&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours78842','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l'histoire de l'art II - premiers temps modernes -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=78841&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours78841','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l'histoire de l'art I - période médiévale -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=81941&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours81941','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l'histoire du bouddhisme indien -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96025&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96025','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction à l’Islam I : des origines à 1517. Histoire, religion et civilisation arabo-musulmane  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=46144&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours46144','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction au hindi : grammaire (niveau 1) -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=39110&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours39110','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction au hindi : hindi oral (niveau 1) -  <span style="font-size: 80%;">[Travaux pratiques]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=46143&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours46143','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction au hindi : travaux pratiques (niveau 1) -  <span style="font-size: 80%;">[Travaux pratiques]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92347&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92347','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction au judaïsme : histoire, religion, culture. Des origines à 1492. -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95440&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95440','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction au Nouveau Testament et aux traditions chrétiennes anciennes I   -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=83006&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours83006','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction au sanskrit : cours de grammaire (niveau 1) -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=61426&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours61426','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction au sanskrit : travaux pratiques (niveau 1) -  <span style="font-size: 80%;">[Travaux pratiques]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=81999&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours81999','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction aux langues moyen-indiennes : grammaire (niveau 1) -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95086&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95086','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction aux religions de la Scandinavie médiévale  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96002&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96002','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Introduction aux sciences sociales des migrations, religions, arts : Concepts, courants, état des lieux  -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95504&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95504','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Jean et le johannisme : origines et devenir d'un milieu chrétien ancien -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96042&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96042','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">La « haute christologie » dans le judaïsme ancien  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95508&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95508','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">La méthode historico-critique dans l’exégèse du Nouveau Testament : une introduction -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95474&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95474','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">L’art du Gandhara  (Asie du Sud thématique) -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95998&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95998','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">La sociologie des religions -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95599&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95599','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Le Bien, le Juste, l'Utile. Introduction aux éthiques philosophiques -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=92455&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours92455','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Le christianisme, son histoire et ses problèmes I. De l’Antiquité au XVIe siècle -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=78819&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours78819','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Lecture cursive : prose et poésie -  <span style="font-size: 80%;">[Travaux pratiques]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95437&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95437','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Lecture de textes choisis de l'Ancien Testament/Bible hébraïque -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96686&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96686','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Lectures de textes grecs. Galien, Ne pas se chagriner / Plutarque, Consolation à sa femme -  <span style="font-size: 80%;">[Exercices]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95106&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95106','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">L’effondrement en perspective : climat, religion et peurs de fin du monde à l’époque moderne (16e-18e siècles) I -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95493&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95493','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Le livre d’Ésaïe -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95865&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95865','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Les Juifs et l’Europe : société et politique I  -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95473&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95473','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Le soufisme: histoire, fondements, pratique (Asie du Sud thématique) -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95991&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95991','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Les usages juifs de l’histoire, les usages de l’histoire juive  -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95472&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95472','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">L’histoire du Coran (Asie du Sud thématique) -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96690&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96690','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Littérature grecque et histoire des textes. Les dieux grecs sur la scène théâtrale -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=46166&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours46166','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Littérature ourdoue I (niveau 3) : La prose -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=61423&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours61423','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Littérature sanskrite (niveau 3) -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95085&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95085','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Loups-garous, cauchemars et sacrifices ; ou, l’histoire des religions  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95531&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95531','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Méthodes qualitatives - Bachelor -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96306&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96306','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Méthodologie de l'histoire ancienne: proséminaire - Annuel (HANC) <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95492&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95492','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Méthodologie exégétique en Ancien Testament/Bible hébraïque -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=46164&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours46164','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Ourdou intermédiaire (niveau 1) -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95941&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95941','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Préhistoire et 'religion' : hypothèses archéologiques et imaginaire contemporain  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96004&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96004','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Représentation de l’Islam et des musulmane.x.s dans l’art (musées, théâtre, peinture, littérature, BD, dessins de presse, musique etc.)  -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95483&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95483','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Sanskrit intermédiaire : syntaxe et traduction (niveau 2) -  <span style="font-size: 80%;">[Cours-TP (travaux pratiques)]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95113&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95113','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;"> Sensibilisation à l’éthique de la recherche en sciences humaines et sociales -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95659&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95659','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Sexualité, couple, famille -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95656&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95656','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Socio-histoire de la médecine et du corps -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95481&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95481','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Spiritualités hindoues, médecine et sport : perspectives globales -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95965&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95965','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Syriaque II  -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=50184&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours50184','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Terre! Origine et évolution d'une planète turbulente -  <span style="font-size: 80%;">[Cours]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=50185&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours50185','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Terre! Origine et évolution d'une planète turbulente -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=45943&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours45943','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Travaux d'appui en grec ancien I -  <span style="font-size: 80%;">[Exercices]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=45944&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours45944','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Travaux d'appui en grec ancien II -  <span style="font-size: 80%;">[Exercices]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=95088&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours95088','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Travaux pratiques en Histoire et sciences des religions : approches théoriques et mises en pratique  -  <span style="font-size: 80%;">[Travaux pratiques]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=64508&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours64508','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">UNIGE: Egyptien: Lecture de textes classiques I -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=64504&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours64504','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">UNIGE: Grammaire de l'égyptien classique I -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=64507&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours64507','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">UNIGE: Grammaire de l'égyptien classique II -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=64509&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours64509','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">UNIGE: Introduction aux études égyptologiques et lecture de textes -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96883&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96883','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">UNIGE: Les fêtes du calendrier romain : Études des rites et des mythes du temps romain -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96882&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96882','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">UNIGE: Les rites funéraires -  <span style="font-size: 80%;">[Séminaire]</span></a></li>
+<li><a href="#" onclick="window.open('ficheCours.php?v_enstyid=96695&v_ueid=253&amp;v_etapeid1=29964&amp;v_langue=fr&amp;v_isinterne=','details_cours96695','width=720,height=550,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes'); return false;">Visibles ou invisibles ? Rôles, droits et devoirs des femmes dans le monde gréco-romain -  <span style="font-size: 80%;">[Cours-Séminaire]</span></a></li>
+</ul>
+</div><!-- fin UniDocContent -->
+
+</div><!-- fin main -->
+<!-- footer -->
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div id="footer1">
+
+            <div class="row">
+
+                <div class="col-xs-12 col-sm-4">
+                    <div id="v14linksbottoma" class="postaddress1"> Unicentre - CH-1015 Lausanne<br>
+                        Suisse<br>
+                        Tél.&nbsp;+41 21 692&nbsp;11 11<br>
+                        Fax.&nbsp;+41 21 692&nbsp;26 15<br>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-8">
+
+                    <div class="row">
+
+                        <div class="col-xs-4 col-sm-5">
+                            <div id="v14linksbottom1">
+                                <a href="mailto:wwwenseignement@unil.ch" class="liens">Contact</a><br>
+                                <a href="https://www.unil.ch/central/home/directories.html"
+                                   class="liens">Annuaires</a><br>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-5 col-sm-5">
+                            <div id="v14linksbottom1" style="margin-left: 3px;">
+                                <a href="https://www.unil.ch/central/home/legalinformation.html" class="liens">Informations
+                                    légales</a><br>
+                                <a href="UnSitemap.php" class="liens">Plan du site</a><br>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-3 col-sm-2">
+                            <div id="vd">
+                                <a href="http://www.vd.ch"><img src="images/etat-vaud-logo.svg" alt="Canton de Vaud"
+                                                                border="0" width="39" height="60"></a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- swissuniversity-->
+
+<div class="row">
+
+    <div class="">
+        <div id="swissu1">
+            <a href="http://www.swissuniversities.ch"><img src="images/swissuniversities-logo.svg"
+                                                           alt="Swiss University" border="0" width="96" height="11"></a>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+    </script>
+</body>
+</html>

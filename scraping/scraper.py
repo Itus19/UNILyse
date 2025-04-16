@@ -5,7 +5,7 @@ import csv
 from datetime import datetime
 
 # Définir des constantes globales pour éviter les répétitions
-CSV_FILE = "cours_extraits.csv"
+CSV_FILE = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
 HTML_FOLDER = os.path.join(os.path.dirname(__file__), "html_pages")
 # Fichier CSV pour stocker les évaluations
 EVALUATION_FILE = os.path.join(os.path.dirname(__file__), "../database/evaluations.csv")
@@ -18,6 +18,14 @@ csv_file = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
 
 # URLs des pages à scraper
 urls = {
+    #FTSR
+    "Attestation de 30 crédits ECTS (BA) en Langues de l'Orient - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=33033",
+    "Attestation de 30 crédits ECTS (BA) en Langues de l'Orient - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=33033",
+    "Attestation de 60 crédits ECTS (BA) en sciences des religions (2017), 1ère année - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29963",
+    "Attestation de 60 crédits ECTS (BA) en sciences des religions (2017), 1ère année - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29963",
+    "Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29964",
+    "Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29964",
+    #SSP
     "SSP_Bachelor_1ère_partie_Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=171&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=32348"
 }
 
@@ -207,7 +215,7 @@ def update_evaluation_file():
         eval_data = []
 
     # Indexer les données existantes de evaluation.csv par le nom du cours
-    eval_index = {row['Nom']: row for row in eval_data}
+    eval_index = {row['Nom']: row for row in eval_data if 'Nom' in row}
 
     # Mettre à jour ou ajouter les cours
     updated_data = []
@@ -240,6 +248,40 @@ def update_evaluation_file():
         writer.writerows(updated_data)
 
     print(f"Le fichier {EVALUATION_FILE} a été mis à jour avec succès.")
+
+def remove_duplicates():
+    """Supprime les doublons dans le fichier scraping.csv en combinant les noms des professeurs."""
+    if not os.path.exists(CSV_FILE):
+        print(f"Le fichier {CSV_FILE} n'existe pas. Impossible de supprimer les doublons.")
+        return
+
+    # Charger les données du fichier scraping.csv
+    with open(CSV_FILE, newline='', encoding='utf-8-sig') as csv_file:
+        reader = csv.DictReader(csv_file, delimiter=';')
+        data = list(reader)
+
+    # Utiliser un dictionnaire pour regrouper les cours uniques
+    unique_courses = {}
+    for row in data:
+        key = (row['Semestre'], row['Crédits'], row['Nom'])
+        if key in unique_courses:
+            # Ajouter le professeur à la liste existante s'il n'est pas déjà présent
+            existing_professors = unique_courses[key]['Professeur'].split(', ')
+            new_professor = row['Professeur']
+            if new_professor not in existing_professors:
+                unique_courses[key]['Professeur'] += f", {new_professor}"
+        else:
+            # Ajouter une nouvelle entrée pour ce cours
+            unique_courses[key] = row
+
+    # Écrire les données uniques dans le fichier scraping.csv
+    with open(CSV_FILE, 'w', newline='', encoding='utf-8-sig') as csv_file:
+        fieldnames = reader.fieldnames
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=';')
+        writer.writeheader()
+        writer.writerows(unique_courses.values())
+
+    print(f"Les doublons ont été supprimés et le fichier {CSV_FILE} a été mis à jour.")
 
 def main():
     """Fonction principale pour scraper les données et les sauvegarder dans un fichier CSV."""
@@ -279,6 +321,9 @@ def main():
             print(f"Erreur lors de la sauvegarde des données : {e}")
     else:
         print("Aucune donnée extraite.")
+
+    # Supprimer les doublons
+    remove_duplicates()
 
     # Mettre à jour evaluation.csv après la mise à jour de cours_extraits.csv
     update_evaluation_file()

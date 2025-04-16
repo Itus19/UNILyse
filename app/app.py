@@ -358,7 +358,6 @@ def evaluation():
         })
 
         if success:
-            update_liste_csv()  # Mettre à jour liste.csv après l'ajout
             return jsonify({"message": "Évaluation enregistrée avec succès."}), 200
         else:
             return jsonify({"error": "Erreur lors de l'enregistrement de l'évaluation."}), 500
@@ -473,15 +472,7 @@ if __name__ == '__main__':
 class EvaluationFileHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.src_path.endswith("evaluations.csv"):
-            print("Le fichier evaluations.csv a été modifié. Mise à jour de liste.csv...")
-            if os.path.getsize(event.src_path) == 0:
-                print("Le fichier evaluations.csv est vide. Réinitialisation des moyennes dans liste.csv...")
-                reset_liste_csv_averages()
-            else:
-                update_liste_csv()
-
-            # Émettre un événement WebSocket pour notifier les clients, même si le fichier est vide
-            socketio.emit('update_evaluations', {'message': 'Les évaluations ont été mises à jour ou réinitialisées.'})
+            print("Modification ignorée pour evaluations.csv.")
 
 if __name__ == '__main__':
     # Lancer l'application avec SocketIO

@@ -300,7 +300,7 @@ h2 {
 .course-name-container {
     height: 30px; /* Hauteur alignée avec search-bar */
     flex-grow: 1; /* Permet à l'élément de prendre l'espace disponible */
-    max-width: 100%; /* Empêche de dépasser la largeur disponible */
+    max-width: 50%; /* Empêche de dépasser la largeur disponible */
     text-align: center; /* Alignement horizontal du texte */
     display: flex; /* Utilisation de flexbox */
     align-items: center; /* Alignement vertical du texte */

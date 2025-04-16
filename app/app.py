@@ -158,15 +158,31 @@ def update_evaluation_counts():
         print(f"Erreur lors de la mise à jour des comptes d'évaluations : {e}")
 
 def read_courses_data():
-    """Lit les données du fichier liste.csv et les retourne sous forme de liste de dictionnaires."""
+    """Lit les données des fichiers liste.csv et evaluations.csv et les fusionne."""
     courses = []
+    evaluations = {}
+
+    # Lire les données de evaluations.csv
+    try:
+        with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
+            reader = csv.DictReader(eval_file, delimiter=';')
+            for row in reader:
+                evaluations[row['evaluation_id']] = row
+    except Exception as e:
+        print(f"Erreur lors de la lecture de evaluations.csv : {e}")
+
+    # Lire les données de liste.csv et les enrichir avec celles de evaluations.csv
     try:
         with open(LISTE_CSV, newline='', encoding='utf-8-sig') as courses_file:
             reader = csv.DictReader(courses_file, delimiter=';')
             for row in reader:
+                evaluation_id = row.get('evaluation_id')
+                if evaluation_id in evaluations:
+                    row.update(evaluations[evaluation_id])
                 courses.append(row)
     except Exception as e:
         print(f"Erreur lors de la lecture de liste.csv : {e}")
+
     return courses
 
 def update_evaluation_with_reference(course_name, data):
@@ -197,9 +213,12 @@ def update_evaluation_with_reference(course_name, data):
         'Moyenne_Globale': '',
         'Commentaires_Généraux': '',
         'Commentaires_Conseils': '',
-        'Like': '0',
-        'Dislike': '0',
-        'Signalement': '0'
+        'Like_Généraux': '0',
+        'Dislike_Généraux': '0',
+        'Signalement_Généraux': '0',
+        'Like_Conseils': '0',
+        'Dislike_Conseils': '0',
+        'Signalement_Conseils': '0'
     }
 
     # Mettre à jour les colonnes avec les données fournies
@@ -207,7 +226,7 @@ def update_evaluation_with_reference(course_name, data):
 
     try:
         with open(EVALUATIONS_CSV, 'a', newline='', encoding='utf-8-sig') as eval_file:
-            fieldnames = ['Nom_Cours', 'Professeur', 'Auteur', 'Date_Evaluation', 'Intérêt_Q1', 'Intérêt_Q2', 'Intérêt_Q3', 'Moyenne_Intérêt', 'Difficulté_Q1', 'Difficulté_Q2', 'Difficulté_Q3', 'Moyenne_Difficulté', 'Travail_Q1', 'Moyenne_Travail', 'Moyenne_Globale', 'Commentaires_Généraux', 'Commentaires_Conseils', 'Like', 'Dislike', 'Signalement']
+            fieldnames = ['Nom_Cours', 'Professeur', 'Auteur', 'Date_Evaluation', 'Intérêt_Q1', 'Intérêt_Q2', 'Intérêt_Q3', 'Moyenne_Intérêt', 'Difficulté_Q1', 'Difficulté_Q2', 'Difficulté_Q3', 'Moyenne_Difficulté', 'Travail_Q1', 'Moyenne_Travail', 'Moyenne_Globale', 'Commentaires_Généraux', 'Commentaires_Conseils', 'Like_Généraux', 'Dislike_Généraux', 'Signalement_Généraux', 'Like_Conseils', 'Dislike_Conseils', 'Signalement_Conseils']
             writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
 
             # Écrire l'évaluation dans le fichier
@@ -393,6 +412,51 @@ def serve_evaluations_csv():
     try:
         directory = os.path.join(os.path.dirname(__file__), '../database')
         return send_from_directory(directory, 'evaluations.csv')
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/update-reaction', methods=['POST'])
+def update_reaction():
+    """Met à jour les colonnes Like_Généraux, Dislike_Généraux, Signalement_Généraux, etc., pour un commentaire donné."""
+    try:
+        # Ajout de logs pour déboguer les données reçues
+        print("Données reçues :", request.json)
+
+        evaluation_id = request.json.get('evaluation_id')
+        reaction_type = request.json.get('reaction_type')
+        comment_type = request.json.get('comment_type')
+
+        if not evaluation_id or reaction_type not in ['Like', 'Dislike', 'Signalement'] or comment_type not in ['general', 'conseils']:
+            return jsonify({"error": "Données invalides."}), 400
+
+        evaluations = []
+        with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
+            reader = csv.DictReader(eval_file, delimiter=';')
+            evaluations = list(reader)
+
+        # Déterminer la colonne à mettre à jour
+        reaction_column = f"{reaction_type}_{'Généraux' if comment_type == 'general' else 'Conseils'}"
+
+        updated = False
+        for row in evaluations:
+            if row['evaluation_id'] == evaluation_id:
+                print(f"Avant mise à jour : {reaction_column} = {row.get(reaction_column, 0)}")
+                row[reaction_column] = str(int(row.get(reaction_column, 0)) + 1)
+                print(f"Après mise à jour : {reaction_column} = {row[reaction_column]}")
+                updated = True
+                break
+
+        if not updated:
+            return jsonify({"error": "Évaluation non trouvée."}), 404
+
+        with open(EVALUATIONS_CSV, 'w', newline='', encoding='utf-8-sig') as eval_file:
+            fieldnames = evaluations[0].keys()
+            writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
+            writer.writeheader()
+            writer.writerows(evaluations)
+
+        return jsonify({"message": "Réaction mise à jour avec succès."}), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

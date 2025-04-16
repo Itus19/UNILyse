@@ -473,11 +473,40 @@ h2 {
 }
 
 .comment-card .comment-footer .reactions {
-    height: 13px; /* Ajuste la hauteur des réactions */
+    height: 15px; /* Ajuste la hauteur des réactions */
     display: flex; /* Utilisation de flexbox pour aligner les éléments */
     justify-content: flex-end; /* Aligne les réactions à droite */
     gap: 5px; /* Espace entre les réactions */
     font-size: 12px; 
+}
+
+/* Styles de base pour les boutons de réaction */
+.reaction-button {
+    height: 20px; /* Ajuste la hauteur des boutons */
+    background-color: #f0f0f0; /* Couleur de fond neutre */
+    border: 1px solid #ccc; /* Bordure légère */
+    border-radius: 5px; /* Coins arrondis */
+    padding: 0px 10px; /* Espacement interne */
+    font-size: 14px; /* Taille de police */
+    cursor: pointer; /* Curseur pointeur pour indiquer qu'il est cliquable */
+    transition: background-color 0.3s, transform 0.2s; /* Animation pour le survol */
+}
+/* Styles pour les boutons de réaction au survol */
+.reaction-button:hover {
+    background-color: #e0e0e0; /* Couleur de fond au survol */
+    transform: scale(1.05); /* Légère mise en avant au survol */
+}
+
+.like-button {
+    color: #28a745; /* Couleur verte pour le bouton Like */
+}
+
+.dislike-button {
+    color: #dc3545; /* Couleur rouge pour le bouton Dislike */
+}
+
+.report-button {
+    color: #ffc107; /* Couleur jaune pour le bouton Signalement */
 }
 
 /* ============================

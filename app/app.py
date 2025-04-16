@@ -181,7 +181,7 @@ def update_evaluation_with_reference(course_name, data):
     new_evaluation = {
         'Nom_Cours': course_name,
         'Professeur': course_data['Professeur'],
-        'Date_Evaluation': datetime.now().strftime('%Y-%m-%d'),
+        'Date_Evaluation': datetime.now().strftime('%d-%m-%Y'),
         **data
     }
 

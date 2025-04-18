@@ -15,8 +15,8 @@
     </p>
 
     <!-- Formulaire d'évaluation -->
-    {% set courses = ["Anthropologie culturelle et sociale A", "Anthropologie culturelle et sociale B", "Anthropologie culturelle et sociale I", "Concepts de base en sciences sociales", "Histoire de la psychologie", "Histoire des idées politiques", "Histoire internationale contemporaine", "Institutions et régimes politiques", "Introduction à la psychologie sociale", "Introduction à la recherche", "Introduction à la recherche: interactions familiales et parcours de vie", "Introduction à la recherche: la construction sociale du corps", "Introduction à la recherche: la perspective de genre", "Introduction à la recherche: migrations et transnationalisme", "Introduction à la recherche: vote, abstention et rapport au politique 1", "Introduction à la recherche: vote, abstention et rapport au politique 2", "Introduction à la recherche: vote, abstention et rapport au politique 3", "Introduction à la science politique", "Introduction à l'histoire des activités physiques et du sport", "Introduction aux méthodes de l'histoire I", "Introduction aux théories économiques", "Politique sociale", "Psychologie du développement", "Sciences sociales et sport", "Sociologie générale A", "Sociologie générale B", "Sociologie générale I"] %}
-
+    {% set courses = courses or [] %}
+    
     <form id="evaluation-form" method="POST" data-courses="{{ courses|tojson|safe }}">
         <input type="text" id="course-name" name="course_name" class="search-bar-2" placeholder="Rechercher un cours..." required>
         <ul id="search-suggestions" class="search-suggestions"></ul>

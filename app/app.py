@@ -33,6 +33,17 @@ def initialize_evaluation_csv():
         else:
             print("Le fichier liste.csv n'existe pas.")
 
+def get_course_names():
+    """Récupère les noms des cours depuis liste.csv."""
+    course_names = []
+    try:
+        with open(LISTE_CSV, newline='', encoding='utf-8-sig') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')
+            course_names = [row['Nom'] for row in reader if 'Nom' in row]
+    except Exception as e:
+        print(f"Erreur lors de la lecture de liste.csv : {e}")
+    return course_names
+
 def initialize_liste_csv():
     """Initialise le fichier liste.csv avec les données de scraping.csv."""
     scraping_csv = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
@@ -362,7 +373,8 @@ def evaluation():
         else:
             return jsonify({"error": "Erreur lors de l'enregistrement de l'évaluation."}), 500
 
-    courses = read_courses_data()  # Lire les données depuis liste.csv
+    # Récupérer les noms des cours depuis liste.csv
+    courses = get_course_names()
     return render_template('evaluation.html', courses=courses)
 
 @app.route('/last-update')
@@ -486,3 +498,4 @@ def format_date_to_dd_mm_yyyy(date_str):
         return datetime.strptime(date_str, '%Y-%m-%d').strftime('%d-%m-%Y')
     except ValueError:
         return date_str
+

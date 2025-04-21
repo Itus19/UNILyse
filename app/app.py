@@ -1,9 +1,10 @@
-from flask import Flask, render_template, jsonify, request, send_from_directory
+from flask import Flask, render_template, jsonify, request, redirect, send_from_directory
 import os
 import csv
 from datetime import datetime
 from flask_socketio import SocketIO
 from watchdog.events import FileSystemEventHandler
+
 
 app = Flask(__name__)  # Définition de l'objet app
 
@@ -178,7 +179,7 @@ def read_courses_data():
         with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
             reader = csv.DictReader(eval_file, delimiter=';')
             for row in reader:
-                evaluations[row['evaluation_id']] = row
+                evaluations[row['Evaluation_id']] = row
     except Exception as e:
         print(f"Erreur lors de la lecture de evaluations.csv : {e}")
 
@@ -187,66 +188,52 @@ def read_courses_data():
         with open(LISTE_CSV, newline='', encoding='utf-8-sig') as courses_file:
             reader = csv.DictReader(courses_file, delimiter=';')
             for row in reader:
-                evaluation_id = row.get('evaluation_id')
-                if evaluation_id in evaluations:
-                    row.update(evaluations[evaluation_id])
+                Evaluation_id = row.get('Evaluation_id')
+                if Evaluation_id in evaluations:
+                    row.update(evaluations[Evaluation_id])
                 courses.append(row)
     except Exception as e:
         print(f"Erreur lors de la lecture de liste.csv : {e}")
 
     return courses
 
-def update_evaluation_with_reference(course_name, data):
-    """Ajoute une nouvelle évaluation en complétant les données manquantes avec liste.csv."""
-    courses = read_courses_data()
-    course_data = next((course for course in courses if course['Nom'] == course_name), None)
+def update_evaluation_with_reference(course_name, evaluation_data):
+    """Ajoute une nouvelle évaluation avec un Evaluation_id généré."""
+    # Générer un identifiant unique
+    Evaluation_id = generate_Evaluation_id()
+    evaluation_data['Evaluation_id'] = Evaluation_id
 
-    if not course_data:
-        print(f"Erreur : le cours '{course_name}' n'existe pas dans liste.csv.")
-        return False
-
-    # Compléter les données manquantes avec les informations de liste.csv
-    new_evaluation = {
-        'Nom_Cours': course_name,
-        'Professeur': course_data['Professeur'],
-        'Date_Evaluation': datetime.now().strftime('%d-%m-%Y'),
-        'Auteur': 'Anne Onyme',  # Remplacer par l'utilisateur actuel si nécessaire
-        'Intérêt_Q1': '',
-        'Intérêt_Q2': '',
-        'Intérêt_Q3': '',
-        'Moyenne_Intérêt': '',
-        'Difficulté_Q1': '',
-        'Difficulté_Q2': '',
-        'Difficulté_Q3': '',
-        'Moyenne_Difficulté': '',
-        'Travail_Q1': '',
-        'Moyenne_Travail': '',
-        'Moyenne_Globale': '',
-        'Commentaires_Généraux': '',
-        'Commentaires_Conseils': '',
-        'Like_Généraux': '0',
-        'Dislike_Généraux': '0',
-        'Signalement_Généraux': '0',
-        'Like_Conseils': '0',
-        'Dislike_Conseils': '0',
-        'Signalement_Conseils': '0'
+    # Compléter les données manquantes avec des valeurs par défaut
+    default_values = {
+        'Intérêt_Q1': '', 'Intérêt_Q2': '', 'Intérêt_Q3': '', 'Moyenne_Intérêt': '',
+        'Difficulté_Q1': '', 'Difficulté_Q2': '', 'Difficulté_Q3': '', 'Moyenne_Difficulté': '',
+        'Travail_Q1': '', 'Moyenne_Travail': '', 'Moyenne_Globale': '',
+        'Commentaires_Généraux': '', 'Commentaires_Conseils': '',
+        'Like_Généraux': '0', 'Dislike_Généraux': '0', 'Signalement_Généraux': '0',
+        'Like_Conseils': '0', 'Dislike_Conseils': '0', 'Signalement_Conseils': '0'
     }
+    for key, value in default_values.items():
+        evaluation_data.setdefault(key, value)
 
-    # Mettre à jour les colonnes avec les données fournies
-    new_evaluation.update(data)
-
+    # Ajouter l'évaluation au fichier CSV
     try:
         with open(EVALUATIONS_CSV, 'a', newline='', encoding='utf-8-sig') as eval_file:
-            fieldnames = ['Nom_Cours', 'Professeur', 'Auteur', 'Date_Evaluation', 'Intérêt_Q1', 'Intérêt_Q2', 'Intérêt_Q3', 'Moyenne_Intérêt', 'Difficulté_Q1', 'Difficulté_Q2', 'Difficulté_Q3', 'Moyenne_Difficulté', 'Travail_Q1', 'Moyenne_Travail', 'Moyenne_Globale', 'Commentaires_Généraux', 'Commentaires_Conseils', 'Like_Généraux', 'Dislike_Généraux', 'Signalement_Généraux', 'Like_Conseils', 'Dislike_Conseils', 'Signalement_Conseils']
+            fieldnames = ['Evaluation_id', 'Nom_Cours', 'Professeur', 'Auteur', 'Date_Evaluation',
+                          'Intérêt_Q1', 'Intérêt_Q2', 'Intérêt_Q3', 'Moyenne_Intérêt',
+                          'Difficulté_Q1', 'Difficulté_Q2', 'Difficulté_Q3', 'Moyenne_Difficulté',
+                          'Travail_Q1', 'Moyenne_Travail', 'Moyenne_Globale',
+                          'Commentaires_Généraux', 'Commentaires_Conseils',
+                          'Like_Généraux', 'Dislike_Généraux', 'Signalement_Généraux',
+                          'Like_Conseils', 'Dislike_Conseils', 'Signalement_Conseils']
             writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
-
-            # Écrire l'évaluation dans le fichier
-            writer.writerow(new_evaluation)
+            if os.stat(EVALUATIONS_CSV).st_size == 0:  # Si le fichier est vide, écrire l'en-tête
+                writer.writeheader()
+            writer.writerow(evaluation_data)
         return True
     except Exception as e:
         print(f"Erreur lors de l'ajout de l'évaluation dans evaluations.csv : {e}")
         return False
-
+    
 def update_liste_csv():
     """Met à jour les moyennes et le nombre d'évaluations dans liste.csv en fonction des données d'evaluations.csv."""
     # Charger les données d'évaluations
@@ -322,37 +309,47 @@ def liste():
     courses = read_courses_data()  # Lire les données depuis liste.csv
     return render_template('liste.html', courses=courses)
 
+def get_professor_from_course(course_name):
+    """Récupère le nom du professeur depuis liste.csv en fonction du nom du cours."""
+    try:
+        with open(LISTE_CSV, newline='', encoding='utf-8-sig') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')
+            for row in reader:
+                if row['Nom'] == course_name:
+                    return row['Professeur']
+    except Exception as e:
+        print(f"Erreur lors de la lecture de liste.csv : {e}")
+    return "Inconnu"
+
 @app.route('/evaluation', methods=['GET', 'POST'])
 def evaluation():
-    initialize_evaluation_csv()  # S'assurer que le fichier evaluation.csv existe
-
     if request.method == 'POST':
+        # Récupérer les données du formulaire
         course_name = request.form.get('course_name')
-        interest_q1 = float(request.form.get('interest_q1')) * 1.5  # Conversion sur 6
-        interest_q2 = float(request.form.get('interest_q2')) * 1.5  # Conversion sur 6
-        interest_q3 = float(request.form.get('interest_q3')) * 1.5  # Conversion sur 6
-        difficulty_q1 = float(request.form.get('difficulty_q1')) * 1.5  # Conversion sur 6
-        difficulty_q2 = float(request.form.get('difficulty_q2')) * 1.5  # Conversion sur 6
-        difficulty_q3 = float(request.form.get('difficulty_q3')) * 1.5  # Conversion sur 6
-        work_q1 = float(request.form.get('work_q1')) * 1.5  # Conversion sur 6
+        professor = get_professor_from_course(course_name)  # Récupérer le professeur depuis liste.csv
+        author = request.form.get('author')
+        interest_q1 = request.form.get('interest_q1')
+        interest_q2 = request.form.get('interest_q2')
+        interest_q3 = request.form.get('interest_q3')
+        difficulty_q1 = request.form.get('difficulty_q1')
+        difficulty_q2 = request.form.get('difficulty_q2')
+        difficulty_q3 = request.form.get('difficulty_q3')
+        work_q1 = request.form.get('work_q1')
         comments_general = request.form.get('comments_general')
         comments_tips = request.form.get('comments_tips')
 
-        # Calcul des moyennes sur 4
-        moyenne_interet = round((float(request.form.get('interest_q1')) + float(request.form.get('interest_q2')) + float(request.form.get('interest_q3'))) / 3, 1)
-        moyenne_difficulte = round((float(request.form.get('difficulty_q1')) + float(request.form.get('difficulty_q2')) + float(request.form.get('difficulty_q3'))) / 3, 1)
-        moyenne_travail = round(float(request.form.get('work_q1')), 1)
-
-        # Conversion des moyennes sur 6
-        moyenne_interet = round(moyenne_interet * 1.5, 1)
-        moyenne_difficulte = round(moyenne_difficulte * 1.5, 1)
-        moyenne_travail = round(moyenne_travail * 1.5, 1)
-
-        # Calcul de la moyenne globale
+        # Calculer les moyennes
+        moyenne_interet = round((float(interest_q1) + float(interest_q2) + float(interest_q3)) / 3, 1)
+        moyenne_difficulte = round((float(difficulty_q1) + float(difficulty_q2) + float(difficulty_q3)) / 3, 1)
+        moyenne_travail = round(float(work_q1), 1)
         moyenne_globale = round((moyenne_interet + moyenne_difficulte + moyenne_travail) / 3, 1)
 
-        # Ajouter une nouvelle évaluation dans evaluations.csv
-        success = update_evaluation_with_reference(course_name, {
+        # Préparer les données pour l'évaluation
+        evaluation_data = {
+            'Nom_Cours': course_name,
+            'Professeur': professor,
+            'Auteur': author,
+            'Date_Evaluation': datetime.now().strftime('%d-%m-%Y'),
             'Intérêt_Q1': interest_q1,
             'Intérêt_Q2': interest_q2,
             'Intérêt_Q3': interest_q3,
@@ -366,14 +363,17 @@ def evaluation():
             'Moyenne_Globale': moyenne_globale,
             'Commentaires_Généraux': comments_general,
             'Commentaires_Conseils': comments_tips
-        })
+        }
+
+        # Ajouter l'évaluation
+        success = update_evaluation_with_reference(course_name, evaluation_data)
 
         if success:
-            return jsonify({"message": "Évaluation enregistrée avec succès."}), 200
+            return redirect('/')
         else:
-            return jsonify({"error": "Erreur lors de l'enregistrement de l'évaluation."}), 500
+            return render_template('evaluation.html', error="Erreur lors de l'ajout de l'évaluation.")
 
-    # Récupérer les noms des cours depuis liste.csv
+    # Afficher la page d'évaluation
     courses = get_course_names()
     return render_template('evaluation.html', courses=courses)
 
@@ -426,6 +426,23 @@ def serve_evaluations_csv():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+def generate_Evaluation_id():
+    """Génère un Evaluation_id au format année_numéro."""
+    current_year = datetime.now().year
+    evaluations = []
+
+    # Charger les évaluations existantes
+    if os.path.exists(EVALUATIONS_CSV):
+        with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
+            reader = csv.DictReader(eval_file, delimiter=';')
+            evaluations = list(reader)
+
+    # Filtrer les évaluations de l'année en cours
+    current_year_evaluations = [row for row in evaluations if row['Evaluation_id'].startswith(str(current_year))]
+    next_number = len(current_year_evaluations) + 1
+
+    return f"{current_year}_{next_number}"
+
 @app.route('/update-reaction', methods=['POST'])
 def update_reaction():
     """Met à jour les colonnes Like_Généraux, Dislike_Généraux, Signalement_Généraux, etc., pour un commentaire donné."""
@@ -433,11 +450,15 @@ def update_reaction():
         # Ajout de logs pour déboguer les données reçues
         print("Données reçues :", request.json)
 
-        evaluation_id = request.json.get('evaluation_id')
+        Evaluation_id = request.json.get('Evaluation_id')
         reaction_type = request.json.get('reaction_type')
         comment_type = request.json.get('comment_type')
 
-        if not evaluation_id or reaction_type not in ['Like', 'Dislike', 'Signalement'] or comment_type not in ['general', 'conseils']:
+        # Générer un nouvel evaluation_id si nécessaire
+        if not Evaluation_id:
+            Evaluation_id = generate_Evaluation_id()
+
+        if reaction_type not in ['Like', 'Dislike', 'Signalement'] or comment_type not in ['general', 'conseils']:
             return jsonify({"error": "Données invalides."}), 400
 
         evaluations = []
@@ -450,7 +471,7 @@ def update_reaction():
 
         updated = False
         for row in evaluations:
-            if row['evaluation_id'] == evaluation_id:
+            if row['Evaluation_id'] == Evaluation_id:
                 print(f"Avant mise à jour : {reaction_column} = {row.get(reaction_column, 0)}")
                 row[reaction_column] = str(int(row.get(reaction_column, 0)) + 1)
                 print(f"Après mise à jour : {reaction_column} = {row[reaction_column]}")
@@ -479,16 +500,13 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"Erreur lors de la mise à jour de liste.csv : {e}")
 
-    app.run(debug=True, port=5001)  # Assurez-vous que l'application est lancée correctement
+    # Lancer l'application avec SocketIO
+    socketio.run(app, debug=True, port=5001)
 
 class EvaluationFileHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.src_path.endswith("evaluations.csv"):
             print("Modification ignorée pour evaluations.csv.")
-
-if __name__ == '__main__':
-    # Lancer l'application avec SocketIO
-    socketio.run(app, debug=True, port=5001)
 
 from datetime import datetime
 

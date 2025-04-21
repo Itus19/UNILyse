@@ -1,11 +1,17 @@
-﻿evaluation_id;Nom_Cours;Professeur;Auteur;Date_Evaluation;Intérêt_Q1;Intérêt_Q2;Intérêt_Q3;Moyenne_Intérêt;Difficulté_Q1;Difficulté_Q2;Difficulté_Q3;Moyenne_Difficulté;Travail_Q1;Moyenne_Travail;Moyenne_Globale;Commentaires_Généraux;Commentaires_Conseils;Like_Généraux;Dislike_Généraux;Signalement_Généraux;Like_Conseils;Dislike_Conseils;Signalement_Conseils
-1;Anthropologie culturelle et sociale A;Mark Goodale;Jacques;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Trop bien;Va aux cours;22;6;0;1;0;0
-2;Anthropologie culturelle et sociale B;Irene Maffi;Jean;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Cool;Travail bien;3;3;0;0;0;0
-3;Anthropologie culturelle et sociale B;Irene Maffi;Jules;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Bien;;0;0;0;0;0;0
-4;Anthropologie culturelle et sociale I;Mark Goodale;Gabriel;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;C'est super !;impossible;0;0;0;0;0;0
-5;Anthropologie culturelle et sociale I;Mark Goodale;Marcel;16-04-2025;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;;Dur dur;0;0;0;0;0;0
-6;Anthropologie culturelle et sociale I;Mark Goodale;François;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;C'est très chouette;Des fiches de révision c'est cool;0;0;0;0;0;0
-7;Anthropologie culturelle et sociale A;Mark Goodale;Pascaline;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Top TOp Top;Podcast;0;0;0;0;0;0
-8;Concepts de base en sciences sociales;Laurence Kaufmann;Claude;16-04-2025;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;Vraiment chouette;;0;0;0;0;0;0
-9;Concepts de base en sciences sociales;Laurence Kaufmann;Anne Onyme;16-04-2025;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;Cool ;Work work work;0;0;0;0;0;0
-10;Concepts de base en sciences sociales;Laurence Kaufmann;Anne Onyme;16-04-2025;3.0;3.0;3.0;3.0;3.0;3.0;3.0;3.0;3.0;3.0;3.0;Arrrrrrrrr;Grrrrrrrrr;0;0;0;0;0;0
+﻿Evaluation_id;Nom_Cours;Professeur;Auteur;Date_Evaluation;Intérêt_Q1;Intérêt_Q2;Intérêt_Q3;Moyenne_Intérêt;Difficulté_Q1;Difficulté_Q2;Difficulté_Q3;Moyenne_Difficulté;Travail_Q1;Moyenne_Travail;Moyenne_Globale;Commentaires_Généraux;Commentaires_Conseils;Like_Généraux;Dislike_Généraux;Signalement_Généraux;Like_Conseils;Dislike_Conseils;Signalement_Conseils
+2025_1;Anthropologie culturelle et sociale A;Mark Goodale;Jacques;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Trop bien;Va aux cours;22;6;0;1;0;0
+2025_2;Anthropologie culturelle et sociale B;Irene Maffi;Jean;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Cool;Travail bien;3;3;0;0;0;0
+2025_3;Anthropologie culturelle et sociale B;Irene Maffi;Jules;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Bien;;0;0;0;0;0;0
+2025_4;Anthropologie culturelle et sociale I;Mark Goodale;Gabriel;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;C'est super !;impossible;0;0;0;0;0;0
+2025_5;Anthropologie culturelle et sociale I;Mark Goodale;Marcel;16-04-2025;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;;Dur dur;0;0;0;0;0;0
+2025_6;Anthropologie culturelle et sociale I;Mark Goodale;François;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;C'est très chouette;Des fiches de révision c'est cool;0;0;0;0;0;0
+2025_7;Anthropologie culturelle et sociale A;Mark Goodale;Pascaline;16-04-2025;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;1.5;Top TOp Top;Podcast;0;0;0;0;0;0
+2025_8;Concepts de base en sciences sociales;Laurence Kaufmann;Claude;16-04-2025;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;6.0;Vraiment chouette;;0;0;0;0;0;0
+2025_9;Concepts de base en sciences sociales;Laurence Kaufmann;Anne Onyme;16-04-2025;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;Cool ;Work work work;0;0;0;0;0;0
+2025_10;Concepts de base en sciences sociales;Laurence Kaufmann;Anne Onyme;16-04-2025;3.0;3.0;3.0;3.0;3.0;3.0;3.0;3.0;3.0;3.0;3.0;Arrrrrrrrr;Grrrrrrrrr;0;0;0;0;0;0
+2025_11;Araméen I;Jürg Hutzli;Anne Onyme;21-04-2025;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;4.5;RTrop;Pas ouf;4;0;0;0;0;0
+2025_12;Grec postclassique I;Anne Boiché;Anne Onyme;21-04-2025;6.0;6.0;4.5;5.6;4.5;4.5;6.0;4.9;4.5;4.5;5.0;Trop bien le grec;C'est pas du latin;0;0;0;0;0;0
+2025_13;Grec postclassique II;;;21-04-2025;3;3;2;2.7;2;2;3;2.3;2;2.0;2.3;kioadf;agsfdaf;0;0;0;0;0;0
+2025_14;Grec postclassique I;;;21-04-2025;1;2;2;1.7;2;3;3;2.7;3;3.0;2.5;mjogiwbnuid; jkagersdfd;0;0;0;0;0;0
+2025_15;Grec postclassique I;;;21-04-2025;1;1;1;1.0;1;1;1;1.0;1;1.0;1.0;k;saf;0;0;0;0;0;0
+2025_16;Grec postclassique I;Anne Boiché;;21-04-2025;1;1;1;1.0;1;1;1;1.0;1;1.0;1.0;jiumkl;hkjl.k;0;0;0;0;0;0

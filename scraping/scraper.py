@@ -8,7 +8,6 @@ from datetime import datetime
 CSV_FILE = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
 HTML_FOLDER = os.path.join(os.path.dirname(__file__), "html_pages")
 # Fichier CSV pour stocker les évaluations
-EVALUATION_FILE = os.path.join(os.path.dirname(__file__), "../database/evaluations.csv")
 
 # Dossier pour stocker les pages HTML
 os.makedirs(HTML_FOLDER, exist_ok=True)
@@ -19,12 +18,29 @@ csv_file = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
 # URLs des pages à scraper
 urls = {
     #FTSR
-    "Attestation de 30 crédits ECTS (BA) en Langues de l'Orient - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=33033",
-    "Attestation de 30 crédits ECTS (BA) en Langues de l'Orient - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=33033",
-    "Attestation de 60 crédits ECTS (BA) en sciences des religions (2017), 1ère année - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29963",
-    "Attestation de 60 crédits ECTS (BA) en sciences des religions (2017), 1ère année - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29963",
-    "Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29964",
-    "Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29964",
+    "FTSR_Attestation de 30 crédits ECTS (BA) en Langues de l'Orient - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=33033",
+    "FTSR_Attestation de 30 crédits ECTS (BA) en Langues de l'Orient - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=33033",
+    "FTSR_Attestation de 60 crédits ECTS (BA) en sciences des religions (2017), 1ère année - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29963",
+    "FTSR_Attestation de 60 crédits ECTS (BA) en sciences des religions (2017), 1ère année - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29963",
+    "FTSR_Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29964",
+    "FTSR_Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29964",
+    "FTSR_Baccalauréat universitaire en sciences des religions (2017), 1ère année - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29959",
+    "FTSR_Baccalauréat universitaire en sciences des religions (2017), 1ère année - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29959",
+    "FTSR_Baccalauréat universitaire en sciences des religions (2017), 2ème partie - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29960",
+    "FTSR_Baccalauréat universitaire en sciences des religions (2017), 2ème partie - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29960",
+    "FTSR_Préalable à la Maîtrise universitaire en Sciences des religions (2017) - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=30339",
+    "FTSR_Préalable à la Maîtrise universitaire en Sciences des religions (2017) - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=30339",
+    "FTSR_Programme de spécialisation «Histoire de l'Islam» (Master en sciences des religions) - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=34855",
+    "FTSR_Programme de spécialisation «Histoire de l'Islam» (Master en sciences des religions) - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=34855",
+    "FTSR_Programme de spécialisation «Eclairer l'interculturalité» (Master en sciences des religions) - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=31011",
+    "FTSR_Programme de spécialisation «Eclairer l'interculturalité» (Master en sciences des religions) - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=31011",
+    "FTSR_Attestation 30 crédits ECTS (MA) en sciences des religions - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=28098",
+    "FTSR_Attestation 30 crédits ECTS (MA) en sciences des religions - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=28098",
+    "FTSR_Maîtrise universitaire en sciences des religions - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=28099",
+    "FTSR_Maîtrise universitaire en sciences des religions - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=28099",
+    #FDCA
+    "FDCA_Droit allemand (étudiants réguliers) - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=5&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=797",
+    "FDCA_Droit allemand (étudiants réguliers) - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=5&v_semposselected=171&v_langue=fr&v_isinterne=&v_etapeid1=797",
     #SSP
     "SSP_Bachelor_1ère_partie_Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=171&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=32348"
 }
@@ -82,7 +98,7 @@ def normalize_faculty(faculty_name):
     mapping = {
         "Faculté des sciences sociales et politiques": "SSP",
         "Faculté de théologie et de sciences des religions": "FTSR",
-        "Faculté de droit‚ des sciences criminelles et d'administration publique": "FDCA",
+        "Faculté de droit, des sciences criminelles et d'administration publique": "FDCA",
         "Ecole des sciences criminelles": "ESC",
         "Institut de hautes études en administration publique": "IDHEAP",
         "Faculté des lettres": "LETTRES",
@@ -171,8 +187,14 @@ def update_html_file(name, url):
         response = requests.get(url)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
-        file_name = f"UNIL_liste_de_cours_{name}.html"
+        
+        # Normaliser le nom de la faculté
+        faculty_name = normalize_faculty(name.split(" - ")[0])  # Extraire et normaliser la faculté
+        
+        # Nommer le fichier avec le nom normalisé de la faculté
+        file_name = f"{name}.html"
         file_path = os.path.join(HTML_FOLDER, file_name)
+        
         with open(file_path, 'w', encoding='utf-8-sig') as file:
             file.write(response.text)
         print(f"Mise à jour du fichier HTML pour {name} réussie sous le nom : {file_name}")
@@ -182,7 +204,12 @@ def update_html_file(name, url):
 def check_html_update():
     """Vérifie si les fichiers HTML doivent être mis à jour."""
     for name, url in urls.items():
-        file_path = os.path.join(HTML_FOLDER, f"UNIL_liste_de_cours_{name}.html")
+        # Extraire et normaliser le nom de la faculté
+        faculty_name = normalize_faculty(name.split(" - ")[0])  # Correction ici
+        
+        # Construire le chemin du fichier avec le nom normalisé de la faculté
+        file_path = os.path.join(HTML_FOLDER, f"{name}.html")
+        
         if os.path.exists(file_path):
             last_modified = datetime.fromtimestamp(os.path.getmtime(file_path))
             today = datetime.now()
@@ -194,60 +221,6 @@ def check_html_update():
         else:
             print(f"Le fichier HTML {name} n'existe pas. Téléchargement en cours...")
             update_html_file(name, url)
-
-def update_evaluation_file():
-    """Met à jour le fichier evaluation.csv en ajoutant les cours manquants et en mettant à jour les données existantes."""
-    if not os.path.exists(CSV_FILE):
-        print(f"Le fichier {CSV_FILE} n'existe pas. Impossible de mettre à jour evaluation.csv.")
-        return
-
-    # Charger les données de cours_extraits.csv
-    with open(CSV_FILE, newline='', encoding='utf-8-sig') as courses_file:
-        courses_reader = csv.DictReader(courses_file, delimiter=';')
-        courses_data = list(courses_reader)
-
-    # Charger les données existantes de evaluation.csv
-    if os.path.exists(EVALUATION_FILE):
-        with open(EVALUATION_FILE, newline='', encoding='utf-8-sig') as eval_file:
-            eval_reader = csv.DictReader(eval_file, delimiter=';')
-            eval_data = list(eval_reader)
-    else:
-        eval_data = []
-
-    # Indexer les données existantes de evaluation.csv par le nom du cours
-    eval_index = {row['Nom']: row for row in eval_data if 'Nom' in row}
-
-    # Mettre à jour ou ajouter les cours
-    updated_data = []
-    for course in courses_data:
-        course_name = course['Nom']
-        if course_name in eval_index:
-            # Mettre à jour les informations du cours existant
-            eval_row = eval_index[course_name]
-            for key in ['Faculté', 'Semestre', 'Crédits', 'Professeur', 'Lien']:
-                eval_row[key] = course[key]
-            updated_data.append(eval_row)
-        else:
-            # Ajouter un nouveau cours avec des colonnes vides pour les évaluations
-            new_row = {**course, 'Intérêt_Q1': '', 'Intérêt_Q2': '', 'Intérêt_Q3': '', 'Moyenne_Intérêt': '',
-                       'Difficulté_Q1': '', 'Difficulté_Q2': '', 'Difficulté_Q3': '', 'Moyenne_Difficulté': '',
-                       'Travail_Q1': '', 'Moyenne_Travail': '', 'Moyenne_Globale': '', 'Commentaires_Généraux': '',
-                       'Commentaires_Conseils': ''}
-            updated_data.append(new_row)
-
-    # Ajouter les cours qui ne sont plus dans cours_extraits.csv mais existent dans evaluation.csv
-    for course_name, eval_row in eval_index.items():
-        if course_name not in {course['Nom'] for course in courses_data}:
-            updated_data.append(eval_row)
-
-    # Écrire les données mises à jour dans evaluation.csv
-    with open(EVALUATION_FILE, 'w', newline='', encoding='utf-8-sig') as eval_file:
-        fieldnames = updated_data[0].keys()
-        writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
-        writer.writeheader()
-        writer.writerows(updated_data)
-
-    print(f"Le fichier {EVALUATION_FILE} a été mis à jour avec succès.")
 
 def remove_duplicates():
     """Supprime les doublons dans le fichier scraping.csv en combinant les noms des professeurs."""
@@ -289,7 +262,11 @@ def main():
     all_courses = []
 
     for name in urls.keys():
-        file_path = os.path.join(HTML_FOLDER, f"UNIL_liste_de_cours_{name}.html")
+        # Extraire et normaliser le nom de la faculté
+        faculty_name = normalize_faculty(name.split(" - ")[0])  # Correction ici
+        
+        # Construire le chemin du fichier HTML
+        file_path = os.path.join(HTML_FOLDER, f"{name}.html")
         if os.path.exists(file_path):
             links = extract_links_from_html(file_path)
             print(f"Nombre de liens trouvés dans {name}: {len(links)}")
@@ -324,9 +301,6 @@ def main():
 
     # Supprimer les doublons
     remove_duplicates()
-
-    # Mettre à jour evaluation.csv après la mise à jour de cours_extraits.csv
-    update_evaluation_file()
 
 def extract_data():
     """

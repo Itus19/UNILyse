@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 from datetime import datetime
+import pandas as pd
 
 # Définir des constantes globales pour éviter les répétitions
 CSV_FILE = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
@@ -382,5 +383,34 @@ def extract_data():
         writer.writerows(courses)
     print(f"Données extraites et sauvegardées dans {csv_file}")
 
+def synchronize_files():
+    scraping_path = os.path.join(os.path.dirname(__file__), '../database/scraping.csv')
+    liste_path = os.path.join(os.path.dirname(__file__), '../database/liste.csv')
+
+    # Charger les fichiers CSV
+    scraping_df = pd.read_csv(scraping_path, delimiter=';', encoding='utf-8-sig')
+    liste_df = pd.read_csv(liste_path, delimiter=';', encoding='utf-8-sig')
+
+    # Identifier les cours à mettre à jour ou ajouter
+    for index, scraping_row in scraping_df.iterrows():
+        match = liste_df[liste_df['Nom'] == scraping_row['Nom']]
+        if not match.empty:
+            # Mettre à jour les informations existantes
+            liste_df.loc[match.index, ['Professeur', 'Crédits']] = scraping_row[['Professeur', 'Crédits']].values
+        else:
+            # Ajouter les nouveaux cours
+            liste_df = pd.concat([liste_df, pd.DataFrame([scraping_row])], ignore_index=True)
+
+    # Identifier les cours à marquer comme "V A C A T" et "N/A"
+    for index, liste_row in liste_df.iterrows():
+        match = scraping_df[scraping_df['Nom'] == liste_row['Nom']]
+        if match.empty:
+            liste_df.loc[index, ['Professeur', 'Crédits']] = ['V A C A T', 'N/A']
+
+    # Sauvegarder les modifications dans liste.csv
+    liste_df.to_csv(liste_path, sep=';', index=False, encoding='utf-8-sig')
+    print("Synchronisation entre scraping.csv et liste.csv terminée.")
+
 if __name__ == "__main__":
     main()
+    synchronize_files()

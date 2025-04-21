@@ -1,3 +1,4 @@
+# Importations
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -5,16 +6,10 @@ import csv
 from datetime import datetime
 import pandas as pd
 
-# Définir des constantes globales pour éviter les répétitions
+# Constantes globales
 CSV_FILE = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
 HTML_FOLDER = os.path.join(os.path.dirname(__file__), "html_pages")
-# Fichier CSV pour stocker les évaluations
-
-# Dossier pour stocker les pages HTML
 os.makedirs(HTML_FOLDER, exist_ok=True)
-
-# Fichier CSV pour stocker les données
-csv_file = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
 
 # URLs des pages à scraper
 urls = {
@@ -46,54 +41,7 @@ urls = {
     "SSP_Bachelor_1ère_partie_Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=171&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=32348"
 }
 
-def extract_links_from_html(file_path):
-    """Extrait les liens des fiches de cours depuis un fichier HTML."""
-    try:
-        with open(file_path, 'r', encoding='utf-8-sig') as file:
-            content = file.read()
-
-        soup = BeautifulSoup(content, 'html.parser')
-        links = []
-        base_url = "https://applicationspub.unil.ch"
-        for a in soup.find_all('a', onclick=True):
-            onclick_content = a['onclick']
-            if "window.open" in onclick_content:
-                start = onclick_content.find("('") + 2
-                end = onclick_content.find("','")
-                relative_url = onclick_content[start:end]
-                full_url = f"{base_url}{relative_url}" if relative_url.startswith("/interpub/noauth/php/Ud/") else f"{base_url}/interpub/noauth/php/Ud/{relative_url}"
-                links.append(full_url)
-        return links
-    except Exception as e:
-        print(f"Erreur lors de l'extraction des liens : {e}")
-        return []
-
-def get_page_title(soup, name):
-    """Extrait le titre pertinent depuis la page HTML."""
-    title_tag = soup.find('h2')
-    if title_tag:
-        title = title_tag.text.strip()
-        if title == "Votre sélection":
-            title = name
-        return title.replace(" ", "_").replace("/", "_")
-    return name
-
-def download_html():
-    """
-    Télécharge les pages principales listant les cours.
-    """
-    for name, url in urls.items():
-        response = requests.get(url)
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.text, "html.parser")
-            title = get_page_title(soup, name)
-            file_path = os.path.join(HTML_FOLDER, f"{title}.html")
-            with open(file_path, "w", encoding="utf-8") as file:
-                file.write(response.text)
-            print(f"Téléchargé : {file_path}")
-        else:
-            print(f"Erreur lors du téléchargement de {url} : {response.status_code}")
-
+# Fonctions utilitaires
 def normalize_faculty(faculty_name):
     """ Normalise les noms des facultés en abréviations. """
     mapping = {
@@ -182,6 +130,38 @@ def extract_course_info(soup):
         print(f"Erreur lors de l'extraction des informations : {e}")
         return None
 
+def extract_links_from_html(file_path):
+    """Extrait les liens des fiches de cours depuis un fichier HTML."""
+    try:
+        with open(file_path, 'r', encoding='utf-8-sig') as file:
+            content = file.read()
+
+        soup = BeautifulSoup(content, 'html.parser')
+        links = []
+        base_url = "https://applicationspub.unil.ch"
+        for a in soup.find_all('a', onclick=True):
+            onclick_content = a['onclick']
+            if "window.open" in onclick_content:
+                start = onclick_content.find("('") + 2
+                end = onclick_content.find("','")
+                relative_url = onclick_content[start:end]
+                full_url = f"{base_url}{relative_url}" if relative_url.startswith("/interpub/noauth/php/Ud/") else f"{base_url}/interpub/noauth/php/Ud/{relative_url}"
+                links.append(full_url)
+        return links
+    except Exception as e:
+        print(f"Erreur lors de l'extraction des liens : {e}")
+        return []
+
+def get_page_title(soup, name):
+    """Extrait le titre pertinent depuis la page HTML."""
+    title_tag = soup.find('h2')
+    if title_tag:
+        title = title_tag.text.strip()
+        if title == "Votre sélection":
+            title = name
+        return title.replace(" ", "_").replace("/", "_")
+    return name
+
 def update_html_file(name, url):
     """Télécharge la page HTML d'une liste de cours et nomme le fichier."""
     try:
@@ -224,7 +204,7 @@ def check_html_update():
             update_html_file(name, url)
 
 def remove_duplicates():
-    """Supprime les doublons dans le fichier scraping.csv en combinant les noms des professeurs."""
+    """Supprime les doublons dans le fichier scraping.csv en combinant les noms des professeurs et en supprimant les doublons dans une même ligne."""
     if not os.path.exists(CSV_FILE):
         print(f"Le fichier {CSV_FILE} n'existe pas. Impossible de supprimer les doublons.")
         return
@@ -240,13 +220,20 @@ def remove_duplicates():
         key = (row['Semestre'], row['Crédits'], row['Nom'])
         if key in unique_courses:
             # Ajouter le professeur à la liste existante s'il n'est pas déjà présent
-            existing_professors = unique_courses[key]['Professeur'].split(', ')
+            existing_professors = set(unique_courses[key]['Professeur'].split(', '))
             new_professor = row['Professeur']
             if new_professor not in existing_professors:
-                unique_courses[key]['Professeur'] += f", {new_professor}"
+                existing_professors.add(new_professor)
+                unique_courses[key]['Professeur'] = ', '.join(sorted(existing_professors))
         else:
             # Ajouter une nouvelle entrée pour ce cours
             unique_courses[key] = row
+
+    # Supprimer les doublons dans les noms des professeurs pour chaque cours
+    for course in unique_courses.values():
+        professors = course['Professeur'].split(', ')
+        unique_professors = sorted(set(professors))
+        course['Professeur'] = ', '.join(unique_professors)
 
     # Écrire les données uniques dans le fichier scraping.csv
     with open(CSV_FILE, 'w', newline='', encoding='utf-8-sig') as csv_file:
@@ -256,6 +243,72 @@ def remove_duplicates():
         writer.writerows(unique_courses.values())
 
     print(f"Les doublons ont été supprimés et le fichier {CSV_FILE} a été mis à jour.")
+
+def verify_professor_names():
+    """Vérifie que les noms des professeurs ne se répètent pas dans une même ligne du fichier liste.csv."""
+    liste_path = os.path.join(os.path.dirname(__file__), '../database/liste.csv')
+
+    if not os.path.exists(liste_path):
+        print(f"Le fichier {liste_path} n'existe pas. Impossible de vérifier les noms des professeurs.")
+        return
+
+    # Charger les données du fichier liste.csv
+    with open(liste_path, newline='', encoding='utf-8-sig') as csv_file:
+        reader = csv.DictReader(csv_file, delimiter=';')
+        data = list(reader)
+
+    # Vérifier les noms des professeurs
+    for row in data:
+        professors = row['Professeur'].split(', ')
+        unique_professors = set(professors)
+        if len(professors) != len(unique_professors):
+            print(f"Doublon trouvé dans la ligne : {row}")
+
+    print("Vérification des noms des professeurs terminée.")
+
+# Fonctions principales
+def download_html():
+    """Télécharge les pages principales listant les cours."""
+    for name, url in urls.items():
+        response = requests.get(url)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, "html.parser")
+            title = get_page_title(soup, name)
+            file_path = os.path.join(HTML_FOLDER, f"{title}.html")
+            with open(file_path, "w", encoding="utf-8") as file:
+                file.write(response.text)
+            print(f"Téléchargé : {file_path}")
+        else:
+            print(f"Erreur lors du téléchargement de {url} : {response.status_code}")
+
+def synchronize_files():
+    """Synchronise les fichiers scraping.csv et liste.csv."""
+    scraping_path = os.path.join(os.path.dirname(__file__), '../database/scraping.csv')
+    liste_path = os.path.join(os.path.dirname(__file__), '../database/liste.csv')
+
+    # Charger les fichiers CSV
+    scraping_df = pd.read_csv(scraping_path, delimiter=';', encoding='utf-8-sig')
+    liste_df = pd.read_csv(liste_path, delimiter=';', encoding='utf-8-sig')
+
+    # Identifier les cours à mettre à jour ou ajouter
+    for index, scraping_row in scraping_df.iterrows():
+        match = liste_df[liste_df['Nom'] == scraping_row['Nom']]
+        if not match.empty:
+            # Mettre à jour les informations existantes
+            liste_df.loc[match.index, ['Professeur', 'Crédits']] = scraping_row[['Professeur', 'Crédits']].values
+        else:
+            # Ajouter les nouveaux cours
+            liste_df = pd.concat([liste_df, pd.DataFrame([scraping_row])], ignore_index=True)
+
+    # Identifier les cours à marquer comme "V A C A T" et "N/A"
+    for index, liste_row in liste_df.iterrows():
+        match = scraping_df[scraping_df['Nom'] == liste_row['Nom']]
+        if match.empty:
+            liste_df.loc[index, ['Professeur', 'Crédits']] = ['V A C A T', 'N/A']
+
+    # Sauvegarder les modifications dans liste.csv
+    liste_df.to_csv(liste_path, sep=';', index=False, encoding='utf-8-sig')
+    print("Synchronisation entre scraping.csv et liste.csv terminée.")
 
 def main():
     """Fonction principale pour scraper les données et les sauvegarder dans un fichier CSV."""
@@ -303,114 +356,8 @@ def main():
     # Supprimer les doublons
     remove_duplicates()
 
-def extract_data():
-    """
-    Scrape les informations des fiches de cours et les sauvegarde dans un fichier CSV.
-    """
-    courses = []
-    for file_name in os.listdir(HTML_FOLDER):
-        if (file_name.endswith(".html")):  # Parcourt tous les fichiers HTML
-            file_path = os.path.join(HTML_FOLDER, file_name)
-            print(f"Traitement du fichier : {file_name}")  # Message de débogage
-            links = extract_links_from_html(file_path)  # Extrait les liens des fiches de cours
-            for link in links:
-                response = requests.get(link)
-                if response.status_code == 200:
-                    soup = BeautifulSoup(response.text, "html.parser")
-                    course_info = {
-                        "Faculté": "Inconnu",
-                        "Nom": "Inconnu",
-                        "Professeur": "Inconnu",
-                        "Semestre": "Inconnu",
-                        "Crédits": "Inconnu",
-                        "Lien": link
-                    }
-                    # Extraction du nom du cours
-                    course_info["Nom"] = soup.find("h2").text.strip() if soup.find("h2") else "Inconnu"
-                    
-                    # Extraction de la faculté
-                    faculty = soup.find("h3")
-                    if faculty:
-                        course_info["Faculté"] = normalize_faculty(faculty.text.strip())
-                    
-                    # Extraction du professeur
-                    professor_paragraph = soup.find("p", string=lambda string: string & "Responsable(s):" in string)
-                    if professor_paragraph:
-                        course_info["Professeur"] = professor_paragraph.text.split("Responsable(s):")[-1].strip()
-                    
-                    # Rechercher toutes les tables de résultats
-                    tables = soup.find_all("table", class_="resultats")
-
-                    # Parcourir chaque table pour trouver les semestres
-                    semesters = set()  # Utiliser un ensemble pour éviter les doublons
-                    for table in tables:
-                        for td in table.find_all("td"):
-                            text = td.get_text().strip().lower()
-                            # Vérifier la présence des mots clés dans le texte
-                            if "printemps" in text:
-                                semesters.add("Printemps")
-                            if "automne" in text:
-                                semesters.add("Automne")
-                            if "annuel" in text:
-                                semesters.add("Annuel")
-
-                    # Logique pour déterminer le semestre final
-                    if "Annuel" in semesters:
-                        course_info["Semestre"] = "Annuel"
-                    elif "Printemps" in semesters and "Automne" in semesters:
-                        course_info["Semestre"] = "Annuel"
-                    elif "Printemps" in semesters:
-                        course_info["Semestre"] = "Printemps"
-                    elif "Automne" in semesters:
-                        course_info["Semestre"] = "Automne"
-                    else:
-                        course_info["Semestre"] = "Inconnu"
-                    
-                    # Extraction des crédits
-                    h3_element = soup.find("h3")
-                    if h3_element:
-                        credits_text = h3_element.find_next_sibling(string=lambda string: string and "Crédits:" in string)
-                        if credits_text:
-                            course_info["Crédits"] = credits_text.split("Crédits:")[-1].split("<br")[0].strip()
-                    
-                    courses.append(course_info)
-                else:
-                    print(f"Erreur lors du téléchargement de la fiche : {link}")
-    # Sauvegarde dans le fichier CSV
-    with open(csv_file, "w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=["Faculté", "Nom", "Professeur", "Semestre", "Crédits", "Lien"])
-        writer.writeheader()
-        writer.writerows(courses)
-    print(f"Données extraites et sauvegardées dans {csv_file}")
-
-def synchronize_files():
-    scraping_path = os.path.join(os.path.dirname(__file__), '../database/scraping.csv')
-    liste_path = os.path.join(os.path.dirname(__file__), '../database/liste.csv')
-
-    # Charger les fichiers CSV
-    scraping_df = pd.read_csv(scraping_path, delimiter=';', encoding='utf-8-sig')
-    liste_df = pd.read_csv(liste_path, delimiter=';', encoding='utf-8-sig')
-
-    # Identifier les cours à mettre à jour ou ajouter
-    for index, scraping_row in scraping_df.iterrows():
-        match = liste_df[liste_df['Nom'] == scraping_row['Nom']]
-        if not match.empty:
-            # Mettre à jour les informations existantes
-            liste_df.loc[match.index, ['Professeur', 'Crédits']] = scraping_row[['Professeur', 'Crédits']].values
-        else:
-            # Ajouter les nouveaux cours
-            liste_df = pd.concat([liste_df, pd.DataFrame([scraping_row])], ignore_index=True)
-
-    # Identifier les cours à marquer comme "V A C A T" et "N/A"
-    for index, liste_row in liste_df.iterrows():
-        match = scraping_df[scraping_df['Nom'] == liste_row['Nom']]
-        if match.empty:
-            liste_df.loc[index, ['Professeur', 'Crédits']] = ['V A C A T', 'N/A']
-
-    # Sauvegarder les modifications dans liste.csv
-    liste_df.to_csv(liste_path, sep=';', index=False, encoding='utf-8-sig')
-    print("Synchronisation entre scraping.csv et liste.csv terminée.")
-
+# Point d'entrée
 if __name__ == "__main__":
     main()
     synchronize_files()
+    verify_professor_names()

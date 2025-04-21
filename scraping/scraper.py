@@ -275,7 +275,7 @@ def download_html():
             soup = BeautifulSoup(response.text, "html.parser")
             title = get_page_title(soup, name)
             file_path = os.path.join(HTML_FOLDER, f"{title}.html")
-            with open(file_path, "w", encoding="utf-8") as file:
+            with open(file_path, "w", encoding="utf-8-sig") as file:
                 file.write(response.text)
             print(f"Téléchargé : {file_path}")
         else:
@@ -310,6 +310,134 @@ def synchronize_files():
     liste_df.to_csv(liste_path, sep=';', index=False, encoding='utf-8-sig')
     print("Synchronisation entre scraping.csv et liste.csv terminée.")
 
+# Ajout des fonctions pour gérer l'exportation des professeurs et la recherche de leurs liens professionnels
+
+def exporter_professeurs(cours):
+    """Exporte une liste unique de professeurs dans professeurs.csv."""
+    chemin_fichier = os.path.join(os.path.dirname(__file__), "../database/professeurs.csv")
+    professeurs = set()
+
+    # Extraire les noms des professeurs uniques
+    for cours_info in cours:
+        if 'Professeur' in cours_info and cours_info['Professeur']:
+            noms = [nom.strip() for nom in cours_info['Professeur'].split(',')]
+            professeurs.update(noms)
+
+    # Écrire dans le fichier CSV
+    try:
+        with open(chemin_fichier, mode='w', encoding='utf-8-sig', newline='') as fichier:
+            writer = csv.writer(fichier)
+            writer.writerow(["Professeur", "Lien_Professeur"])
+            for professeur in sorted(professeurs):
+                writer.writerow([professeur, ""])
+        print(f"Liste des professeurs exportée dans {chemin_fichier}")
+    except Exception as e:
+        print(f"Erreur lors de l'exportation des professeurs : {e}")
+
+def mettre_a_jour_liens_professeurs():
+    """Met à jour les liens des professeurs dans professeurs.csv."""
+    chemin_fichier = os.path.join(os.path.dirname(__file__), "../database/professeurs.csv")
+    base_url = "https://applicationspub.unil.ch/interpub/noauth/php/Un/UnIndex.php?list=pers&LanCode=37"
+
+    try:
+        # Lire le fichier existant
+        with open(chemin_fichier, mode='r', encoding='utf-8-sig') as fichier:
+            lecteur_csv = csv.DictReader(fichier)
+            lignes = list(lecteur_csv)
+
+        # Envoyer une requête pour récupérer la page complète
+        response = requests.get(base_url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Parcourir chaque professeur dans le fichier CSV
+        for ligne in lignes:
+            professeur = ligne['Professeur']
+            if not ligne['Lien_Professeur']:
+                print(f"Recherche du lien pour : {professeur}")
+                # Rechercher le lien correspondant au nom du professeur
+                lien = None
+                for a_tag in soup.find_all('a', href=True):
+                    if professeur in a_tag.text:
+                        lien = a_tag['href']
+                        break
+
+                # Mettre à jour le lien dans la ligne
+                ligne['Lien_Professeur'] = lien if lien else "Non trouvé"
+
+        # Écrire les mises à jour dans le fichier
+        with open(chemin_fichier, mode='w', encoding='utf-8-sig', newline='') as fichier:
+            writer = csv.DictWriter(fichier, fieldnames=["Professeur", "Lien_Professeur"])
+            writer.writeheader()
+            writer.writerows(lignes)
+        print(f"Liens des professeurs mis à jour dans {chemin_fichier}")
+    except Exception as e:
+        print(f"Erreur lors de la mise à jour des liens des professeurs : {e}")
+
+def update_professors_html():
+    """Télécharge ou met à jour la page HTML des professeurs si elle a changé."""
+    html_file_path = os.path.join(HTML_FOLDER, "professeurs.html")
+    url = "https://applicationspub.unil.ch/interpub/noauth/php/Un/UnIndex.php?list=pers&LanCode=37"
+
+    try:
+        # Télécharger la page en ligne
+        response = requests.get(url)
+        response.raise_for_status()
+        online_content = response.text
+
+        # Vérifier si le fichier local existe
+        if os.path.exists(html_file_path):
+            with open(html_file_path, 'r', encoding='utf-8-sig') as local_file:
+                local_content = local_file.read()
+
+            # Comparer le contenu local avec le contenu en ligne
+            if local_content == online_content:
+                print("La page HTML des professeurs est déjà à jour.")
+                return
+
+        # Mettre à jour ou créer le fichier local
+        with open(html_file_path, 'w', encoding='utf-8-sig') as local_file:
+            local_file.write(online_content)
+        print("La page HTML des professeurs a été mise à jour.")
+
+    except requests.RequestException as e:
+        print(f"Erreur lors du téléchargement de la page des professeurs : {e}")
+
+def scrape_professors_from_html():
+    """Scrape les noms et liens des professeurs depuis la page HTML locale."""
+    html_file_path = os.path.join(HTML_FOLDER, "professeurs.html")
+    chemin_fichier_csv = os.path.join(os.path.dirname(__file__), "../database/professeurs.csv")
+    base_url = "https://applicationspub.unil.ch"
+
+    try:
+        # Lire le fichier HTML local
+        with open(html_file_path, 'r', encoding='utf-8') as file:
+            soup = BeautifulSoup(file, 'html.parser')
+
+        # Extraire les noms et liens des professeurs depuis le tableau
+        professeurs = []
+        tableau = soup.find('table')  # Trouver le tableau contenant les données
+        if tableau:
+            for row in tableau.find_all('tr'):
+                cells = row.find_all('td')
+                if len(cells) >= 2:  # Vérifier qu'il y a au moins deux colonnes (nom et lien)
+                    nom = cells[0].get_text(strip=True)
+                    lien_partiel = cells[0].find('a', href=True)['href'] if cells[0].find('a', href=True) else None
+                    if nom and lien_partiel:
+                        lien_complet = f"{base_url}{lien_partiel}&menu=coord"
+                        professeurs.append({"Professeur": nom, "Lien_Professeur": lien_complet})
+
+        # Écrire les résultats dans le fichier CSV
+        with open(chemin_fichier_csv, mode='w', encoding='utf-8', newline='') as fichier:
+            writer = csv.DictWriter(fichier, fieldnames=["Professeur", "Lien_Professeur"])
+            writer.writeheader()
+            writer.writerows(professeurs)
+        print(f"Les données des professeurs ont été extraites et sauvegardées dans {chemin_fichier_csv}.")
+
+    except Exception as e:
+        print(f"Erreur lors du scraping des professeurs : {e}")
+
+# Intégration dans la fonction principale
 def main():
     """Fonction principale pour scraper les données et les sauvegarder dans un fichier CSV."""
     check_html_update()
@@ -321,7 +449,7 @@ def main():
         
         # Construire le chemin du fichier HTML
         file_path = os.path.join(HTML_FOLDER, f"{name}.html")
-        if os.path.exists(file_path):
+        if (os.path.exists(file_path)):
             links = extract_links_from_html(file_path)
             print(f"Nombre de liens trouvés dans {name}: {len(links)}")
 
@@ -355,6 +483,18 @@ def main():
 
     # Supprimer les doublons
     remove_duplicates()
+
+    # Étape : Exporter la liste des professeurs
+    exporter_professeurs(all_courses)
+
+    # Étape : Mettre à jour les liens des professeurs
+    mettre_a_jour_liens_professeurs()
+
+    # Étape : Mettre à jour la page HTML des professeurs
+    update_professors_html()
+
+    # Étape : Scraper les données des professeurs depuis la page HTML locale
+    scrape_professors_from_html()
 
 # Point d'entrée
 if __name__ == "__main__":

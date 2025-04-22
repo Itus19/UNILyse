@@ -1,10 +1,11 @@
 # Importations
 import os
+import csv
 import requests
 from bs4 import BeautifulSoup
-import csv
 from datetime import datetime
 import pandas as pd
+import re
 
 # Constantes globales
 CSV_FILE = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
@@ -13,27 +14,6 @@ os.makedirs(HTML_FOLDER, exist_ok=True)
 
 # URLs des pages à scraper
 urls = {
-    #FTSR
-    "FTSR_Attestation de 30 crédits ECTS (BA) en Langues de l'Orient - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=33033",
-    "FTSR_Attestation de 30 crédits ECTS (BA) en Langues de l'Orient - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=33033",
-    "FTSR_Attestation de 60 crédits ECTS (BA) en sciences des religions (2017), 1ère année - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29963",
-    "FTSR_Attestation de 60 crédits ECTS (BA) en sciences des religions (2017), 1ère année - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29963",
-    "FTSR_Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29964",
-    "FTSR_Attestation de 60 crédits ECTS (BA) en sciences des religions, 2ème partie - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29964",
-    "FTSR_Baccalauréat universitaire en sciences des religions (2017), 1ère année - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29959",
-    "FTSR_Baccalauréat universitaire en sciences des religions (2017), 1ère année - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29959",
-    "FTSR_Baccalauréat universitaire en sciences des religions (2017), 2ème partie - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=29960",
-    "FTSR_Baccalauréat universitaire en sciences des religions (2017), 2ème partie - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=29960",
-    "FTSR_Préalable à la Maîtrise universitaire en Sciences des religions (2017) - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=30339",
-    "FTSR_Préalable à la Maîtrise universitaire en Sciences des religions (2017) - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=30339",
-    "FTSR_Programme de spécialisation «Histoire de l'Islam» (Master en sciences des religions) - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=34855",
-    "FTSR_Programme de spécialisation «Histoire de l'Islam» (Master en sciences des religions) - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=34855",
-    "FTSR_Programme de spécialisation «Eclairer l'interculturalité» (Master en sciences des religions) - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=31011",
-    "FTSR_Programme de spécialisation «Eclairer l'interculturalité» (Master en sciences des religions) - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=31011",
-    "FTSR_Attestation 30 crédits ECTS (MA) en sciences des religions - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=28098",
-    "FTSR_Attestation 30 crédits ECTS (MA) en sciences des religions - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=28098",
-    "FTSR_Maîtrise universitaire en sciences des religions - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=169&v_langue=fr&v_isinterne=&v_etapeid1=28099",
-    "FTSR_Maîtrise universitaire en sciences des religions - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=253&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=28099",
     #FDCA
     "FDCA_Droit allemand (étudiants réguliers) - Printemps": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=5&v_semposselected=170&v_langue=fr&v_isinterne=&v_etapeid1=797",
     "FDCA_Droit allemand (étudiants réguliers) - Automne": "https://applicationspub.unil.ch/interpub/noauth/php/Ud/listeCours.php?v_ueid=5&v_semposselected=171&v_langue=fr&v_isinterne=&v_etapeid1=797",
@@ -353,12 +333,12 @@ def mettre_a_jour_liens_professeurs():
         # Parcourir chaque professeur dans le fichier CSV
         for ligne in lignes:
             professeur = ligne['Professeur']
-            if not ligne['Lien_Professeur']:
+            if not ligne['Lien_Professeur'] or ligne['Lien_Professeur'] == "Non trouvé":
                 print(f"Recherche du lien pour : {professeur}")
                 # Rechercher le lien correspondant au nom du professeur
                 lien = None
                 for a_tag in soup.find_all('a', href=True):
-                    if professeur in a_tag.text:
+                    if professeur.lower() in a_tag.text.lower():
                         lien = a_tag['href']
                         break
 
@@ -371,6 +351,7 @@ def mettre_a_jour_liens_professeurs():
             writer.writeheader()
             writer.writerows(lignes)
         print(f"Liens des professeurs mis à jour dans {chemin_fichier}")
+
     except Exception as e:
         print(f"Erreur lors de la mise à jour des liens des professeurs : {e}")
 
@@ -403,41 +384,85 @@ def update_professors_html():
     except requests.RequestException as e:
         print(f"Erreur lors du téléchargement de la page des professeurs : {e}")
 
+def normaliser_nom(nom):
+    """Nettoie et normalise un nom pour comparaison."""
+    return ' '.join(nom.split()).lower()
+
+def extraire_mots(nom):
+    """Extrait les mots d'un nom après nettoyage."""
+    nom = re.sub(r'[^\w\s]', '', nom)  # Supprimer les caractères spéciaux
+    return set(nom.split())
+
+def pourcentage_mots_communs(mots_csv, mots_html):
+    """Calcule le pourcentage de mots communs entre deux ensembles de mots."""
+    communs = mots_csv.intersection(mots_html)
+    total = max(len(mots_csv), len(mots_html))
+    return len(communs) / total if total > 0 else 0
+
 def scrape_professors_from_html():
-    """Scrape les noms et liens des professeurs depuis la page HTML locale."""
+    """Scrape uniquement les liens des professeurs présents dans professeurs.csv depuis la page HTML locale."""
     html_file_path = os.path.join(HTML_FOLDER, "professeurs.html")
     chemin_fichier_csv = os.path.join(os.path.dirname(__file__), "../database/professeurs.csv")
     base_url = "https://applicationspub.unil.ch"
 
     try:
+        # Charger les noms des professeurs depuis professeurs.csv
+        with open(chemin_fichier_csv, mode='r', encoding='utf-8-sig') as fichier:
+            lecteur_csv = csv.DictReader(fichier)
+            professeurs_csv = {ligne['Professeur'].strip(): ligne['Lien_Professeur'].strip() for ligne in lecteur_csv}
+
         # Lire le fichier HTML local
         with open(html_file_path, 'r', encoding='utf-8') as file:
             soup = BeautifulSoup(file, 'html.parser')
 
-        # Extraire les noms et liens des professeurs depuis le tableau
-        professeurs = []
-        tableau = soup.find('table')  # Trouver le tableau contenant les données
-        if tableau:
+        # Extraire les noms et liens des professeurs depuis tous les tableaux
+        professeurs_html = {}
+        tableaux = soup.find_all('table')  # Trouver tous les tableaux
+        for tableau in tableaux:
             for row in tableau.find_all('tr'):
                 cells = row.find_all('td')
-                if len(cells) >= 2:  # Vérifier qu'il y a au moins deux colonnes (nom et lien)
-                    nom = cells[0].get_text(strip=True)
+                if len(cells) >= 1:  # Vérifier qu'il y a au moins une colonne avec le nom et le lien
+                    nom_html = cells[0].get_text(strip=True)
                     lien_partiel = cells[0].find('a', href=True)['href'] if cells[0].find('a', href=True) else None
-                    if nom and lien_partiel:
-                        lien_complet = f"{base_url}{lien_partiel}&menu=coord"
-                        professeurs.append({"Professeur": nom, "Lien_Professeur": lien_complet})
+
+                    if lien_partiel:
+                        lien_complet = f"{base_url}{lien_partiel}"
+                        professeurs_html[nom_html] = lien_complet
+                        print(f"Extrait : Nom HTML = {nom_html}, Lien = {lien_complet}")
+
+        # Mettre à jour les liens dans le fichier CSV
+        professeurs_mis_a_jour = []
+        seuil_pourcentage = 0.8  # Seuil de correspondance (80 % de mots communs)
+        for nom_csv, lien_csv in professeurs_csv.items():
+            mots_csv = extraire_mots(nom_csv)
+            correspondance = None
+
+            for nom_html, lien_html in professeurs_html.items():
+                mots_html = extraire_mots(nom_html)
+                pourcentage = pourcentage_mots_communs(mots_csv, mots_html)
+
+                if pourcentage >= seuil_pourcentage:  # Correspondance basée sur les mots communs
+                    correspondance = lien_html
+                    break
+
+            if correspondance:
+                print(f"Correspondance trouvée : {nom_csv} -> {correspondance}")
+                professeurs_mis_a_jour.append({"Professeur": nom_csv, "Lien_Professeur": correspondance})
+            else:
+                print(f"Aucune correspondance trouvée pour : {nom_csv}")
+                professeurs_mis_a_jour.append({"Professeur": nom_csv, "Lien_Professeur": lien_csv or "Non trouvé"})
 
         # Écrire les résultats dans le fichier CSV
-        with open(chemin_fichier_csv, mode='w', encoding='utf-8', newline='') as fichier:
-            writer = csv.DictWriter(fichier, fieldnames=["Professeur", "Lien_Professeur"])
+        with open(chemin_fichier_csv, mode='w', encoding='utf-8-sig', newline='') as fichier:
+            writer = csv.DictWriter(fichier, fieldnames=["Professeur", "Lien_Professeur"], delimiter=';')
             writer.writeheader()
-            writer.writerows(professeurs)
-        print(f"Les données des professeurs ont été extraites et sauvegardées dans {chemin_fichier_csv}.")
+            writer.writerows(professeurs_mis_a_jour)
+        print(f"Les liens des professeurs ont été mis à jour dans {chemin_fichier_csv}.")
 
     except Exception as e:
         print(f"Erreur lors du scraping des professeurs : {e}")
-
-# Intégration dans la fonction principale
+        
+        # Intégration dans la fonction principale
 def main():
     """Fonction principale pour scraper les données et les sauvegarder dans un fichier CSV."""
     check_html_update()
@@ -445,11 +470,11 @@ def main():
 
     for name in urls.keys():
         # Extraire et normaliser le nom de la faculté
-        faculty_name = normalize_faculty(name.split(" - ")[0])  # Correction ici
+        faculty_name = normalize_faculty(name.split(" - ")[0])
         
         # Construire le chemin du fichier HTML
         file_path = os.path.join(HTML_FOLDER, f"{name}.html")
-        if (os.path.exists(file_path)):
+        if os.path.exists(file_path):
             links = extract_links_from_html(file_path)
             print(f"Nombre de liens trouvés dans {name}: {len(links)}")
 
@@ -490,12 +515,9 @@ def main():
     # Étape : Mettre à jour les liens des professeurs
     mettre_a_jour_liens_professeurs()
 
-    # Étape : Mettre à jour la page HTML des professeurs
-    update_professors_html()
-
     # Étape : Scraper les données des professeurs depuis la page HTML locale
     scrape_professors_from_html()
-
+    
 # Point d'entrée
 if __name__ == "__main__":
     main()

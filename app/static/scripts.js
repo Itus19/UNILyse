@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 evaluation.Like_Généraux,
                                 evaluation.Dislike_Généraux,
                                 evaluation.Signalement_Généraux,
-                                evaluation.evaluation_id // Ajout de l'identifiant unique
+                                evaluation.Evaluation_id // Correction ici
                             );
                             generalCommentsContainer?.appendChild(generalCommentCard);
                             console.log(`Carte ajoutée dans general-comments pour le cours : ${courseName}`);
@@ -271,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 evaluation.Like_Conseils,
                                 evaluation.Dislike_Conseils,
                                 evaluation.Signalement_Conseils,
-                                evaluation.evaluation_id // Ajout de l'identifiant unique
+                                evaluation.Evaluation_id // Correction ici
                             );
                             studyTipsContainer?.appendChild(studyTipCard);
                             console.log(`Carte ajoutée dans study-tips pour le cours : ${courseName}`);
@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 evaluation.Like_Généraux,
                                 evaluation.Dislike_Généraux,
                                 evaluation.Signalement_Généraux,
-                                evaluation.evaluation_id // Ajout de l'identifiant unique
+                                evaluation.Evaluation_id // Correction ici
                             );
                             generalCommentsContainer.appendChild(generalCommentCard);
                             console.log(`Carte ajoutée dans general-comments pour le cours : ${courseName}`);
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 evaluation.Like_Conseils,
                                 evaluation.Dislike_Conseils,
                                 evaluation.Signalement_Conseils,
-                                evaluation.evaluation_id // Ajout de l'identifiant unique
+                                evaluation.Evaluation_id // Correction ici
                             );
                             studyTipsContainer.appendChild(studyTipCard);
                             console.log(`Carte ajoutée dans study-tips pour le cours : ${courseName}`);
@@ -388,6 +388,7 @@ function createCommentCard(content, date, auteur = null, likeGeneraux = 0, disli
     likeButtonGeneraux.className = "reaction-button like-button";
     likeButtonGeneraux.innerHTML = `👍 ${likeGeneraux}`;
     likeButtonGeneraux.addEventListener("click", () => {
+        console.log("evaluationId envoyé :", evaluationId);
         fetch('/update-reaction', {
             method: 'POST',
             headers: {
@@ -410,6 +411,7 @@ function createCommentCard(content, date, auteur = null, likeGeneraux = 0, disli
     dislikeButtonGeneraux.className = "reaction-button dislike-button";
     dislikeButtonGeneraux.innerHTML = `👎 ${dislikeGeneraux}`;
     dislikeButtonGeneraux.addEventListener("click", () => {
+        console.log("evaluationId envoyé :", evaluationId);
         fetch('/update-reaction', {
             method: 'POST',
             headers: {
@@ -432,6 +434,7 @@ function createCommentCard(content, date, auteur = null, likeGeneraux = 0, disli
     reportButtonGeneraux.className = "reaction-button report-button";
     reportButtonGeneraux.innerHTML = `⚠️ ${signalementGeneraux}`;
     reportButtonGeneraux.addEventListener("click", () => {
+        console.log("evaluationId envoyé :", evaluationId);
         fetch('/update-reaction', {
             method: 'POST',
             headers: {
@@ -462,6 +465,9 @@ function createCommentCard(content, date, auteur = null, likeGeneraux = 0, disli
 
     commentCard.appendChild(commentBody);
     commentCard.appendChild(commentFooter);
+
+    // Ajout de logs pour vérifier la transmission correcte de evaluationId
+    console.log("Création de la carte avec evaluationId :", evaluationId);
 
     return commentCard;
 }
@@ -515,7 +521,7 @@ fetch('/database/evaluations.csv')
                             evaluation["Like_Généraux"],
                             evaluation["Dislike_Généraux"],
                             evaluation["Signalement_Généraux"],
-                            evaluation["evaluation_id"] // Correction pour inclure l'identifiant unique
+                            evaluation["Evaluation_id"] // Correction ici
                         );
                         generalCommentsContainer.appendChild(generalCommentCard);
                     }
@@ -541,7 +547,7 @@ fetch('/database/evaluations.csv')
                             evaluation["Like_Conseils"],
                             evaluation["Dislike_Conseils"],
                             evaluation["Signalement_Conseils"],
-                            evaluation["evaluation_id"] // Correction pour inclure l'identifiant unique
+                            evaluation["Evaluation_id"] // Correction ici
                         );
                         studyTipsContainer.appendChild(studyTipCard);
                     }

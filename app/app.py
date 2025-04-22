@@ -4,7 +4,7 @@ import csv
 from datetime import datetime
 from flask_socketio import SocketIO
 from watchdog.events import FileSystemEventHandler
-
+import re
 
 app = Flask(__name__)  # Définition de l'objet app
 
@@ -465,20 +465,33 @@ def generate_Evaluation_id():
 def update_reaction():
     """Met à jour les colonnes Like_Généraux, Dislike_Généraux, Signalement_Généraux, etc., pour un commentaire donné."""
     try:
-        # Ajout de logs pour déboguer les données reçues
-        print("Données reçues :", request.json)
+        # Récupérer les données JSON reçues
+        data = request.json
+        print("Données reçues :", data)
 
-        Evaluation_id = request.json.get('Evaluation_id')
-        reaction_type = request.json.get('reaction_type')
-        comment_type = request.json.get('comment_type')
+        # Vérifier les données envoyées par le client
+        if not data:
+            return jsonify({"error": "Aucune donnée reçue."}), 400
 
-        # Générer un nouvel evaluation_id si nécessaire
-        if not Evaluation_id:
-            Evaluation_id = generate_Evaluation_id()
+        # Correction pour accepter evaluation_id en minuscule
+        Evaluation_id = data.get('evaluation_id') or data.get('Evaluation_id')
+        reaction_type = data.get('reaction_type')
+        comment_type = data.get('comment_type')
 
-        if reaction_type not in ['Like', 'Dislike', 'Signalement'] or comment_type not in ['general', 'conseils']:
-            return jsonify({"error": "Données invalides."}), 400
+        # Validation du format de Evaluation_id
+        if not Evaluation_id or not re.match(r'^\d{4}_\d+$', Evaluation_id):
+            print("Erreur : Evaluation_id manquant ou invalide")
+            return jsonify({"error": "Le champ 'Evaluation_id' est requis et doit être au format 'année_numéro'."}), 400
 
+        if reaction_type not in ['Like', 'Dislike', 'Signalement']:
+            print("Erreur : reaction_type invalide")
+            return jsonify({"error": "Le champ 'reaction_type' est invalide."}), 400
+
+        if comment_type not in ['general', 'conseils']:
+            print("Erreur : comment_type invalide")
+            return jsonify({"error": "Le champ 'comment_type' est invalide."}), 400
+
+        # Charger les évaluations depuis le fichier CSV
         evaluations = []
         with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
             reader = csv.DictReader(eval_file, delimiter=';')
@@ -487,11 +500,13 @@ def update_reaction():
         # Déterminer la colonne à mettre à jour
         reaction_column = f"{reaction_type}_{'Généraux' if comment_type == 'general' else 'Conseils'}"
 
+        # Mettre à jour la ligne correspondante
         updated = False
         for row in evaluations:
             if row['Evaluation_id'] == Evaluation_id:
                 print(f"Avant mise à jour : {reaction_column} = {row.get(reaction_column, 0)}")
-                row[reaction_column] = str(int(row.get(reaction_column, 0)) + 1)
+                current_value = row.get(reaction_column, "0")
+                row[reaction_column] = str(int(current_value) + 1 if current_value.isdigit() else 1)
                 print(f"Après mise à jour : {reaction_column} = {row[reaction_column]}")
                 updated = True
                 break
@@ -499,6 +514,7 @@ def update_reaction():
         if not updated:
             return jsonify({"error": "Évaluation non trouvée."}), 404
 
+        # Sauvegarder les modifications dans le fichier CSV
         with open(EVALUATIONS_CSV, 'w', newline='', encoding='utf-8-sig') as eval_file:
             fieldnames = evaluations[0].keys()
             writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
@@ -508,6 +524,7 @@ def update_reaction():
         return jsonify({"message": "Réaction mise à jour avec succès."}), 200
 
     except Exception as e:
+        print("Erreur lors de la mise à jour de la réaction :", str(e))
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
@@ -519,7 +536,7 @@ if __name__ == '__main__':
         print(f"Erreur lors de la mise à jour de liste.csv : {e}")
 
     # Lancer l'application avec SocketIO
-    socketio.run(app, debug=True, port=5001)
+    socketio.run(app, debug=True, port=5000)
 
 class EvaluationFileHandler(FileSystemEventHandler):
     def on_modified(self, event):

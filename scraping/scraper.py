@@ -101,9 +101,14 @@ def extract_course_info(soup):
                     credits_value = cells[-1].get_text().strip()
                     if credits_value.replace('.', '', 1).isdigit():
                         course_info['Crédits'] = credits_value
-                    break
+                        break
+            # Si une valeur valide a été trouvée, sortir de la boucle principale
             if course_info['Crédits'] != "Inconnu":
                 break
+
+        # Si aucun crédit valide n'a été trouvé, remplacer "Inconnu" par "0.00"
+        if course_info['Crédits'] == "Inconnu":
+            course_info['Crédits'] = "0.00"
 
         return course_info
     except Exception as e:
@@ -517,7 +522,7 @@ def main():
 
     # Étape : Scraper les données des professeurs depuis la page HTML locale
     scrape_professors_from_html()
-    
+
 # Point d'entrée
 if __name__ == "__main__":
     main()

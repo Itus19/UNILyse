@@ -240,73 +240,80 @@ h2 {
 
 /* Ajout d'un style des cartes */
 .course-card {
-    height: 40px; /* Ajuste la hauteur des cartes */
-    max-width: 100%; /* Ajuste la largeur maximale des cartes */
-    display: flex; /* Utilise le modèle de boîte flexible */
-    align-items: center; /* Centre les éléments verticalement */
-    justify-content: space-between; /* Espacement entre les éléments */
-    border: 1px solid #ddd; /* Bordure grise */
+    height: 45px; /* Augmenter légèrement la hauteur pour plus d'espace */
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    margin-bottom: 0px; /* Espace entre les cartes */
+    margin-bottom: 0px; /* Augmenter l'espace entre les cartes */
     background-color: #f9f9f9;
-    margin-left: 0px; /* Espace à gauche */
-    margin-right: 0px; /* Espace à droite */
-    padding: 0px;
-    gap: 5px; /* Ajout d'espacement entre les éléments */
+    padding: 0 0px; /* Ajouter un padding horizontal pour éviter que le contenu colle aux bords */
+    gap: 3px; /* Augmenter l'espace entre les éléments internes */
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s; /* Animation douce au survol */
 }
 
 .course-card:hover {
-    background-color: #f2e0fc; /* Couleur de fond au survol */
+    background-color: #f2e0fc;
+    transform: translateY(-2px); /* Effet subtil de soulèvement au survol */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Légère ombre au survol */
 }
 
 /* Ajout d'un style pour le faculty-container */
 .faculty-container {
-    height: 25px; /* Ajuste la hauteur des éléments */
-    width: 90px; /* Ajuste la largeur des éléments */
+    height: 30px; /* Hauteur alignée avec filter-row-item */
+    width: 90px; /* Largeur exacte de filter-row-item (faculté) */
     text-align: center;
-    margin: 0 0px; /* Ajuste l'espacement entre les éléments */
-    font-size: 18px; /* Ajuste la taille de la police */
-    border-radius: 5px; /* Arrondit les coins des éléments */
-    background-color: #007bff; /* Couleur de fond */
-    color: white; /* Couleur du texte */
-    text-transform: bold; /* Met le texte en gras */
-    display: flex;  /* Affichage en flex */
-    align-items: center; /* Centre verticalement le texte */
-    justify-content: center; /* Centre horizontalement le texte */
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 2px 0 0; /* Même espacement que dans filter-row (gap: 5px) */
 }
+
 /* Mise à jour du style pour aligner le semester-container */
 .semester-container {
     height: 30px; /* Hauteur alignée avec filter-row-item */
-    width: 90px; /* Largeur alignée avec filter-row-item faculty */
-    text-align: center; /* Alignement horizontal du texte */
-    display: flex; /* Utilisation de flexbox */
-    align-items: center; /* Alignement vertical du texte */
-    justify-content: center; /* Centrage horizontal du texte */
-    margin: 0; /* Pas de marge */
+    width: 90px; /* Largeur alignée avec filter-row-item */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 2px 0 0; /* Même espacement que dans filter-row (gap: 5px) */
+    border-radius: 5px;
+    background-color: #f8f9fa;
+
 }
+
 /* Mise à jour du style pour aligner le credits-container */
 .credits-container {
     height: 30px; /* Hauteur alignée avec filter-row-item */
-    width: 90px; /* Largeur alignée avec filter-row-item credits */
-    text-align: center; /* Alignement horizontal du texte */
-    display: flex; /* Utilisation de flexbox */
-    align-items: center; /* Alignement vertical du texte */
-    justify-content: center; /* Centrage horizontal du texte */
-    margin: 0; /* Pas de marge */
+    width: 90px; /* Largeur alignée avec filter-row-item */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px 0 0; /* Même espacement que dans filter-row (gap: 5px) */
+    border-radius: 5px;
+    background-color: #f8f9fa;
+
 }
 
 /* Mise à jour du style pour aligner le course-name-container */
 .course-name-container {
     height: 30px; /* Hauteur alignée avec search-bar */
-    flex-grow: 1; /* Permet à l'élément de prendre l'espace disponible */
-    max-width: 50%; /* Empêche de dépasser la largeur disponible */
-    text-align: center; /* Alignement horizontal du texte */
-    display: flex; /* Utilisation de flexbox */
-    align-items: center; /* Alignement vertical du texte */
-    justify-content: center; /* Centrage horizontal du texte */
-    margin: 0; /* Pas de marge */
-    text-transform: bold; /* Met le texte en gras */
+    flex-grow: 1; /* Permet à l'élément de prendre l'espace disponible comme la search-bar */
+    min-width: 150px; /* Même valeur minimale que la search-bar */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px 0 0; /* Même espacement que dans filter-row (gap: 5px) */
 }
 
 .course-name-container a {
@@ -321,16 +328,16 @@ h2 {
 
 /* Mise à jour du style pour les evaluation-box */
 .evaluation-box {
-    height: 25px; /* Hauteur alignée avec sort-button */
-    width: 87px; /* Largeur alignée avec sort-button */
-    text-align: center; /* Alignement horizontal du texte */
-    display: flex; /* Utilisation de flexbox */
-    align-items: center; /* Alignement vertical */
-    justify-content: center; /* Centrage horizontal du texte */
-    margin-left: 1px; /* Espacement entre les boîtes */
-    border: 1px solid #ddd; /* Bordure grise */
-    border-radius: 5px; /* Coins arrondis */
-    background-color: #f9f9f9; /* Couleur de fond */
+    height: 30px; /* Hauteur alignée avec sort-button */
+    width: 90px; /* Largeur exacte des boutons de tri */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0px 0 0; /* Même espacement que dans filter-row (gap: 5px) */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
 .evaluation-box p span {
@@ -371,118 +378,123 @@ h2 {
 /* Styles pour le course-container */
 .course-container {
     display: flex;
-    flex-direction: column; /* Aligne la course-card et le commentary-container verticalement */
-    margin-bottom: 5px; /* Espacement entre les conteneurs */
-    margin-left: 10px; /* Espace à gauche */
-    margin-right: 10px; /* Espace à droite */
-    border: none; /* Bordure aucune */
-    border-radius: 5px; /* Coins arrondis */
-    background-color: #f9f9f9; /* Couleur de fond */
-    padding: 0px; /* Espacement interne */
+    flex-direction: column;
+    margin-bottom: 0px; /* Espacement fixé à 10px entre les conteneurs comme demandé */
+    margin-left: 10px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
 }
 
 /* ============================
    COMMENTARY CONTAINER
    ============================ */
-   .commentary-container {
+.commentary-container {
     position: relative;
-    top: 0;
-    margin-left: 0px; /* Espace à gauche */
-    margin-right: 0px; /* Espace à droite */
-    margin-top: 0px; /* Espace entre la course-card et le commentary-container */ 
-    font-size: 16px; /* Taille de la police */
-    color: #333; /* Couleur du texte */
-    margin-bottom: 0px; /* Espace entre les commentaires */
-    padding-left: 10px; /* Espace à gauche */
+    margin-top: 5px; /* Ajouter un petit espace entre la carte et le conteneur de commentaires */
+    margin-bottom: 0px; /* Ajouter un espace après le conteneur de commentaires */
+    font-size: 16px;
+    color: #333;
+    padding: 0 10px 5px 10px; /* Ajouter un padding uniforme */
     overflow: hidden;
     max-height: 0;
-    transition: max-height 0.3s ease-out;
-    border: none; /* Bordure aucune */
+    transition: max-height 0.4s ease-out, margin 0.3s ease; /* Transition plus fluide */
+    border: none;
+    border-radius: 0 0 5px 5px; /* Arrondir uniquement les coins bas */
+    background-color: #f2f2f2; /* Léger contraste avec la carte */
 }
 
 /* Styles pour les colonnes dans commentary-container */
 .commentary-columns {
     display: flex;
     justify-content: space-between;
-    gap: 10px; 
-    margin-top: 10px;
-    margin-bottom: 5px;
+    gap: 15px; /* Augmenter l'espace entre les colonnes */
+    margin-top: 15px; /* Augmenter la marge supérieure */
+    margin-bottom: 10px;
 }
 
 .general-comments, .study-tips {
     flex: 1;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+    border-radius: 8px; /* Coins plus arrondis */
+    padding: 15px; /* Plus d'espace interne */
     background-color: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Légère ombre */
 }
 
 .general-comments h4, .study-tips h4 {
     text-align: center;
     font-size: 18px;
-    margin-bottom: 5px;
-    margin-top: 2px;
+    margin-bottom: 10px; /* Plus d'espace sous les titres */
+    margin-top: 0; /* Suppression de la marge supérieure */
+    color: #272356; /* Couleur de la charte graphique */
 }
 
 /* Styles pour les fiches de commentaires */
 .comment-card {
-    font-size: 16px; /* Taille de la police */
+    font-size: 16px;
     border: 1px solid #9136b3;
     border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 15px; /* Plus d'espace interne */
+    margin-bottom: 15px; /* Plus d'espace entre les cartes */
     background-color: #f4f2f3;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .comment-card p {
-    margin: 0 0 5px;
+    margin: 0 0 10px; /* Plus d'espace sous les paragraphes */
+    line-height: 1.4; /* Meilleure lisibilité */
     font-size: 16px;
 }
-
-
 
 /* Styles pour le message "Pas de commentaire pour le moment 🙁" */
 .no-comments-message {
     font-style: italic;
     color: #666;
     text-align: center;
-    margin: 10px 0;
+    margin: 20px 0; /* Plus d'espace vertical */
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
 }
 
 .comment-card .comment-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 10px; /* Ajout d'espace avant le footer */
+    padding-top: 5px; /* Espace intérieur supérieur */
+    border-top: 1px solid #eee; /* Ligne de séparation légère */
 }
 
 .comment-card .comment-footer .author {
-    height: 7px;
     margin-left: auto;
     text-align: right;
-    font-size: 14px; /* Taille de la police pour le nom de l'auteur */
+    font-size: 14px;
     color: #666;
+    font-weight: 500; /* Légèrement plus visible */
 }
 
 .comment-card .comment-footer .comment-date {
-    height: 5px; /* Ajuste la hauteur de la date */
     flex-grow: 1;
     text-align: center;
-    font-size: 12px; /* Taille de la police pour la date */
+    font-size: 13px; /* Taille de police légèrement augmentée */
     color: #666;
+    margin-right: 5px; /* Espace entre la date et l'auteur */
 }
 
 .comment-card .comment-footer .reactions {
-    height: 15px; /* Ajuste la hauteur des réactions */
-    display: flex; /* Utilisation de flexbox pour aligner les éléments */
-    justify-content: flex-end; /* Aligne les réactions à droite */
-    gap: 5px; /* Espace entre les réactions */
-    font-size: 12px; 
+    height: 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px; /* Plus d'espace entre les boutons de réaction */
+    font-size: 12px;
 }
 
 /* Styles de base pour les boutons de réaction */
 .reaction-button {
-    height: 20px; /* Ajuste la hauteur des boutons */
+    height: 20px; /* Hauteur des boutons */
     background-color: #f0f0f0; /* Couleur de fond neutre */
     border: 1px solid #ccc; /* Bordure légère */
     border-radius: 5px; /* Coins arrondis */
@@ -491,6 +503,7 @@ h2 {
     cursor: pointer; /* Curseur pointeur pour indiquer qu'il est cliquable */
     transition: background-color 0.3s, transform 0.2s; /* Animation pour le survol */
 }
+
 /* Styles pour les boutons de réaction au survol */
 .reaction-button:hover {
     background-color: #e0e0e0; /* Couleur de fond au survol */

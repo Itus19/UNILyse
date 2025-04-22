@@ -6,6 +6,13 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import pandas as pd
 import re
+import shutil
+
+# Définir le chemin vers liste.csv
+liste_path = os.path.join(os.path.dirname(__file__), '../database/liste.csv')
+
+# Sauvegarder une copie avant d'écrire
+shutil.copy(liste_path, f"{liste_path}.backup")
 
 # Constantes globales
 CSV_FILE = os.path.join(os.path.dirname(__file__), "../database/scraping.csv")
@@ -272,31 +279,41 @@ def synchronize_files():
     liste_path = os.path.join(os.path.dirname(__file__), '../database/liste.csv')
 
     # Charger les fichiers CSV
-    scraping_df = pd.read_csv(scraping_path, delimiter=';', encoding='utf-8-sig')
-    liste_df = pd.read_csv(liste_path, delimiter=';', encoding='utf-8-sig')
+    scraping_data = {}
+    with open(scraping_path, mode='r', encoding='utf-8-sig') as scraping_file:
+        reader = csv.DictReader(scraping_file, delimiter=';')
+        for row in reader:
+            scraping_data[row['Nom']] = {
+                'credits': row.get('Crédits', '0.00'),
+                'semestre': row.get('Semestre', 'N/A'),
+                'prof': row.get('Professeur', 'VACAT')
+            }
 
-    # Identifier les cours à mettre à jour ou ajouter
-    for index, scraping_row in scraping_df.iterrows():
-        match = liste_df[liste_df['Nom'] == scraping_row['Nom']]
-        if not match.empty:
-            # Mettre à jour les informations existantes
-            liste_df.loc[match.index, ['Professeur', 'Crédits']] = scraping_row[['Professeur', 'Crédits']].values
-        else:
-            # Ajouter les nouveaux cours
-            liste_df = pd.concat([liste_df, pd.DataFrame([scraping_row])], ignore_index=True)
+    updated_rows = []
+    with open(liste_path, mode='r', encoding='utf-8-sig') as liste_file:
+        reader = csv.DictReader(liste_file, delimiter=';')
+        fieldnames = reader.fieldnames
+        for row in reader:
+            nom_cours = row['Nom']
+            if nom_cours in scraping_data:
+                row['Crédits'] = scraping_data[nom_cours]['credits']
+                row['Semestre'] = scraping_data[nom_cours]['semestre']
+                row['Professeur'] = scraping_data[nom_cours]['prof']
+            else:
+                row['Crédits'] = '0.00'
+                row['Semestre'] = 'N/A'
+                row['Professeur'] = 'VACAT'
+            updated_rows.append(row)
 
-    # Identifier les cours à marquer comme "V A C A T" et "N/A"
-    for index, liste_row in liste_df.iterrows():
-        match = scraping_df[scraping_df['Nom'] == liste_row['Nom']]
-        if match.empty:
-            liste_df.loc[index, ['Professeur', 'Crédits']] = ['V A C A T', 'N/A']
+    # Écrire les données mises à jour dans liste.csv
+    with open(liste_path, mode='w', encoding='utf-8-sig', newline='') as liste_file:
+        writer = csv.DictWriter(liste_file, fieldnames=fieldnames, delimiter=';')
+        writer.writeheader()
+        writer.writerows(updated_rows)
 
-    # Sauvegarder les modifications dans liste.csv
-    liste_df.to_csv(liste_path, sep=';', index=False, encoding='utf-8-sig')
     print("Synchronisation entre scraping.csv et liste.csv terminée.")
 
 # Ajout des fonctions pour gérer l'exportation des professeurs et la recherche de leurs liens professionnels
-
 def exporter_professeurs(cours):
     """Exporte une liste unique de professeurs dans professeurs.csv."""
     chemin_fichier = os.path.join(os.path.dirname(__file__), "../database/professeurs.csv")

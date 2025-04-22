@@ -307,7 +307,8 @@ def update_liste_csv():
 @app.route('/')
 def liste():
     courses = read_courses_data()  # Lire les données depuis liste.csv
-    return render_template('liste.html', courses=courses)
+    professor_links = load_professor_links()  # Charger les liens des professeurs
+    return render_template('liste.html', courses=courses, professor_links=professor_links)
 
 def get_professor_from_course(course_name):
     """Récupère le nom du professeur depuis liste.csv en fonction du nom du cours."""
@@ -376,6 +377,23 @@ def evaluation():
     # Afficher la page d'évaluation
     courses = get_course_names()
     return render_template('evaluation.html', courses=courses)
+
+def load_professor_links():
+    """Charge les liens des professeurs depuis professeurs.csv."""
+    professor_links = {}
+    csv_path = os.path.join(os.path.dirname(__file__), "../database/professeurs.csv")
+    try:
+        with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')  # Ajout du délimiteur
+            if 'Professeur' not in reader.fieldnames or 'Lien_Professeur' not in reader.fieldnames:
+                raise ValueError("Les colonnes 'Professeur' et 'Lien_Professeur' sont manquantes dans professeurs.csv.")
+            for row in reader:
+                professor_links[row['Professeur']] = row['Lien_Professeur']
+    except FileNotFoundError:
+        print(f"Le fichier {csv_path} est introuvable.")
+    except Exception as e:
+        print(f"Erreur lors de la lecture de professeurs.csv : {e}")
+    return professor_links
 
 @app.route('/last-update')
 def last_update():

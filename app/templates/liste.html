@@ -60,7 +60,15 @@
                 {% endfor %}
             </div>
             <div class="commentary-container">
-                <p><strong>Enseignant·x·e·s :</strong> {{ course['Professeur'] }}</p>
+                <p><strong>Enseignant·x·e·s :</strong>
+                    {% for professor in course['Professeur'].split(', ') %}
+                        {% if professor in professor_links %}
+                            <a href="{{ professor_links[professor] }}" target="_blank">{{ professor }}</a>{% if not loop.last %}, {% endif %}
+                        {% else %}
+                            {{ professor }}{% if not loop.last %}, {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </p>
                 <div class="commentary-columns">
                     <!-- Colonne des commentaires généraux -->
                     <div class="general-comments" data-section="general-comments">
@@ -75,7 +83,7 @@
                         <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
                         {% endif %}
                     </div>
-
+                    
                     <!-- Colonne des conseils d'étude -->
                     <div class="study-tips" data-section="study-tips">
                         <h4>Conseil d'étude</h4>

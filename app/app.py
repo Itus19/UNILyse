@@ -28,10 +28,14 @@ def get_question_stats_by_course():
             for row in reader:
                 course_name = row['Nom_Cours']
                 
+                # Ignorer les lignes sans nom de cours
+                if not course_name:
+                    continue
+                
                 # Initialiser les données pour ce cours s'il n'existe pas encore
                 if course_name not in course_stats:
                     course_stats[course_name] = {
-                        'interest_q1': [0, 0, 0, 0],  # [Non, Plutôt non, Plutôt oui, Oui]
+                        'interest_q1': [0, 0, 0, 0],  # [1, 2, 3, 4] pour une échelle de 1 à 4
                         'interest_q2': [0, 0, 0, 0],
                         'interest_q3': [0, 0, 0, 0],
                         'difficulty_q1': [0, 0, 0, 0],
@@ -55,13 +59,16 @@ def get_question_stats_by_course():
                 for js_key, csv_key in questions.items():
                     if csv_key in row and row[csv_key].strip():
                         try:
+                            # Convertir en nombre entier (1 à 4)
                             # Les valeurs dans le CSV sont de 1 à 4, on soustrait 1 pour les index de 0 à 3
                             value = int(float(row[csv_key])) - 1
-                            if 0 <= value <= 3:  # Vérifier que l'indice est valide
+                            if 0 <= value <= 3:  # Vérifier que l'indice est valide (0-3)
                                 course_stats[course_name][js_key][value] += 1
-                        except (ValueError, IndexError):
+                            else:
+                                print(f"Valeur hors limite pour {csv_key}: {row[csv_key]} (index calculé: {value})")
+                        except (ValueError, IndexError) as e:
                             # Ignorer les valeurs non numériques ou hors limites
-                            pass
+                            print(f"Erreur lors du traitement de la valeur {row[csv_key]} pour {csv_key}: {e}")
         
         # Lire liste.csv pour obtenir les IDs des cours
         try:
@@ -404,7 +411,7 @@ def evaluation():
         comments_general = request.form.get('comments_general')
         comments_tips = request.form.get('comments_tips')
 
-        # Calculer les moyennes
+        # Calculer les moyennes sur une échelle de 1 à 4
         moyenne_interet = round((float(interest_q1) + float(interest_q2) + float(interest_q3)) / 3, 1)
         moyenne_difficulte = round((float(difficulty_q1) + float(difficulty_q2) + float(difficulty_q3)) / 3, 1)
         moyenne_travail = round(float(work_q1), 1)

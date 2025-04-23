@@ -23,7 +23,7 @@
         <input type="search" id="search-bar" class="search-bar" placeholder="Rechercher un cours..." data-search="Nom">
         <button id="sort-global" class="sort-button" data-column="moyenne_globale" data-order="asc">Globale</button>
         <button id="sort-work" class="sort-button" data-column="moyenne_travail" data-order="asc">Travail</button>
-        <button id="sort-difficulty" class="sort-button" data-column="moyenne_difficulte" data-order="asc">Difficulté</button>
+        <button id="sort-difficulty" class="sort-button" data-column="moyenne_difficulte" data-order="asc">Facilité</button>
         <button id="sort-interest" class="sort-button" data-column="moyenne_interet" data-order="asc">Intérêt</button>
     </div>
 
@@ -55,7 +55,7 @@
                 <div class="evaluation-box" 
                      data-value="{{ course[metric]|float|round(1) }}" 
                      data-evaluations="({{ course['Nombre_Evaluations'] }})">
-                    <p>{{ course[metric]|float|round(1) }}/6{% if metric == 'Moyenne_Globale' %}<span>({{ course['Nombre_Evaluations'] }})</span>{% endif %}</p>
+                    <p>{{ course[metric]|float|round(1) }}/4{% if metric == 'Moyenne_Globale' %}<span>({{ course['Nombre_Evaluations'] }})</span>{% endif %}</p>
                 </div>
                 {% endfor %}
             </div>

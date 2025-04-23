@@ -356,22 +356,14 @@ h2 {
 }
 
 .evaluation-box[data-value^="2."] {
-    background-color: #fcd8ae;
-}
-
-.evaluation-box[data-value^="3."] {
     background-color: #fef093;
 }
 
-.evaluation-box[data-value^="4."] {
+.evaluation-box[data-value^="3."] {
     background-color: #aef2d1;
 }
 
-.evaluation-box[data-value^="5."] {
-    background-color: #4ad2bf;
-}
-
-.evaluation-box[data-value^="6."] {
+.evaluation-box[data-value^="4."] {
     background-color: #4ad2bf; /* Meilleure note */
 }
 

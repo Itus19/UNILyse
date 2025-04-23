@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="text-center">Profil Utilisateur</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="avatar-circle mx-auto">
+                                <span class="initials">{{ current_user.username[0] | upper }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <h5 class="card-title">{{ current_user.username }}</h5>
+                            <p class="card-text"><strong>Email:</strong> {{ current_user.email }}</p>
+                            <p class="card-text"><strong>Rôle:</strong> {{ current_user.role }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger float-end">Se déconnecter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-circle {
+    width: 100px;
+    height: 100px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.initials {
+    font-size: 42px;
+    font-weight: bold;
+    color: white;
+}
+</style>
+{% endblock %}

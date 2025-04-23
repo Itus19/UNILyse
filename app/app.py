@@ -1,12 +1,25 @@
-from flask import Flask, render_template, jsonify, request, redirect, send_from_directory
+from flask import Flask, render_template, jsonify, request, redirect, send_from_directory, url_for, flash
 import os
 import csv
 from datetime import datetime
 from flask_socketio import SocketIO
 from watchdog.events import FileSystemEventHandler
 import re
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from auth import User  # Importation absolue au lieu de relative
 
 app = Flask(__name__)  # Définition de l'objet app
+app.config['SECRET_KEY'] = 'votre_clé_secrète_difficile_à_deviner'  # Clé secrète pour les sessions
+
+# Configuration de Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+login_manager.login_message = "Veuillez vous connecter pour accéder à cette page."
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 # Initialisation de SocketIO
 socketio = SocketIO(app)
@@ -375,6 +388,65 @@ def update_liste_csv():
     except Exception as e:
         print(f"Erreur lors de la mise à jour de liste.csv : {e}")
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('liste'))
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        remember = 'remember' in request.form
+        
+        user = User.find_by_username(username)
+        
+        if user and user.check_password(password):
+            login_user(user, remember=remember)
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('liste'))
+        else:
+            flash('Nom d\'utilisateur ou mot de passe incorrect.')
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('liste'))
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if password != confirm_password:
+            flash('Les mots de passe ne correspondent pas.')
+            return render_template('register.html')
+        
+        if User.find_by_username(username):
+            flash('Ce nom d\'utilisateur est déjà utilisé.')
+            return render_template('register.html')
+        
+        if User.create(username, password, email):
+            flash('Compte créé avec succès! Vous pouvez maintenant vous connecter.')
+            return redirect(url_for('login'))
+        else:
+            flash('Une erreur s\'est produite lors de la création du compte.')
+    
+    return render_template('register.html')
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
+
 @app.route('/')
 def liste():
     courses = read_courses_data()  # Lire les données depuis liste.csv
@@ -395,12 +467,13 @@ def get_professor_from_course(course_name):
     return "Inconnu"
 
 @app.route('/evaluation', methods=['GET', 'POST'])
+@login_required  # Protéger cette route pour utilisateurs authentifiés uniquement
 def evaluation():
     if request.method == 'POST':
         # Récupérer les données du formulaire
         course_name = request.form.get('course_name')
         professor = get_professor_from_course(course_name)  # Récupérer le professeur depuis liste.csv
-        author = request.form.get('author')
+        author = current_user.username  # Utiliser le nom d'utilisateur connecté
         interest_q1 = request.form.get('interest_q1')
         interest_q2 = request.form.get('interest_q2')
         interest_q3 = request.form.get('interest_q3')

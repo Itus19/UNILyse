@@ -78,6 +78,17 @@ h2 {
 
 .menu a:hover {
     background-color: #9c54b5; /* Couleur de fond au survol */
+    color: white;
+}
+
+/* Styles pour les liens d'authentification */
+.auth-link {
+    font-weight: bold;
+    border-top: 1px solid #eee;
+}
+
+.menu a.auth-link:hover {
+    background-color: #6a3a7c; /* Couleur plus foncée pour les liens d'authentification */
 }
 
 .header-button:hover + .menu, 
@@ -253,6 +264,16 @@ h2 {
     gap: 3px; /* Augmenter l'espace entre les éléments internes */
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s; /* Animation douce au survol */
+}
+
+/* Supprime les marges des paragraphes dans les conteneurs de cartes pour un meilleur centrage vertical */
+.faculty-container p, 
+.semester-container p, 
+.credits-container p, 
+.course-name-container p, 
+.evaluation-box p {
+    margin: 0;
+    padding: 0;
 }
 
 .course-card:hover {

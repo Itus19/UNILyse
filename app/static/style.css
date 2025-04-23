@@ -387,12 +387,57 @@ h2 {
     background-color: transparent;
 }
 
+/* Couleurs des conteneurs de facultés selon la faculté */
+.course-container[data-faculté="SSP"] .faculty-container {
+    background-color: #537fa8;
+}
+
+.course-container[data-faculté="FTSR"] .faculty-container {
+    background-color: #2d587b;
+}
+
+.course-container[data-faculté="FDCA"] .faculty-container {
+    background-color: #912559;
+}
+
+.course-container[data-faculté="ESC"] .faculty-container {
+    background-color: #912559;
+}
+
+.course-container[data-faculté="IDHEAP"] .faculty-container {
+    background-color: #912559;
+}
+
+.course-container[data-faculté="LETTRES"] .faculty-container {
+    background-color: #2ea59d;
+}
+
+.course-container[data-faculté="HEC"] .faculty-container {
+    background-color: #073752;
+}
+
+.course-container[data-faculté="FBM-BIO"] .faculty-container {
+    background-color: #ab5064;
+}
+
+.course-container[data-faculté="FBM-MED"] .faculty-container {
+    background-color: #ab5064;
+}
+
+.course-container[data-faculté="FGSE"] .faculty-container {
+    background-color: #2da15e;
+}
+
+.course-container[data-faculté="SCIENCES²"] .faculty-container {
+    background-color: #44597d;
+}
+
 /* ============================
    COMMENTARY CONTAINER
    ============================ */
 .commentary-container {
     position: relative;
-    margin-top: 5px; /* Ajouter un petit espace entre la carte et le conteneur de commentaires */
+    margin-top: 0px; /* Ajouter un petit espace entre la carte et le conteneur de commentaires */
     margin-bottom: 0px; /* Ajouter un espace après le conteneur de commentaires */
     font-size: 16px;
     color: #333;

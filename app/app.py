@@ -15,6 +15,70 @@ socketio = SocketIO(app)
 EVALUATIONS_CSV = os.path.join(os.path.dirname(__file__), "../database/evaluations.csv")
 LISTE_CSV = os.path.join(os.path.dirname(__file__), "../database/liste.csv")
 
+def get_question_stats_by_course():
+    """
+    Collecte les statistiques des réponses aux questions pour chaque cours.
+    Renvoie un dictionnaire avec les compteurs de réponses pour chaque question et chaque cours.
+    """
+    course_stats = {}
+    
+    try:
+        with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
+            reader = csv.DictReader(eval_file, delimiter=';')
+            for row in reader:
+                course_name = row['Nom_Cours']
+                
+                # Initialiser les données pour ce cours s'il n'existe pas encore
+                if course_name not in course_stats:
+                    course_stats[course_name] = {
+                        'interest_q1': [0, 0, 0, 0],  # [Non, Plutôt non, Plutôt oui, Oui]
+                        'interest_q2': [0, 0, 0, 0],
+                        'interest_q3': [0, 0, 0, 0],
+                        'difficulty_q1': [0, 0, 0, 0],
+                        'difficulty_q2': [0, 0, 0, 0],
+                        'difficulty_q3': [0, 0, 0, 0],
+                        'work_q1': [0, 0, 0, 0],
+                        'course_id': ''  # Sera rempli plus tard
+                    }
+                
+                # Incrémenter les compteurs pour chaque question si une réponse existe
+                questions = {
+                    'interest_q1': 'Intérêt_Q1',
+                    'interest_q2': 'Intérêt_Q2',
+                    'interest_q3': 'Intérêt_Q3',
+                    'difficulty_q1': 'Difficulté_Q1',
+                    'difficulty_q2': 'Difficulté_Q2',
+                    'difficulty_q3': 'Difficulté_Q3',
+                    'work_q1': 'Travail_Q1'
+                }
+                
+                for js_key, csv_key in questions.items():
+                    if csv_key in row and row[csv_key].strip():
+                        try:
+                            # Les valeurs dans le CSV sont de 1 à 4, on soustrait 1 pour les index de 0 à 3
+                            value = int(float(row[csv_key])) - 1
+                            if 0 <= value <= 3:  # Vérifier que l'indice est valide
+                                course_stats[course_name][js_key][value] += 1
+                        except (ValueError, IndexError):
+                            # Ignorer les valeurs non numériques ou hors limites
+                            pass
+        
+        # Lire liste.csv pour obtenir les IDs des cours
+        try:
+            with open(LISTE_CSV, newline='', encoding='utf-8-sig') as liste_file:
+                reader = csv.DictReader(liste_file, delimiter=';')
+                for i, row in enumerate(reader, 1):
+                    course_name = row['Nom']
+                    if course_name in course_stats:
+                        course_stats[course_name]['course_id'] = str(i)
+        except Exception as e:
+            print(f"Erreur lors de la lecture de liste.csv : {e}")
+    
+    except Exception as e:
+        print(f"Erreur lors de la collecte des statistiques : {e}")
+    
+    return course_stats
+
 def initialize_evaluation_csv():
     """Crée le fichier evaluation.csv s'il n'existe pas et copie les données de liste.csv."""
     if not os.path.exists(EVALUATIONS_CSV):
@@ -308,7 +372,8 @@ def update_liste_csv():
 def liste():
     courses = read_courses_data()  # Lire les données depuis liste.csv
     professor_links = load_professor_links()  # Charger les liens des professeurs
-    return render_template('liste.html', courses=courses, professor_links=professor_links)
+    question_stats = get_question_stats_by_course()  # Récupérer les statistiques des questions par cours
+    return render_template('liste.html', courses=courses, professor_links=professor_links, question_stats=question_stats)
 
 def get_professor_from_course(course_name):
     """Récupère le nom du professeur depuis liste.csv en fonction du nom du cours."""

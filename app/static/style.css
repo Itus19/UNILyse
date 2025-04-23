@@ -459,7 +459,7 @@ h2 {
     margin-bottom: 10px;
 }
 
-.general-comments, .study-tips {
+.general-comments, .study-tips, .details {
     flex: 1;
     border: 1px solid #ddd;
     border-radius: 8px; /* Coins plus arrondis */
@@ -468,7 +468,7 @@ h2 {
     box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Légère ombre */
 }
 
-.general-comments h4, .study-tips h4 {
+.general-comments h4, .study-tips h4, .details h4 {
     text-align: center;
     font-size: 18px;
     margin-bottom: 10px; /* Plus d'espace sous les titres */
@@ -508,9 +508,10 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px; /* Ajout d'espace avant le footer */
+    margin-top: 5px; /* Ajout d'espace avant le footer */
     padding-top: 5px; /* Espace intérieur supérieur */
     border-top: 1px solid #eee; /* Ligne de séparation légère */
+    margin-bottom: -10px; /* Supprime l'espace après le footer */
 }
 
 .comment-card .comment-footer .author {
@@ -535,6 +536,7 @@ h2 {
     justify-content: flex-end;
     gap: 8px; /* Plus d'espace entre les boutons de réaction */
     font-size: 12px;
+    margin-bottom: 5px;
 }
 
 /* Styles de base pour les boutons de réaction */
@@ -633,7 +635,6 @@ h2 {
     background: linear-gradient(90deg, #9c54b5, #272356); /* Dégradé de gauche à droite */
     margin: -10px 0; /* Espace réduit pour un rendu plus compact */
     margin-bottom: 5px;
-    border: none;
 }
 
 /* ============================
@@ -914,6 +915,45 @@ button[type="submit"]:hover {
 .reactions span {
     margin-left: 10px;
     font-size: 1.1rem;
+}
+
+/* ============================
+   STYLES POUR LA SECTION DÉTAILS
+   ============================ */
+
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.question-select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #9c54b5;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+}
+
+.pie-chart-container {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+}
+
+.no-data-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    width: 80%;
 }
 
 

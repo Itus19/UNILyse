@@ -97,11 +97,48 @@
                         <p class="no-comments-message">Pas de commentaire pour le moment 🙁</p>
                         {% endif %}
                     </div>
+                    
+                    <!-- Colonne détails -->
+                    <div class="details" data-section="details">
+                        <h4>Détails</h4>
+                        <div class="chart-container">
+                            <select id="question-select-{{ loop.index }}" class="question-select" data-course-id="{{ course['ID'] }}">
+                                <option value="">Sélectionnez une question</option>
+                                <optgroup label="Intérêt">
+                                    <option value="interest_q1">Avez-vous aimé ce cours dans sa globalité ?</option>
+                                    <option value="interest_q2">Recommanderiez-vous cet enseignement ?</option>
+                                    <option value="interest_q3">Votre réflexion est stimulée.</option>
+                                </optgroup>
+                                <optgroup label="Difficulté">
+                                    <option value="difficulty_q1">Les objectifs de l'enseignement sont bien définis.</option>
+                                    <option value="difficulty_q2">Les consignes concernant les évaluations sont claires.</option>
+                                    <option value="difficulty_q3">Les commentaires sur vos évaluations vous aident à améliorer la qualité de votre travail.</option>
+                                </optgroup>
+                                <optgroup label="Travail">
+                                    <option value="work_q1">La charge de travail est adéquate par rapport au nombre de crédits ECTS.</option>
+                                </optgroup>
+                            </select>
+                            <div class="pie-chart-container">
+                                <canvas id="pie-chart-{{ loop.index }}" width="250" height="250"></canvas>
+                                <p id="no-data-message-{{ loop.index }}" class="no-data-message">Veuillez sélectionner une question pour afficher les données</p>
+                            </div>
+                        </div>
+                        {% if course['Details'] %}
+                        <div class="comment-card">
+                            <div class="comment-body">
+                                <p>{{ course['Details'] }}</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -130,6 +167,122 @@
                     } else {
                         commentaryContainer.style.maxHeight = commentaryContainer.scrollHeight + "px";
                     }
+                }
+            });
+        });
+
+        // Code pour les graphiques en camembert
+        const questionSelects = document.querySelectorAll(".question-select");
+        
+        // Données des statistiques des questions par cours (transmises par le serveur)
+        const questionStatsData = JSON.parse('{{ question_stats|tojson|safe }}');
+        
+        // Récupère les données pour une question spécifique d'un cours
+        const getQuestionData = (courseName, questionId) => {
+            // Si nous avons des données pour ce cours et cette question
+            if (questionStatsData[courseName] && questionStatsData[courseName][questionId]) {
+                return questionStatsData[courseName][questionId];
+            }
+            
+            // Sinon renvoyer des données vides (aucune réponse)
+            return [0, 0, 0, 0];
+        };
+
+        // Couleurs pour chaque option de réponse
+        const chartColors = [
+            'rgba(255, 99, 132, 0.7)',  // Rouge - Non
+            'rgba(255, 159, 64, 0.7)',  // Orange - Plutôt non
+            'rgba(75, 192, 192, 0.7)',  // Bleu-vert - Plutôt oui
+            'rgba(54, 162, 235, 0.7)',  // Bleu - Oui
+        ];
+
+        // Options de réponse correspondant aux valeurs 1, 2, 3, 4 dans le formulaire
+        const responseLabels = ['Non', 'Plutôt non', 'Plutôt oui', 'Oui'];
+
+        // Initialiser les charts
+        const charts = {};
+
+        questionSelects.forEach((select) => {
+            const index = select.id.split('-')[2];
+            const chartCanvas = document.getElementById(`pie-chart-${index}`);
+            const noDataMessage = document.getElementById(`no-data-message-${index}`);
+            
+            // Récupérer le nom du cours à partir du conteneur parent
+            const courseContainer = select.closest('.course-container');
+            const courseName = courseContainer.querySelector('.course-name-container a').textContent;
+            
+            // Cacher le message par défaut
+            chartCanvas.style.display = 'none';
+            noDataMessage.style.display = 'block';
+            
+            // Créer le graphique avec des données vides
+            charts[index] = new Chart(chartCanvas, {
+                type: 'pie',
+                data: {
+                    labels: responseLabels,
+                    datasets: [{
+                        data: [0, 0, 0, 0],
+                        backgroundColor: chartColors,
+                        borderColor: chartColors.map(color => color.replace('0.7', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Réponses à la question',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Événement de changement pour le select
+            select.addEventListener('change', function() {
+                const questionId = this.value;
+                
+                if (questionId) {
+                    // Récupérer les données pour la question sélectionnée
+                    const data = getQuestionData(courseName, questionId);
+                    const selectedOption = this.options[this.selectedIndex];
+                    const questionText = selectedOption.text;
+                    
+                    // Vérifier si nous avons des réponses
+                    const hasResponses = data.some(count => count > 0);
+                    
+                    if (hasResponses) {
+                        // Mettre à jour le graphique
+                        charts[index].data.datasets[0].data = data;
+                        charts[index].options.plugins.title.text = questionText;
+                        charts[index].update();
+                        
+                        // Afficher le graphique et cacher le message
+                        chartCanvas.style.display = 'block';
+                        noDataMessage.style.display = 'none';
+                    } else {
+                        // Afficher un message spécifique s'il n'y a pas de réponses
+                        chartCanvas.style.display = 'none';
+                        noDataMessage.textContent = "Aucune réponse disponible pour cette question";
+                        noDataMessage.style.display = 'block';
+                    }
+                    
+                    // Adapter la hauteur du conteneur de commentaires
+                    const commentaryContainer = select.closest('.commentary-container');
+                    if (commentaryContainer && commentaryContainer.style.maxHeight) {
+                        commentaryContainer.style.maxHeight = commentaryContainer.scrollHeight + "px";
+                    }
+                } else {
+                    // Cacher le graphique et afficher le message par défaut
+                    chartCanvas.style.display = 'none';
+                    noDataMessage.textContent = "Veuillez sélectionner une question pour afficher les données";
+                    noDataMessage.style.display = 'block';
                 }
             });
         });

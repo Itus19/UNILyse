@@ -370,7 +370,7 @@ function filterCourses() {
 }
 
 // Fusion des deux fonctions createCommentCard en une seule
-function createCommentCard(content, date, auteur = null, likeGeneraux = 0, dislikeGeneraux = 0, signalementGeneraux = 0, evaluationId, likeConseils = 0, dislikeConseils = 0, signalementConseils = 0) {
+function createCommentCard(content, date, auteur = null, likeCount = 0, dislikeCount = 0, signalementCount = 0, evaluationId, likeConseils = 0, dislikeConseils = 0, signalementConseils = 0) {
     const commentCard = document.createElement("div");
     commentCard.className = "comment-card";
 
@@ -384,78 +384,104 @@ function createCommentCard(content, date, auteur = null, likeGeneraux = 0, disli
     const reactionsContainer = document.createElement("div");
     reactionsContainer.className = "reactions";
 
-    const likeButtonGeneraux = document.createElement("button");
-    likeButtonGeneraux.className = "reaction-button like-button";
-    likeButtonGeneraux.innerHTML = `👍 ${likeGeneraux}`;
-    likeButtonGeneraux.addEventListener("click", () => {
-        console.log("evaluationId envoyé :", evaluationId);
+    // Détecter si c'est un commentaire conseil ou général basé sur la position des arguments
+    // Une meilleure détection qui prend en compte la position des arguments
+    const isConseil = arguments.length > 7 && (arguments[7] !== undefined || arguments[8] !== undefined || arguments[9] !== undefined);
+    const commentType = isConseil ? 'conseils' : 'general';
+    
+    // Prendre les bonnes valeurs selon le type de commentaire
+    let likes, dislikes, signalements;
+    
+    if (isConseil) {
+        likes = likeConseils !== undefined ? Number(likeConseils) : 0;
+        dislikes = dislikeConseils !== undefined ? Number(dislikeConseils) : 0;
+        signalements = signalementConseils !== undefined ? Number(signalementConseils) : 0;
+    } else {
+        likes = likeCount !== undefined ? Number(likeCount) : 0;
+        dislikes = dislikeCount !== undefined ? Number(dislikeCount) : 0;
+        signalements = signalementCount !== undefined ? Number(signalementCount) : 0;
+    }
+    
+    console.log(`Type: ${commentType}, Likes: ${likes}, Dislikes: ${dislikes}, Signalements: ${signalements}`);
+
+    // Création du bouton like
+    const likeButton = document.createElement("button");
+    likeButton.className = "reaction-button like-button";
+    likeButton.innerHTML = `👍 ${likes}`;
+    likeButton.addEventListener("click", () => {
+        console.log(`evaluationId envoyé : ${evaluationId} pour commentaire type : ${commentType}`);
         fetch('/update-reaction', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Like', comment_type: 'general' }),
+            body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Like', comment_type: commentType }),
         })
         .then(response => {
             if (response.ok) {
-                likeGeneraux++;
-                likeButtonGeneraux.innerHTML = `👍 ${likeGeneraux}`;
+                // Mettre à jour le compteur et le texte du bouton
+                const newCount = parseInt(likeButton.textContent.split(' ')[1]) + 1;
+                likeButton.innerHTML = `👍 ${newCount}`;
             } else {
-                console.error("Erreur lors de la mise à jour du Like_Généraux.");
+                console.error(`Erreur lors de la mise à jour du Like_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
             }
         })
         .catch(error => console.error("Erreur réseau :", error));
     });
 
-    const dislikeButtonGeneraux = document.createElement("button");
-    dislikeButtonGeneraux.className = "reaction-button dislike-button";
-    dislikeButtonGeneraux.innerHTML = `👎 ${dislikeGeneraux}`;
-    dislikeButtonGeneraux.addEventListener("click", () => {
-        console.log("evaluationId envoyé :", evaluationId);
+    // Création du bouton dislike
+    const dislikeButton = document.createElement("button");
+    dislikeButton.className = "reaction-button dislike-button";
+    dislikeButton.innerHTML = `👎 ${dislikes}`;
+    dislikeButton.addEventListener("click", () => {
+        console.log(`evaluationId envoyé : ${evaluationId} pour commentaire type : ${commentType}`);
         fetch('/update-reaction', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Dislike', comment_type: 'general' }),
+            body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Dislike', comment_type: commentType }),
         })
         .then(response => {
             if (response.ok) {
-                dislikeGeneraux++;
-                dislikeButtonGeneraux.innerHTML = `👎 ${dislikeGeneraux}`;
+                // Mettre à jour le compteur et le texte du bouton
+                const newCount = parseInt(dislikeButton.textContent.split(' ')[1]) + 1;
+                dislikeButton.innerHTML = `👎 ${newCount}`;
             } else {
-                console.error("Erreur lors de la mise à jour du Dislike_Généraux.");
+                console.error(`Erreur lors de la mise à jour du Dislike_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
             }
         })
         .catch(error => console.error("Erreur réseau :", error));
     });
 
-    const reportButtonGeneraux = document.createElement("button");
-    reportButtonGeneraux.className = "reaction-button report-button";
-    reportButtonGeneraux.innerHTML = `⚠️ ${signalementGeneraux}`;
-    reportButtonGeneraux.addEventListener("click", () => {
-        console.log("evaluationId envoyé :", evaluationId);
+    // Création du bouton signalement
+    const reportButton = document.createElement("button");
+    reportButton.className = "reaction-button report-button";
+    reportButton.innerHTML = `⚠️ ${signalements}`;
+    reportButton.addEventListener("click", () => {
+        console.log(`evaluationId envoyé : ${evaluationId} pour commentaire type : ${commentType}`);
         fetch('/update-reaction', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Signalement', comment_type: 'general' }),
+            body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Signalement', comment_type: commentType }),
         })
         .then(response => {
             if (response.ok) {
-                signalementGeneraux++;
-                reportButtonGeneraux.innerHTML = `⚠️ ${signalementGeneraux}`;
+                // Mettre à jour le compteur et le texte du bouton
+                const newCount = parseInt(reportButton.textContent.split(' ')[1]) + 1;
+                reportButton.innerHTML = `⚠️ ${newCount}`;
             } else {
-                console.error("Erreur lors de la mise à jour du Signalement_Généraux.");
+                console.error(`Erreur lors de la mise à jour du Signalement_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
             }
         })
         .catch(error => console.error("Erreur réseau :", error));
     });
 
-    reactionsContainer.appendChild(likeButtonGeneraux);
-    reactionsContainer.appendChild(dislikeButtonGeneraux);
-    reactionsContainer.appendChild(reportButtonGeneraux);
+    reactionsContainer.appendChild(likeButton);
+    reactionsContainer.appendChild(dislikeButton);
+    reactionsContainer.appendChild(reportButton);
 
     commentFooter.innerHTML = `
         ${auteur ? `<span class="author">${auteur}</span>` : ""}
@@ -466,8 +492,8 @@ function createCommentCard(content, date, auteur = null, likeGeneraux = 0, disli
     commentCard.appendChild(commentBody);
     commentCard.appendChild(commentFooter);
 
-    // Ajout de logs pour vérifier la transmission correcte de evaluationId
-    console.log("Création de la carte avec evaluationId :", evaluationId);
+    // Ajout de logs pour vérifier la transmission correcte de evaluationId et des compteurs
+    console.log(`Création de la carte avec evaluationId: ${evaluationId}, type: ${commentType}, likes: ${likes}, dislikes: ${dislikes}, signalements: ${signalements}`);
 
     return commentCard;
 }

@@ -645,8 +645,18 @@ def update_reaction():
             print("Erreur : Evaluation_id manquant ou invalide")
             return jsonify({"error": "Le champ 'Evaluation_id' est requis et doit être au format 'année_numéro'."}), 400
 
-        if reaction_type not in ['Like', 'Dislike', 'Signalement']:
-            print("Erreur : reaction_type invalide")
+        # Vérifier si c'est une action d'annulation
+        is_removal = reaction_type.startswith('Un')
+        
+        # Déterminer le type de réaction réel (sans le préfixe 'Un')
+        actual_reaction_type = reaction_type[2:] if is_removal else reaction_type
+        
+        # Normaliser le type de réaction pour la validation (première lettre majuscule, reste en minuscules)
+        normalized_reaction_type = actual_reaction_type.capitalize()
+        
+        # Vérifier si le type de réaction est valide
+        if normalized_reaction_type not in ['Like', 'Dislike', 'Signalement']:
+            print(f"Erreur : reaction_type invalide '{actual_reaction_type}' (normalisé: '{normalized_reaction_type}')")
             return jsonify({"error": "Le champ 'reaction_type' est invalide."}), 400
 
         if comment_type not in ['general', 'conseils']:
@@ -659,8 +669,8 @@ def update_reaction():
             reader = csv.DictReader(eval_file, delimiter=';')
             evaluations = list(reader)
 
-        # Déterminer la colonne à mettre à jour
-        reaction_column = f"{reaction_type}_{'Généraux' if comment_type == 'general' else 'Conseils'}"
+        # Déterminer la colonne à mettre à jour en utilisant le type normalisé
+        reaction_column = f"{normalized_reaction_type}_{'Généraux' if comment_type == 'general' else 'Conseils'}"
 
         # Mettre à jour la ligne correspondante
         updated = False
@@ -668,7 +678,15 @@ def update_reaction():
             if row['Evaluation_id'] == Evaluation_id:
                 print(f"Avant mise à jour : {reaction_column} = {row.get(reaction_column, 0)}")
                 current_value = row.get(reaction_column, "0")
-                row[reaction_column] = str(int(current_value) + 1 if current_value.isdigit() else 1)
+                
+                # Si c'est une action d'annulation, décrémenter la valeur
+                if is_removal:
+                    new_value = max(0, int(current_value) - 1 if current_value.isdigit() else 0)
+                else:
+                    # Sinon, c'est une action d'ajout, incrémenter la valeur
+                    new_value = int(current_value) + 1 if current_value.isdigit() else 1
+                
+                row[reaction_column] = str(new_value)
                 print(f"Après mise à jour : {reaction_column} = {row[reaction_column]}")
                 updated = True
                 break

@@ -369,6 +369,34 @@ function filterCourses() {
     });
 }
 
+// Fonction pour mettre à jour l'état visuel des boutons selon le vote actuel
+const updateButtonStates = (likeButton, dislikeButton, reportButton, currentVote) => {
+    // Réinitialiser l'état de tous les boutons
+    likeButton.classList.remove('voted');
+    dislikeButton.classList.remove('voted');
+    reportButton.classList.remove('voted');
+    
+    // Marquer le bouton actif
+    if (currentVote === 'like') {
+        likeButton.classList.add('voted');
+    } else if (currentVote === 'dislike') {
+        dislikeButton.classList.add('voted');
+    } else if (currentVote === 'report') {
+        reportButton.classList.add('voted');
+    }
+};
+
+// Fusionner tous les cookies de réactions en un seul objet JSON
+function getUserReactions() {
+    const cookieVal = getCookie("userReactions");
+    return cookieVal ? JSON.parse(cookieVal) : {};
+}
+
+// Sauvegarder les réactions dans un cookie (valide pendant 365 jours)
+function saveUserReactions(reactionsObj) {
+    setCookie("userReactions", JSON.stringify(reactionsObj), 365);
+}
+
 // Fusion des deux fonctions createCommentCard en une seule
 function createCommentCard(content, date, auteur = null, likeCount = 0, dislikeCount = 0, signalementCount = 0, evaluationId, likeConseils = 0, dislikeConseils = 0, signalementConseils = 0) {
     const commentCard = document.createElement("div");
@@ -385,7 +413,6 @@ function createCommentCard(content, date, auteur = null, likeCount = 0, dislikeC
     reactionsContainer.className = "reactions";
 
     // Détecter si c'est un commentaire conseil ou général basé sur la position des arguments
-    // Une meilleure détection qui prend en compte la position des arguments
     const isConseil = arguments.length > 7 && (arguments[7] !== undefined || arguments[8] !== undefined || arguments[9] !== undefined);
     const commentType = isConseil ? 'conseils' : 'general';
     
@@ -402,13 +429,70 @@ function createCommentCard(content, date, auteur = null, likeCount = 0, dislikeC
         signalements = signalementCount !== undefined ? Number(signalementCount) : 0;
     }
     
-    console.log(`Type: ${commentType}, Likes: ${likes}, Dislikes: ${dislikes}, Signalements: ${signalements}`);
-
+    // Vérifier si l'utilisateur a déjà voté sur ce commentaire avec les cookies
+    const reactionKey = `${evaluationId}_${commentType}`;
+    let userReactions = getUserReactions();
+    
     // Création du bouton like
     const likeButton = document.createElement("button");
     likeButton.className = "reaction-button like-button";
     likeButton.innerHTML = `👍 ${likes}`;
+    
+    // Création du bouton dislike
+    const dislikeButton = document.createElement("button");
+    dislikeButton.className = "reaction-button dislike-button";
+    dislikeButton.innerHTML = `👎 ${dislikes}`;
+    
+    // Création du bouton signalement
+    const reportButton = document.createElement("button");
+    reportButton.className = "reaction-button report-button";
+    reportButton.innerHTML = `⚠️ ${signalements}`;
+    
+    // Appliquer l'état initial des boutons selon le vote existant
+    if (userReactions[reactionKey]) {
+        updateButtonStates(likeButton, dislikeButton, reportButton, userReactions[reactionKey]);
+    }
+    
     likeButton.addEventListener("click", () => {
+        // Si l'utilisateur clique sur le même bouton, on annule son vote
+        if (userReactions[reactionKey] === 'like') {
+            // Annuler le vote
+            fetch('/update-reaction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    evaluation_id: evaluationId, 
+                    reaction_type: 'Unlike', // Action d'annulation
+                    comment_type: commentType 
+                }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Mettre à jour le compteur et le texte du bouton
+                    const newCount = Math.max(0, parseInt(likeButton.textContent.split(' ')[1]) - 1);
+                    likeButton.innerHTML = `👍 ${newCount}`;
+                    
+                    // Supprimer le vote de l'utilisateur
+                    delete userReactions[reactionKey];
+                    saveUserReactions(userReactions);
+                    
+                    // Réinitialiser l'état des boutons
+                    updateButtonStates(likeButton, dislikeButton, reportButton, null);
+                    
+                    console.log("Vote annulé avec succès");
+                } else {
+                    console.error(`Erreur lors de l'annulation du Like_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
+                }
+            })
+            .catch(error => console.error("Erreur réseau :", error));
+            return;
+        }
+        
+        // Obtenir l'ancien vote (s'il existe)
+        const previousVote = userReactions[reactionKey];
+        
         console.log(`evaluationId envoyé : ${evaluationId} pour commentaire type : ${commentType}`);
         fetch('/update-reaction', {
             method: 'POST',
@@ -419,21 +503,93 @@ function createCommentCard(content, date, auteur = null, likeCount = 0, dislikeC
         })
         .then(response => {
             if (response.ok) {
-                // Mettre à jour le compteur et le texte du bouton
+                // Gérer l'incrémentation du compteur actuel et éventuellement décrémenter l'ancien
+                if (previousVote === 'dislike') {
+                    // Décrementer le compteur de dislikes
+                    const newDislikeCount = parseInt(dislikeButton.textContent.split(' ')[1]) - 1;
+                    dislikeButton.innerHTML = `👎 ${newDislikeCount >= 0 ? newDislikeCount : 0}`;
+                    
+                    // Annuler l'ancien vote dans la base de données
+                    fetch('/update-reaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Undislike', comment_type: commentType }),
+                    });
+                    
+                } else if (previousVote === 'report') {
+                    // Décrementer le compteur de signalements
+                    const newReportCount = parseInt(reportButton.textContent.split(' ')[1]) - 1;
+                    reportButton.innerHTML = `⚠️ ${newReportCount >= 0 ? newReportCount : 0}`;
+                    
+                    // Annuler l'ancien vote dans la base de données
+                    fetch('/update-reaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Unreport', comment_type: commentType }),
+                    });
+                }
+                
+                // Mettre à jour le compteur de likes
                 const newCount = parseInt(likeButton.textContent.split(' ')[1]) + 1;
                 likeButton.innerHTML = `👍 ${newCount}`;
+                
+                // Enregistrer le nouveau vote
+                userReactions[reactionKey] = 'like';
+                saveUserReactions(userReactions);
+                
+                // Mettre à jour l'état visuel des boutons
+                updateButtonStates(likeButton, dislikeButton, reportButton, 'like');
             } else {
                 console.error(`Erreur lors de la mise à jour du Like_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
             }
         })
         .catch(error => console.error("Erreur réseau :", error));
     });
-
-    // Création du bouton dislike
-    const dislikeButton = document.createElement("button");
-    dislikeButton.className = "reaction-button dislike-button";
-    dislikeButton.innerHTML = `👎 ${dislikes}`;
+    
     dislikeButton.addEventListener("click", () => {
+        // Si l'utilisateur clique sur le même bouton, on annule son vote
+        if (userReactions[reactionKey] === 'dislike') {
+            // Annuler le vote
+            fetch('/update-reaction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    evaluation_id: evaluationId, 
+                    reaction_type: 'Undislike', // Action d'annulation
+                    comment_type: commentType 
+                }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Mettre à jour le compteur et le texte du bouton
+                    const newCount = Math.max(0, parseInt(dislikeButton.textContent.split(' ')[1]) - 1);
+                    dislikeButton.innerHTML = `👎 ${newCount}`;
+                    
+                    // Supprimer le vote de l'utilisateur
+                    delete userReactions[reactionKey];
+                    saveUserReactions(userReactions);
+                    
+                    // Réinitialiser l'état des boutons
+                    updateButtonStates(likeButton, dislikeButton, reportButton, null);
+                    
+                    console.log("Vote annulé avec succès");
+                } else {
+                    console.error(`Erreur lors de l'annulation du Dislike_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
+                }
+            })
+            .catch(error => console.error("Erreur réseau :", error));
+            return;
+        }
+        
+        // Obtenir l'ancien vote (s'il existe)
+        const previousVote = userReactions[reactionKey];
+        
         console.log(`evaluationId envoyé : ${evaluationId} pour commentaire type : ${commentType}`);
         fetch('/update-reaction', {
             method: 'POST',
@@ -444,21 +600,93 @@ function createCommentCard(content, date, auteur = null, likeCount = 0, dislikeC
         })
         .then(response => {
             if (response.ok) {
-                // Mettre à jour le compteur et le texte du bouton
+                // Gérer l'incrémentation du compteur actuel et éventuellement décrémenter l'ancien
+                if (previousVote === 'like') {
+                    // Décrementer le compteur de likes
+                    const newLikeCount = parseInt(likeButton.textContent.split(' ')[1]) - 1;
+                    likeButton.innerHTML = `👍 ${newLikeCount >= 0 ? newLikeCount : 0}`;
+                    
+                    // Annuler l'ancien vote dans la base de données
+                    fetch('/update-reaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Unlike', comment_type: commentType }),
+                    });
+                    
+                } else if (previousVote === 'report') {
+                    // Décrementer le compteur de signalements
+                    const newReportCount = parseInt(reportButton.textContent.split(' ')[1]) - 1;
+                    reportButton.innerHTML = `⚠️ ${newReportCount >= 0 ? newReportCount : 0}`;
+                    
+                    // Annuler l'ancien vote dans la base de données
+                    fetch('/update-reaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Unreport', comment_type: commentType }),
+                    });
+                }
+                
+                // Mettre à jour le compteur de dislikes
                 const newCount = parseInt(dislikeButton.textContent.split(' ')[1]) + 1;
                 dislikeButton.innerHTML = `👎 ${newCount}`;
+                
+                // Enregistrer le nouveau vote
+                userReactions[reactionKey] = 'dislike';
+                saveUserReactions(userReactions);
+                
+                // Mettre à jour l'état visuel des boutons
+                updateButtonStates(likeButton, dislikeButton, reportButton, 'dislike');
             } else {
                 console.error(`Erreur lors de la mise à jour du Dislike_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
             }
         })
         .catch(error => console.error("Erreur réseau :", error));
     });
-
-    // Création du bouton signalement
-    const reportButton = document.createElement("button");
-    reportButton.className = "reaction-button report-button";
-    reportButton.innerHTML = `⚠️ ${signalements}`;
+    
     reportButton.addEventListener("click", () => {
+        // Si l'utilisateur clique sur le même bouton, on annule son vote
+        if (userReactions[reactionKey] === 'report') {
+            // Annuler le vote
+            fetch('/update-reaction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    evaluation_id: evaluationId, 
+                    reaction_type: 'Unreport', // Action d'annulation
+                    comment_type: commentType 
+                }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Mettre à jour le compteur et le texte du bouton
+                    const newCount = Math.max(0, parseInt(reportButton.textContent.split(' ')[1]) - 1);
+                    reportButton.innerHTML = `⚠️ ${newCount}`;
+                    
+                    // Supprimer le vote de l'utilisateur
+                    delete userReactions[reactionKey];
+                    saveUserReactions(userReactions);
+                    
+                    // Réinitialiser l'état des boutons
+                    updateButtonStates(likeButton, dislikeButton, reportButton, null);
+                    
+                    console.log("Vote annulé avec succès");
+                } else {
+                    console.error(`Erreur lors de l'annulation du Signalement_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
+                }
+            })
+            .catch(error => console.error("Erreur réseau :", error));
+            return;
+        }
+        
+        // Obtenir l'ancien vote (s'il existe)
+        const previousVote = userReactions[reactionKey];
+        
         console.log(`evaluationId envoyé : ${evaluationId} pour commentaire type : ${commentType}`);
         fetch('/update-reaction', {
             method: 'POST',
@@ -469,9 +697,46 @@ function createCommentCard(content, date, auteur = null, likeCount = 0, dislikeC
         })
         .then(response => {
             if (response.ok) {
-                // Mettre à jour le compteur et le texte du bouton
+                // Gérer l'incrémentation du compteur actuel et éventuellement décrémenter l'ancien
+                if (previousVote === 'like') {
+                    // Décrementer le compteur de likes
+                    const newLikeCount = parseInt(likeButton.textContent.split(' ')[1]) - 1;
+                    likeButton.innerHTML = `👍 ${newLikeCount >= 0 ? newLikeCount : 0}`;
+                    
+                    // Annuler l'ancien vote dans la base de données
+                    fetch('/update-reaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Unlike', comment_type: commentType }),
+                    });
+                    
+                } else if (previousVote === 'dislike') {
+                    // Décrementer le compteur de dislikes
+                    const newDislikeCount = parseInt(dislikeButton.textContent.split(' ')[1]) - 1;
+                    dislikeButton.innerHTML = `👎 ${newDislikeCount >= 0 ? newDislikeCount : 0}`;
+                    
+                    // Annuler l'ancien vote dans la base de données
+                    fetch('/update-reaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ evaluation_id: evaluationId, reaction_type: 'Undislike', comment_type: commentType }),
+                    });
+                }
+                
+                // Mettre à jour le compteur de signalements
                 const newCount = parseInt(reportButton.textContent.split(' ')[1]) + 1;
                 reportButton.innerHTML = `⚠️ ${newCount}`;
+                
+                // Enregistrer le nouveau vote
+                userReactions[reactionKey] = 'report';
+                saveUserReactions(userReactions);
+                
+                // Mettre à jour l'état visuel des boutons
+                updateButtonStates(likeButton, dislikeButton, reportButton, 'report');
             } else {
                 console.error(`Erreur lors de la mise à jour du Signalement_${commentType === 'conseils' ? 'Conseils' : 'Généraux'}.`);
             }
@@ -491,9 +756,6 @@ function createCommentCard(content, date, auteur = null, likeCount = 0, dislikeC
 
     commentCard.appendChild(commentBody);
     commentCard.appendChild(commentFooter);
-
-    // Ajout de logs pour vérifier la transmission correcte de evaluationId et des compteurs
-    console.log(`Création de la carte avec evaluationId: ${evaluationId}, type: ${commentType}, likes: ${likes}, dislikes: ${dislikes}, signalements: ${signalements}`);
 
     return commentCard;
 }
@@ -582,4 +844,39 @@ fetch('/database/evaluations.csv')
         });
     })
     .catch(error => console.error('Erreur lors du chargement des évaluations :', error));
+
+// Fonctions pour gérer les cookies persistants
+function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Strict";
+}
+
+function getCookie(name) {
+    const cname = name + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(cname) === 0) {
+            return c.substring(cname.length, c.length);
+        }
+    }
+    return "";
+}
+
+// Fusionner tous les cookies de réactions en un seul objet JSON
+function getUserReactions() {
+    const cookieVal = getCookie("userReactions");
+    return cookieVal ? JSON.parse(cookieVal) : {};
+}
+
+// Sauvegarder les réactions dans un cookie (valide pendant 365 jours)
+function saveUserReactions(reactionsObj) {
+    setCookie("userReactions", JSON.stringify(reactionsObj), 365);
+}
 

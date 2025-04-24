@@ -554,14 +554,18 @@ h2 {
 
 /* Styles de base pour les boutons de réaction */
 .reaction-button {
-    height: 20px; /* Hauteur des boutons */
+    display: flex; /* Utilisation de flexbox pour centrer le contenu */
+    align-items: center; /* Centrage vertical */
+    justify-content: center; /* Centrage horizontal */
+    height: 20px; /* Hauteur fixe pour tous les boutons */
     background-color: #f0f0f0; /* Couleur de fond neutre */
     border: 1px solid #ccc; /* Bordure légère */
     border-radius: 5px; /* Coins arrondis */
-    padding: 0px 10px; /* Espacement interne */
+    padding: 0 10px; /* Padding horizontal uniquement */
     font-size: 14px; /* Taille de police */
     cursor: pointer; /* Curseur pointeur pour indiquer qu'il est cliquable */
     transition: background-color 0.3s, transform 0.2s; /* Animation pour le survol */
+    line-height: 1; /* Empêche le texte de déborder vers le bas */
 }
 
 /* Styles pour les boutons de réaction au survol */
@@ -580,6 +584,32 @@ h2 {
 
 .report-button {
     color: #ffc107; /* Couleur jaune pour le bouton Signalement */
+}
+
+/* Style pour les boutons après le vote (classe voted) */
+.reaction-button.voted {
+    border: 2px solid #9c54b5; /* Bordure violette pour indiquer le choix */
+    background-color: #f8f4fa; /* Fond légèrement coloré */
+    font-weight: bold; /* Texte en gras pour le bouton sélectionné */
+    transform: scale(1.05); /* Légère mise en avant du bouton sélectionné */
+}
+
+/* Animation pour transition fluide */
+.reaction-button {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Effets au survol différents selon l'état */
+.like-button.voted:hover {
+    background-color: #e8f5e9; /* Vert très pâle au survol */
+}
+
+.dislike-button.voted:hover {
+    background-color: #ffebee; /* Rouge très pâle au survol */
+}
+
+.report-button.voted:hover {
+    background-color: #fffde7; /* Jaune très pâle au survol */
 }
 
 /* ============================

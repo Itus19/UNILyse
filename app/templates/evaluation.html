@@ -50,7 +50,7 @@
                         <td class="radio-group"><input type="radio" name="interest_q2" value="3"></td>
                         <td class="radio-group"><input type="radio" name="interest_q2" value="4"></td>
                     </tr>
-                    <tr>
+                    <tr class="last-question">
                         <td>Votre réflexion est stimulée.</td>
                         <td class="radio-group"><input type="radio" name="interest_q3" value="1" required></td>
                         <td class="radio-group"><input type="radio" name="interest_q3" value="2"></td>
@@ -60,12 +60,17 @@
                 </tbody>
             </table>
         </div>
-
+<br>
         <!-- Section Facilité -->
         <div class="section">
             <div class="section-header">
                 <h3>Facilité</h3>
-            
+                <div class="response-labels">
+                    <span>Non</span>
+                    <span>Plutôt non</span>
+                    <span>Plutôt oui</span>
+                    <span>Oui</span>
+                </div>
             </div>
             <hr class="section-divider">
             <table>
@@ -84,7 +89,7 @@
                         <td class="radio-group"><input type="radio" name="difficulty_q2" value="3"></td>
                         <td class="radio-group"><input type="radio" name="difficulty_q2" value="4"></td>
                     </tr>
-                    <tr>
+                    <tr class="last-question">
                         <td>Les commentaires sur vos évaluations vous aident à améliorer la qualité de votre travail.</td>
                         <td class="radio-group"><input type="radio" name="difficulty_q3" value="1" required></td>
                         <td class="radio-group"><input type="radio" name="difficulty_q3" value="2"></td>
@@ -94,17 +99,22 @@
                 </tbody>
             </table>
         </div>
-
+<br>
         <!-- Section Travail -->
         <div class="section">
             <div class="section-header">
                 <h3>Travail</h3>
-
+                <div class="response-labels">
+                    <span>Non</span>
+                    <span>Plutôt non</span>
+                    <span>Plutôt oui</span>
+                    <span>Oui</span>
+                </div>
             </div>
             <hr class="section-divider">
             <table>
                 <tbody>
-                    <tr>
+                    <tr class="last-question">
                         <td>La charge de travail est adéquate par rapport au nombre de crédits ECTS.<br>
                             (1 crédit ECTS = 25-30 heures de travail, y compris la présence en classe et la préparation des examens/travaux).</td>
                         <td class="radio-group"><input type="radio" name="work_q1" value="1" required></td>
@@ -171,17 +181,50 @@
         const popupMessage = document.getElementById("popup-message");
         const closePopupButton = document.getElementById("close-popup");
 
-        // Supprimer les gestionnaires multiples
+        // Vérification des champs requis
+        function validateForm() {
+            const requiredFields = ["interest_q1", "interest_q2", "interest_q3", "difficulty_q1", "difficulty_q2", "difficulty_q3", "work_q1"];
+            let allFilled = true;
+
+            requiredFields.forEach(fieldName => {
+                const radios = document.getElementsByName(fieldName);
+                const isChecked = Array.from(radios).some(radio => radio.checked);
+                if (!isChecked) {
+                    allFilled = false;
+                }
+            });
+
+            if (!allFilled) {
+                alert("Veuillez remplir tous les champs obligatoires de l'évaluation");
+                return false;
+            }
+            return true;
+        }
+
+        // Ajout du gestionnaire d'événement au formulaire
         if (!form.dataset.initialized) {
             form.addEventListener("submit", (event) => {
                 event.preventDefault(); // Empêche l'envoi direct du formulaire
+                
+                // Vérifier si tous les champs requis sont remplis
+                if (!validateForm()) {
+                    return;
+                }
 
                 const formData = new FormData(form);
                 fetch('/evaluation', {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => {
+                .then(response => response.json().catch(() => response.ok ? {} : null))
+                .then(data => {
+                    // Si l'utilisateur doit se connecter
+                    if (data && data.redirect && data.message === "login_required") {
+                        showLoginPopup(); // Fonction définie dans base.html
+                        return;
+                    }
+                    
+                    // Sinon, si tout s'est bien passé ou en cas d'erreur
                     if (response.ok) {
                         popupMessage.textContent = "Merci d'avoir évalué l'enseignement <3";
                         popup.style.display = "flex"; // Affiche la fenêtre pop-up
@@ -200,7 +243,6 @@
             closePopupButton.addEventListener("click", () => {
                 popup.style.display = "none"; // Cache la pop-up
                 form.reset(); // Réinitialise tous les champs du formulaire
-                const suggestions = document.getElementById("search-suggestions");
                 suggestions.innerHTML = ""; // Vide les suggestions de recherche
             });
 
@@ -243,6 +285,36 @@
 
     .popup-content button:hover {
         background-color: #2c3e50;
+    }
+
+    /* Styles pour aligner les boutons radio avec les entêtes */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .response-labels {
+        display: flex;
+        justify-content: space-between;
+        width: 25%; /* Largeur correspondant aux 4 colonnes de boutons radio */
+        margin-right: 47px;
+    }
+
+    .response-labels span {
+        text-align: center; /* Centre le texte */
+    }
+
+    /* Ajustement des boutons radio */
+    .radio-group {
+        width: 100px;
+        text-align: center;
+        padding: 0;
+    }
+
+    /* Suppression du trait tillé sous la dernière question de chaque groupe */
+    .last-question td {
+        border-bottom: none;
     }
 </style>
 

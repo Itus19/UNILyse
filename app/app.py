@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, redirect, send_from_directory, url_for, flash
+from flask import Flask, render_template, jsonify, request, redirect, send_from_directory, url_for, flash, session
 import os
 import csv
 from datetime import datetime
@@ -467,9 +467,15 @@ def get_professor_from_course(course_name):
     return "Inconnu"
 
 @app.route('/evaluation', methods=['GET', 'POST'])
-@login_required  # Protéger cette route pour utilisateurs authentifiés uniquement
 def evaluation():
     if request.method == 'POST':
+        # Vérifier si l'utilisateur est connecté pour la soumission du formulaire
+        if not current_user.is_authenticated:
+            # Stocker les données du formulaire dans la session pour les récupérer après connexion
+            session['pending_evaluation'] = request.form.to_dict()
+            flash("Veuillez vous connecter pour soumettre votre évaluation.")
+            return jsonify({"redirect": True, "message": "login_required"}), 200
+        
         # Récupérer les données du formulaire
         course_name = request.form.get('course_name')
         professor = get_professor_from_course(course_name)  # Récupérer le professeur depuis liste.csv

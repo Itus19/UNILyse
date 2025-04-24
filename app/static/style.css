@@ -644,9 +644,9 @@ h2 {
 
 /* Ligne séparatrice sous chaque section */
 .section-divider {
-    height: 2px; /* Épaisseur de la ligne */
+    height: 2px; /* Épaisseur de la ligne augmentée à 2px */
     background: linear-gradient(90deg, #9c54b5, #272356); /* Dégradé de gauche à droite */
-    margin: -10px 0; /* Espace réduit pour un rendu plus compact */
+    margin: -5px 0; /* Espace réduit pour un rendu plus compact */
     margin-bottom: 5px;
 }
 
@@ -663,9 +663,9 @@ table {
 /* Alignement centré des boutons radio */
 .radio-group {
     height: 0px; /* Ajuste la hauteur des boutons radio */
-    width: 55px; /* Ajuste la largeur des boutons radio */
+    width: 90px; /* Ajuste la largeur des boutons radio */
     margin-inline: center; /* Centre les boutons radio */
-    margin-right: 0px; /* Ajuste l'espacement entre les éléments */
+    margin-right: 100px; /* Ajuste l'espacement entre les éléments */
 }
 
 /* Styles pour les labels de réponse (Oui, Plutôt oui, etc.) */
@@ -967,6 +967,173 @@ button[type="submit"]:hover {
     color: #666;
     font-style: italic;
     width: 80%;
+}
+
+/* ============================
+   STYLES POUR AVATAR ET POP-UPS
+   ============================ */
+
+/* Conteneur de navigation pour organiser les éléments du menu */
+.nav-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espacement entre le menu de profil et le menu principal */
+}
+
+/* Conteneur de profil */
+.profile-container {
+    position: relative;
+    z-index: 1001;
+}
+
+/* Avatar circulaire */
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #9c54b5, #272356);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.avatar-circle:hover {
+    transform: scale(1.05);
+}
+
+/* Version plus grande pour la pop-up de profil */
+.avatar-circle-large {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #9c54b5, #272356);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #ffffff;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+/* Style des initiales dans l'avatar */
+.initials {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+}
+
+.avatar-circle-large .initials {
+    font-size: 42px;
+}
+
+/* Menu déroulant de profil */
+.profile-menu {
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 0; /* Aligner à gauche de l'avatar */
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    min-width: 180px;
+    z-index: 1005;
+}
+
+/* Éléments du menu de profil */
+.profile-menu-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-menu-item:last-child {
+    border-bottom: none;
+}
+
+.profile-menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+.profile-menu-item i {
+    width: 20px;
+    margin-right: 8px;
+    color: #9c54b5;
+}
+
+/* Styles pour les pop-ups d'authentification */
+.auth-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1010;
+    overflow-y: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-popup-content {
+    position: relative;
+    background-color: #fff;
+    width: 100%;
+    max-width: 450px;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: popupFadeIn 0.3s ease;
+}
+
+@keyframes popupFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bouton pour fermer les pop-ups */
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-popup:hover {
+    color: #333;
+}
+
+/* Styles pour le contenu du profil */
+.profile-content {
+    margin: 10px 0;
+}
+
+.profile-details {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.profile-details p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+/* Style pour l'icône utilisateur dans l'avatar non connecté */
+.avatar-circle i {
+    color: white;
+    font-size: 20px;
 }
 
 

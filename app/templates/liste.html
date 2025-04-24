@@ -290,6 +290,16 @@
         const courseData = JSON.parse('{{ courses|tojson|safe }}');
         const courseContainer = document.getElementById("course-tab");
         courseContainer.setAttribute("data-courses", JSON.stringify(courseData));
+
+        // Vérifier les paramètres d'URL pour afficher les pop-ups
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('show_login') === 'true') {
+            showLoginPopup();
+        } else if (urlParams.get('show_register') === 'true') {
+            showRegisterPopup();
+        } else if (urlParams.get('show_profile') === 'true') {
+            showProfilePopup();
+        }
     });
 </script>
 

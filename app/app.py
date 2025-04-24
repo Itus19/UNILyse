@@ -402,18 +402,26 @@ def login():
         
         if user and user.check_password(password):
             login_user(user, remember=remember)
+            
+            # Vérifier s'il y a une évaluation en attente dans la session
+            if 'pending_evaluation' in session:
+                # Rediriger vers l'évaluation avec les données en session
+                return redirect(url_for('evaluation'))
+            
             next_page = request.args.get('next')
             return redirect(next_page or url_for('liste'))
         else:
             flash('Nom d\'utilisateur ou mot de passe incorrect.')
+            return jsonify({"success": False, "message": "Identifiants incorrects"}), 401
     
-    return render_template('login.html')
+    # Pour les requêtes GET, rediriger vers la page principale avec l'indication d'ouvrir la pop-up
+    return redirect(url_for('liste', show_login='true'))
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('liste'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -428,24 +436,27 @@ def register():
         
         if password != confirm_password:
             flash('Les mots de passe ne correspondent pas.')
-            return render_template('register.html')
+            return jsonify({"success": False, "message": "Les mots de passe ne correspondent pas"}), 400
         
         if User.find_by_username(username):
             flash('Ce nom d\'utilisateur est déjà utilisé.')
-            return render_template('register.html')
+            return jsonify({"success": False, "message": "Nom d'utilisateur déjà utilisé"}), 400
         
         if User.create(username, password, email):
             flash('Compte créé avec succès! Vous pouvez maintenant vous connecter.')
-            return redirect(url_for('login'))
+            return jsonify({"success": True, "message": "Compte créé avec succès"})
         else:
             flash('Une erreur s\'est produite lors de la création du compte.')
+            return jsonify({"success": False, "message": "Erreur lors de la création du compte"}), 500
     
-    return render_template('register.html')
+    # Pour les requêtes GET, rediriger vers la page principale avec l'indication d'ouvrir la pop-up
+    return redirect(url_for('liste', show_register='true'))
 
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html')
+    # Rediriger vers la page principale avec l'indication d'ouvrir la pop-up de profil
+    return redirect(url_for('liste', show_profile='true'))
 
 @app.route('/')
 def liste():
@@ -677,6 +688,66 @@ def update_reaction():
     except Exception as e:
         print("Erreur lors de la mise à jour de la réaction :", str(e))
         return jsonify({"error": str(e)}), 500
+
+@app.route('/delete-account', methods=['POST'])
+@login_required
+def delete_account():
+    """Route pour supprimer le compte de l'utilisateur actuel"""
+    try:
+        # Récupérer les informations de l'utilisateur actuellement connecté
+        user_id = current_user.id
+        username = current_user.username
+        
+        # Anonymiser les évaluations de l'utilisateur au lieu de les supprimer
+        anonymize_user_evaluations(username, user_id)
+        
+        # Déconnecter l'utilisateur
+        logout_user()
+        
+        # Supprimer l'utilisateur de la base de données
+        success = User.delete(user_id)
+        
+        if success:
+            flash('Votre compte a été supprimé avec succès.')
+            return jsonify({"success": True, "message": "Compte supprimé avec succès"}), 200
+        else:
+            # Renvoyer une erreur si la suppression échoue
+            return jsonify({"success": False, "message": "Une erreur s'est produite lors de la suppression du compte"}), 500
+    except Exception as e:
+        print(f"Erreur lors de la suppression du compte: {e}")
+        return jsonify({"success": False, "message": f"Une erreur s'est produite: {str(e)}"}), 500
+
+def anonymize_user_evaluations(username, user_id):
+    """Anonymise toutes les évaluations d'un utilisateur spécifique"""
+    try:
+        # Créer un pseudonyme anonyme mais traçable
+        anonymous_username = f"Utilisateur supprimé #{user_id}"
+        
+        # Lire le fichier d'évaluations
+        evaluations = []
+        with open(EVALUATIONS_CSV, newline='', encoding='utf-8-sig') as eval_file:
+            reader = csv.DictReader(eval_file, delimiter=';')
+            evaluations = list(reader)
+        
+        # Modifier le nom d'utilisateur dans les évaluations
+        modified = False
+        for eval_row in evaluations:
+            if eval_row.get('Auteur') == username:
+                eval_row['Auteur'] = anonymous_username
+                modified = True
+        
+        if modified:
+            # Écrire les évaluations modifiées dans le fichier
+            with open(EVALUATIONS_CSV, 'w', newline='', encoding='utf-8-sig') as eval_file:
+                fieldnames = evaluations[0].keys() if evaluations else []
+                writer = csv.DictWriter(eval_file, fieldnames=fieldnames, delimiter=';')
+                writer.writeheader()
+                writer.writerows(evaluations)
+        
+        return True
+    except Exception as e:
+        print(f"Erreur lors de l'anonymisation des évaluations de l'utilisateur {username}: {e}")
+        return False
 
 if __name__ == '__main__':
     # Met à jour les moyennes dans liste.csv au démarrage
